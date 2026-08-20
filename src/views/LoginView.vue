@@ -18,7 +18,7 @@ async function seConnecter() {
     await auth.login(email.value, motDePasse.value);
     router.push('/groupes');
   } catch (e) {
-    erreurMessage.value = e.message;
+    erreur.value = e.message;
   } finally {
     chargement.value = false;
   }
