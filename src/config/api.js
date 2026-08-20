@@ -2,9 +2,11 @@
 // en local on tape le serveur local, en ligne on tape celui de Render.
 const EN_LOCAL = ["localhost", "127.0.0.1"].includes(window.location.hostname);
 
-export const API_BASE_URL = EN_LOCAL
-  ? "http://localhost:3000"
-  : "https://backendsakinaconnectapi.onrender.com";
+// export const API_BASE_URL = EN_LOCAL
+  // ? "http://localhost:3000"
+  // : "https://backendsakinaconnectapi.onrender.com";
+
+  export const API_BASE_URL=import.meta.VITE_API
 
 export const ENDPOINTS = {
   utilisateurs: `${API_BASE_URL}/utilisateurs`,
