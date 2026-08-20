@@ -1,5 +1,6 @@
-// src/services/authService.js (Version épurée)
-import { ENDPOINTS } from "../config/api.js";
+
+// import { ENDPOINTS } from "../config/api.js";
+import { ENDPOINTS } from "@/config/api.js";
 
 export async function login(email, password) {
   if (!email || !password) {

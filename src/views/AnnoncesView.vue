@@ -1,31 +1,53 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useAuthStore } from '@/stores/auth.js';
 import { useToast, useConfirm, useModal } from '@/composables/index.js';
 import { getAnnoncesVisibles, deleteAnnonce } from '@/services/annonceService.js';
+import { getGroupes } from '@/services/groupeService.js';
 import AnnonceForm from '@/components/forms/AnnonceForm.vue';
-import { useAuthStore } from '@/stores/auth.js';
 
-const auth = useAuthStore(); const annonces = ref([]); const search = ref('');
-const { ouvrir } = useModal(); const { demanderConfirmation } = useConfirm(); const { erreur, succes } = useToast();
+const auth = useAuthStore(); 
+const annonces = ref([]); 
+const groupes = ref([]);
+const { open: openModal } = useModal();
+const { askConfirmation } = useConfirm();
+const { success, error } = useToast();
 
 async function charger() {
-  try { annonces.value = await getAnnoncesVisibles(auth.utilisateur, auth.role); } catch (e) { erreur(e.message); }
+  try { 
+    [annonces.value, groupes.value] = await Promise.all([
+      getAnnoncesVisibles(auth.utilisateur, auth.role), 
+      getGroupes()
+    ]); 
+  } catch (e) { error(e.message); }
 }
 onMounted(charger);
 
 async function supprimer(a) {
-  if (!await demanderConfirmation(`Supprimer l'annonce ?`)) return;
-  try { await deleteAnnonce(a.id); succes('Annonce supprimée.'); charger(); } catch (e) { erreur(e.message); }
+  if (!await askConfirmation(`Supprimer l'annonce ?`)) return;
+  try { 
+    await deleteAnnonce(a.id); 
+    success('Annonce supprimée.'); 
+    charger(); 
+  } catch (e) { error(e.message); }
 }
 </script>
 <template>
   <section>
     <PageHeader kicker="Communication" title="Tableau d'affichage" subtitle="Alertes en temps réel.">
-      <template #actions><AppButton v-if="auth.role !== 'PELERIN'" @click="ouvrir(AnnonceForm, { props: { onSucces: charger } })">Publier</AppButton></template>
+      <template #actions v-if="auth.role !== 'PELERIN'">
+        <AppButton @click="openModal(AnnonceForm, { props: { user: auth.utilisateur, role: auth.role, groupes, onSucces: charger } })">Publier</AppButton>
+      </template>
     </PageHeader>
-    <div class="mb-4"><AppInput v-model="search" placeholder="Rechercher un communiqué..." /></div>
     <div class="grid gap-4">
-      <CarteAnnonce v-for="a in annonces.filter(p => p.titre.includes(search))" :key="a.id" :annonce="a" @supprimer="supprimer(a)" @modifier="ouvrir(AnnonceForm, { props: { annonce: a, onSucces: charger } })" />
+      <div v-for="a in annonces" :key="a.id" class="rounded-2xl border border-l-4 bg-white p-4 shadow-sm" :class="a.urgence ? 'border-l-rose-600' : 'border-l-slate-300'">
+        <h3 class="font-black">{{ a.titre }}</h3>
+        <p class="text-sm text-slate-600 whitespace-pre-line">{{ a.contenu }}</p>
+        <div class="mt-2 flex gap-2">
+          <AppButton variant="secondary" size="sm" @click="openModal(AnnonceForm, { props: { annonce: a, user: auth.utilisateur, role: auth.role, groupes, onSucces: charger } })">Modifier</AppButton>
+          <AppButton variant="danger" size="sm" @click="supprimer(a)">Supprimer</AppButton>
+        </div>
+      </div>
     </div>
   </section>
 </template>
