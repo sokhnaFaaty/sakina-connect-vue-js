@@ -1,41 +1,31 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { getPelerinsArchives, restorePelerin, deletePelerinDefinitif } from '@/services/pelerinService.js';
-import { getGuidesArchives, restoreGuide, deleteGuideDefinitif } from '@/services/guideService.js';
-import { getGroupesArchives, restoreGroupe, deleteGroupeDefinitif } from '@/services/groupeService.js';
 import { useToast, useConfirm } from '@/composables/index.js';
 
-const activeTab = ref('pelerins'); const items = ref([]); const search = ref('');
-const { demanderConfirmation } = useConfirm(); const { erreur, succes } = useToast();
+const items = ref([]); const activeTab = ref('pelerins');
+const { askConfirmation } = useConfirm(); const { success, error } = useToast();
 
 const services = {
   pelerins: { fetch: getPelerinsArchives, restore: restorePelerin, delete: deletePelerinDefinitif },
-  guides: { fetch: getGuidesArchives, restore: restoreGuide, delete: deleteGuideDefinitif },
-  groupes: { fetch: getGroupesArchives, restore: restoreGroupe, delete: deleteGroupeDefinitif },
 };
 
-async function charger() {
-  try { items.value = await services[activeTab.value].fetch(); } catch (e) { erreur(e.message); }
-}
+async function charger() { try { items.value = await services[activeTab.value].fetch(); } catch (e) { error(e.message); } }
 onMounted(charger);
 
-async function restore(id) {
-  try { await services[activeTab.value].restore(id); succes('Élément restauré.'); charger(); } catch (e) { erreur(e.message); }
-}
-async function del(id) {
-  if(!await demanderConfirmation('Suppression définitive irréversible ?')) return;
-  try { await services[activeTab.value].delete(id); succes('Supprimé définitivement.'); charger(); } catch (e) { erreur(e.message); }
+async function supprimer(id) {
+  if (!await askConfirmation('Suppression définitive irréversible ?')) return;
+  try { await services[activeTab.value].delete(id); success('Supprimé.'); charger(); } catch (e) { error(e.message); }
 }
 </script>
 <template>
   <section>
-    <PageHeader title="Liste des Archives" kicker="Corbeille" subtitle="Restaurez ou supprimez définitivement." />
-    <div class="flex gap-4 mb-6"><button v-for="tab in ['pelerins','guides','groupes']" :key="tab" @click="activeTab=tab; charger()" :class="activeTab===tab?'bg-[#333D2A] text-white':'border'" class="px-4 py-2 rounded-xl">{{ tab }}</button></div>
-    <div class="grid gap-3 rounded-2xl border p-6 bg-white">
-      <div v-if="items.length === 0" class="text-slate-400 text-center py-8">Aucun élément archivé.</div>
-      <div v-for="it in items" :key="it.id" class="flex justify-between border-b pb-2">
-        <div>{{ it.nom }}</div>
-        <div><button @click="restore(it.id)" class="text-emerald-600 mr-4">Restaurer</button><button @click="del(it.id)" class="text-rose-600">Supprimer</button></div>
+    <PageHeader title="Archives" kicker="Corbeille" />
+    <div class="mb-4 flex gap-2"><button @click="activeTab='pelerins'; charger()" :class="activeTab==='pelerins'?'bg-[#333D2A] text-white':'border'" class="px-4 py-2 rounded-xl">Pèlerins</button></div>
+    <div class="bg-white p-4 rounded-2xl border">
+      <div v-for="item in items" :key="item.id" class="border-b py-2 flex justify-between">
+        <span>{{ item.nomComplet }}</span>
+        <button @click="supprimer(item.id)" class="text-rose-600 text-sm">Supprimer déf.</button>
       </div>
     </div>
   </section>
