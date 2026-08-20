@@ -1,13 +1,11 @@
+// src/services/authService.js (Version épurée)
 import { ENDPOINTS } from "../config/api.js";
-import { saveSession, clearSession } from "../utils/auth.js";
 
 export async function login(email, password) {
   if (!email || !password) {
     throw new Error("Email et mot de passe obligatoires.");
   }
 
-  // Le backend vérifie le mot de passe haché (bcrypt) et renvoie un JWT.
-  // La comparaison ne se fait plus côté navigateur.
   let response;
   try {
     response = await fetch(ENDPOINTS.connexion, {
@@ -25,13 +23,10 @@ export async function login(email, password) {
     throw new Error(donnees?.erreur ?? "Email ou mot de passe incorrect.");
   }
 
-  const { token, user } = donnees;
-  saveSession(user, token);
-
-  return user;
-}
-
-export function logout() {
-  clearSession();
-  window.location.href = window.location.pathname;
+  // ⚠️ SUPPRIME `saveSession` ici. On renvoie juste les données au Store.
+  // const { token, user } = donnees;
+  // saveSession(user, token); // <--- À ENLEVER
+  
+  // Le Store se chargera de persister le token et l'utilisateur.
+  return donnees; 
 }
