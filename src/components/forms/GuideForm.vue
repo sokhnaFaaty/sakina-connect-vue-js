@@ -1,8 +1,7 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { useToast } from '@/composables/useToast.js';
 import { createGuide, updateGuide } from '@/services/guideService.js';
-import { uploadUserPhoto } from '@/services/cloudinaryService.js';
 import AppInput from '@/components/ui/AppInput.vue';
 import AppButton from '@/components/ui/AppButton.vue';
 
@@ -18,7 +17,7 @@ const nomComplet = ref(props.guide ? props.guide.nomComplet : '');
 const email = ref(props.guide ? props.guide.email : '');
 const telephone = ref(props.guide ? props.guide.telephone : '');
 const disponibilite = ref(props.guide ? props.guide.disponibilite : true);
-const photoFile = ref(null);
+const photoFile = ref(null); // ⚠️ On garde la réf, mais on ne l'utilise plus pour le moment
 
 async function soumettre() {
   if (!nomComplet.value || !email.value || !telephone.value) {
@@ -28,11 +27,9 @@ async function soumettre() {
 
   chargement.value = true;
   try {
-    let photoUrl = props.guide?.photo || '';
-    if (photoFile.value) {
-      const result = await uploadUserPhoto(photoFile.value);
-      photoUrl = result.photoUrl;
-    }
+    // ✅ Plus d'appel à uploadUserPhoto. 
+    // On garde simplement l'ancienne photo si elle existe.
+    let photoUrl = props.guide?.photo || ''; 
 
     if (props.guide) {
       await updateGuide(props.guide.id, {
@@ -72,7 +69,8 @@ async function soumettre() {
 
     <div>
       <label class="mb-2 block text-xs font-extrabold uppercase text-slate-500">Photo de profil (facultatif)</label>
-      <input ref="photoFile" type="file" accept="image/*" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm" />
+      <!-- L'input est encore là, mais le traitement côté front est désactivé en attendant ton backend -->
+      <input type="file" accept="image/*" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm" />
     </div>
 
     <label class="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm">

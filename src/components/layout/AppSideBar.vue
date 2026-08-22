@@ -80,7 +80,7 @@ function naviguer(page) {
         :key="link.page"
         @click="naviguer(link.page)"
         class="flex items-center gap-3 rounded-xl border-l-4 border-transparent px-4 py-3 text-left text-sm font-semibold text-slate-600 transition hover:bg-[#F2F2DE]/60"
-        :class="route.path.startsWith('/' + link.page) ? 'border-[#333D2A] bg-[#F2F2DE] text-[#333D2A]' : ''"
+        :class="route.path.startsWith('/' + link.page) ? 'border-blue-500 bg-[#F2F2DE] text-[#333D2A]' : ''"
       >
         <i class="fa-solid" :class="link.icon + ' w-5 text-center'"></i>
         <span>{{ link.label }}</span>

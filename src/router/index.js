@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.js';
+import { HOME_PAGE_BY_ROLE } from '@/config/roles.js';
 
 // Import de toutes tes vues
 import LoginView from '@/views/LoginView.vue';
@@ -52,14 +53,27 @@ const router = createRouter({
   routes,
 });
 
-// Garde de navigation : empêche d'accéder aux routes protégées sans être connecté
+// Garde de navigation : empêche d'accéder aux routes protégées sans être connecté,
+// et redirige vers la page d'accueil du rôle si déjà authentifié
 router.beforeEach((to, from, next) => {
   const auth = useAuthStore();
+
+  // Non authentifié : interdiction d'accéder aux routes protégées
   if (to.meta.requiresAuth && !auth.isAuthenticated) {
     next('/login');
-  } else {
-    next();
+    return;
   }
+
+  // Déjà authentifié : pas de retour sur /login ou /register
+  if (auth.isAuthenticated && (to.path === '/login' || to.path === '/register')) {
+    const homePage = HOME_PAGE_BY_ROLE[auth.role];
+    if (homePage) {
+      next({ name: homePage });
+      return;
+    }
+  }
+
+  next();
 });
 
 export default router;

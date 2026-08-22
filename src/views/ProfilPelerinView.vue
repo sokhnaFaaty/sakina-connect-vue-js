@@ -1,29 +1,51 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useAuthStore } from '@/stores/auth.js';
-import { getPelerinByUtilisateurId, updatePelerin } from '@/services/pelerinService.js';
-import { useToast } from '@/composables/index.js';
+import { ref, onMounted } from 'vue'
+import { useAuthStore } from '@/stores/auth.js'
+import { saveSession } from '@/utils/auth.js'
+import { getPelerinByUtilisateurId, updatePelerin } from '@/services/pelerinService.js'
+import { updateUtilisateur } from '@/services/utilisateurService.js'
+import { useToast } from '@/composables/index.js'
+import { AppInput, AppButton, PageHeader } from '@/components/ui/index.js'
 
-const auth = useAuthStore(); const form = ref({ telephone: '', email: '' });
-const { succes, erreur } = useToast();
+const auth = useAuthStore()
+const { success, error } = useToast()
+const pelerin = ref(null)
+const form = ref({ nomComplet: '', email: '', telephone: '', photo: '' })
 
-onMounted(async () => {
-  const p = await getPelerinByUtilisateurId(auth.utilisateur.id);
-  form.value = { telephone: auth.utilisateur.telephone, email: auth.utilisateur.email, id: p.id };
-});
+async function charger() {
+  pelerin.value = await getPelerinByUtilisateurId(auth.user.id)
+  form.value = {
+    nomComplet: auth.user.nomComplet,
+    email: auth.user.email,
+    telephone: auth.user.telephone,
+    photo: auth.user.photo || ''
+  }
+}
+onMounted(charger)
 
-async function save() {
-  try { await updatePelerin(form.value.id, form.value); succes('Profil mis à jour.'); } catch(e) { erreur(e.message); }
+async function sauvegarder() {
+  try {
+    await updateUtilisateur(auth.user.id, form.value)
+    await updatePelerin(pelerin.value.id, { informationsMedicales: form.value.informationsMedicales })
+    auth.user = { ...auth.user, ...form.value }
+    saveSession(auth.user, auth.token)
+    success('Profil mis à jour.')
+  } catch (e) { error(e.message) }
 }
 </script>
+
 <template>
   <section>
-    <PageHeader title="Mon Profil Spirituel" kicker="Identité" />
-    <div class="bg-white p-6 rounded-2xl border max-w-2xl">
-      <AppInput v-model="form.telephone" label="Numéro de téléphone" />
-      <AppInput v-model="form.email" label="Adresse email" type="email" />
-      <AppInput type="password" label="Nouveau mot de passe" placeholder="Laisser vide" />
-      <AppButton @click="save" class="mt-4">Enregistrer</AppButton>
+    <PageHeader title="Mon Profil Spirituel" />
+    <div class="max-w-2xl bg-white p-6 rounded-2xl border grid gap-4">
+      <AppInput v-model="form.nomComplet" label="Nom complet" />
+      <AppInput v-model="form.telephone" label="Téléphone" />
+      <AppInput v-model="form.email" label="Email" />
+      <div>
+        <label class="block text-xs font-bold mb-1">Informations médicales</label>
+        <textarea v-model="form.informationsMedicales" rows="3" class="w-full border rounded-xl p-2"></textarea>
+      </div>
+      <AppButton @click="sauvegarder">Enregistrer</AppButton>
     </div>
   </section>
 </template>

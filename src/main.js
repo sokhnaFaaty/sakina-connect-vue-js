@@ -1,4 +1,4 @@
-import './assets/main.css'
+import './public/assets/main.css'
 
 
 import { createApp } from 'vue'
@@ -17,3 +17,4 @@ app.use(router)
 
 
 app.mount('#app')
+

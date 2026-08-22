@@ -20,7 +20,7 @@ defineEmits(['modifier', 'supprimer']);
           <tr v-for="ligne in lignes" :key="ligne.id" class="transition hover:bg-slate-50">
             <td v-for="col in colonnes" :key="col.key" class="px-5 py-4 text-slate-700">
               <!-- Si une fonction 'render' est passée, on l'utilise -->
-              <template v-if="col.render">{{ col.render(ligne) }}</template>
+              <template v-if="col.render"><span v-html="col.render(ligne)"></span></template>
               <!-- Sinon on affiche simplement la propriété de l'objet -->
               <template v-else>{{ ligne[col.key] }}</template>
             </td>

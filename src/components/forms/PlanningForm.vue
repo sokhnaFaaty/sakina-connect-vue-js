@@ -1,7 +1,8 @@
 <script setup>
 import { ref } from 'vue';
 import { useToast } from '@/composables/useToast.js';
-import { createPlanningEvent, updatePlanningEvent, STATUT_EVENEMENT } from '@/services/planningService.js';
+import { STATUT_EVENEMENT } from '@/config/constantes.js';
+import { createPlanningEvent, updatePlanningEvent} from '@/services/planningService.js';
 import AppInput from '@/components/ui/AppInput.vue';
 import AppButton from '@/components/ui/AppButton.vue';
 

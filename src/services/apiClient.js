@@ -1,41 +1,82 @@
-import { getToken, clearSession } from "../utils/auth.js";
+// src/services/apiClient.js
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const TOKEN_KEY = 'token';
+const USER_KEY = 'user';
 
-export async function apiRequest(url, options = {}, errorMessage = "Une erreur est survenue") {
-    const token = getToken();
-
-    const response = await fetch(url, {
-        ...options,
-        headers: {
-            "Content-Type": "application/json",
-            // Le backend protège toutes les routes par JWT
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-            ...(options.headers || {})
-        },
-    });
-
-    if (!response.ok) {
-        // Token absent ou expiré (24 h) : on repart de la page de connexion
-        if (response.status === 401) {
-            clearSession();
-            window.location.href = window.location.pathname;
-            throw new Error("Session expirée. Reconnecte-toi.");
-        }
-
-        // Le backend renvoie { erreur: "..." } : on préfère son message
-        let messageServeur = null;
-        try {
-            const corps = await response.json();
-            messageServeur = corps?.erreur ?? null;
-        } catch {
-            // réponse sans JSON exploitable, on garde le message par défaut
-        }
-
-        throw new Error(messageServeur ?? errorMessage);
-    }
-
-    if (response.status === 204) {
-        return null;
-    }
-
-    return response.json();
+function getToken() {
+  return localStorage.getItem(TOKEN_KEY);
 }
+
+function viderSessionLocale() {
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(USER_KEY);
+}
+
+function preparerBody(body) {
+  if (body == null) {
+    return undefined;
+  }
+  return JSON.stringify(body);
+}
+
+async function lireReponse(reponse) {
+  if (reponse.status === 204) {
+    return null;
+  }
+  const contentType = reponse.headers.get('content-type') || '';
+  if (contentType.includes('application/json')) {
+    return reponse.json().catch(() => null);
+  }
+  return reponse.text().catch(() => null);
+}
+
+async function requete(chemin, options = {}) {
+  const token = getToken();
+  const headers = { ...options.headers };
+
+  if (options.body != null) {
+    headers['Content-Type'] = 'application/json';
+  }
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  let reponse;
+  try {
+    reponse = await fetch(`${BASE_URL}${chemin}`, {
+      ...options,
+      headers,
+      body: preparerBody(options.body),
+    });
+  } catch {
+    throw new Error('Impossible de joindre le serveur.');
+  }
+
+  const data = await lireReponse(reponse);
+
+  if (reponse.status === 401 && token) {
+    viderSessionLocale();
+    if (window.location.pathname !== '/login') {
+      window.location.replace('/login');
+    }
+    throw new Error('Session expirée, reconnectez-vous.');
+  }
+
+  if (!reponse.ok) {
+    const message = typeof data === 'object' && data !== null
+      ? data.erreur || data.message
+      : data;
+    throw new Error(message || 'Une erreur est survenue.');
+  }
+
+  return data;
+}
+
+export const apiClient = {
+  get: (chemin) => requete(chemin, { method: 'GET' }),
+  post: (chemin, body) => requete(chemin, { method: 'POST', body }),
+  patch: (chemin, body) => requete(chemin, { method: 'PATCH', body }),
+  put: (chemin, body) => requete(chemin, { method: 'PUT', body }),
+  delete: (chemin) => requete(chemin, { method: 'DELETE' }),
+};

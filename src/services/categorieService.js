@@ -1,6 +1,18 @@
-import { ENDPOINTS } from "../config/api.js";
-import { apiRequest } from "./apiClient.js";
+// src/services/categorieService.js
+import { apiClient } from './apiClient.js';
 
-export async function getCategories() {
-  return apiRequest(ENDPOINTS.categories, {}, "Impossible de charger les catégories.");
+export function getCategories() { 
+  return apiClient.get('/categories');
+}
+
+export function creerCategorie(libelle) {
+  return apiClient.post('/categories', { libelle });
+}
+
+export function modifierCategorie(id, libelle) {
+  return apiClient.patch(`/categories/${id}`, { libelle });
+}
+
+export function supprimerCategorie(id) {
+  return apiClient.delete(`/categories/${id}`);
 }

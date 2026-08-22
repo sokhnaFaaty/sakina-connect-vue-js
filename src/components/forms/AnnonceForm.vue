@@ -1,7 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useToast } from '@/composables/useToast.js';
-import { createAnnonce, updateAnnonce, STATUT_ANNONCE } from '@/services/annonceService.js';
+import { STATUT_ANNONCE } from '@/config/constantes.js';
+import { createAnnonce, updateAnnonce } from '@/services/annonceService.js';
 import AppInput from '@/components/ui/AppInput.vue';
 import AppButton from '@/components/ui/AppButton.vue';
 

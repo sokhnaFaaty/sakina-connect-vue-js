@@ -4,7 +4,7 @@ import { login as apiLogin } from '@/services/authService.js';
 
 // Fonction utilitaire pour lire le localStorage au démarrage
 function getSessionFromStorage() {
-  const token = localStorage.getItem('token');
+  let token = localStorage.getItem('token');
   const userData = localStorage.getItem('currentUser');
   let user = null;
   if (userData) {
