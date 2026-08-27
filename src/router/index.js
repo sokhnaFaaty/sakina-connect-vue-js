@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.js';
+import { HOME_PAGE_BY_ROLE } from '@/config/roles.js';
 import { useToast } from '@/composables/useToast.js';
 
 // Import de toutes tes vues
@@ -53,28 +54,38 @@ const router = createRouter({
 });
 
 // Page d'accueil selon le rôle (fidèle au vanilla config/roles.js)
-const HOME_PAGE_BY_ROLE = {
-  ADMIN: '/dashboard-admin',
-  GUIDE: '/dashboard-guide',
-  PELERIN: '/dashboard-pelerin',
-  PROCHE: '/dashboard-proche',
+const redirigerAccueil = () => {
+  const auth = useAuthStore();
+  const page = HOME_PAGE_BY_ROLE[auth.role];
+  return page ? { name: page } : { name: 'login' };
 };
 
 // Garde de navigation : empêche d'accéder aux routes protégées sans être connecté,
 // et restreint chaque page aux rôles autorisés (comme le ROUTE_PERMISSIONS du vanilla)
-router.beforeEach((to, from, next) => {
+router.beforeEach((to) => {
   const auth = useAuthStore();
-  if (to.meta.requiresAuth && !auth.isAuthenticated) {
-    next('/login');
-    return;
+
+  // Session invalide (token absent/expiré) => on nettoie et on va sur la page de connexion
+  if (!auth.isAuthenticated) {
+    if (to.meta.requiresAuth) {
+      return { name: 'login' };
+    }
+    return true;
   }
+
+  // Déjà connecté : on ne laisse pas accéder au login
+  if (to.name === 'login') {
+    return redirigerAccueil();
+  }
+
+  // Restriction par rôle
   if (to.meta.roles && !to.meta.roles.includes(auth.role)) {
     const { error } = useToast();
     error('Accès refusé.');
-    next(HOME_PAGE_BY_ROLE[auth.role] || '/login');
-    return;
+    return redirigerAccueil();
   }
-  next();
+
+  return true;
 });
 
 export default router;

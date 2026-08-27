@@ -57,7 +57,7 @@ async function seConnecter() {
     await auth.login(email.value.trim(), motDePasse.value);
     router.push('/' + (HOME_PAGE_BY_ROLE[auth.role] || 'login'));
   } catch (e) {
-    erreur.value = e.message;
+    erreurMessage.value = e.message;
   } finally {
     chargement.value = false;
   }

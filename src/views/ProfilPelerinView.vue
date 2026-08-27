@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useAuthStore, saveSession } from '@/stores/auth.js'; // Assure-toi d'exporter saveSession depuis ton store
+import { useAuthStore } from '@/stores/auth.js';
 import { getPelerinByUtilisateurId, updatePelerin } from '@/services/pelerinService.js';
 import { getProcheByPelerinId } from '@/services/procheService.js';
 import { updateUtilisateur, getUtilisateurs } from '@/services/utilisateurService.js';

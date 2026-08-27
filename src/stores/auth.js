@@ -2,21 +2,44 @@
 import { defineStore } from 'pinia';
 import { login as apiLogin } from '@/services/authService.js';
 
+// Retourne true si le token JWT est valide (non expiré).
+// Le backend signe des JWT valides 24h ; on vérifie le champ `exp` (secondes).
+function tokenEstExpire(token) {
+  if (!token) return true;
+  const morceaux = token.split('.');
+  if (morceaux.length !== 3) return false; // pas un JWT : on le laisse (à vérifier côté serveur)
+  try {
+    const payload = JSON.parse(atob(morceaux[1]));
+    if (typeof payload.exp === 'number') return payload.exp * 1000 < Date.now();
+    return false;
+  } catch {
+    return false; // payload non décodable, on ne prend pas le risque de déconnecter
+  }
+}
+
 // Fonction utilitaire pour lire le localStorage au démarrage
+// et nettoyer la session si le token est absent ou expiré (ou si le JSON est corrompu).
 function getSessionFromStorage() {
   let token = localStorage.getItem('token');
   const userData = localStorage.getItem('currentUser');
   let user = null;
+  let corrompu = false;
   if (userData) {
     try {
       user = JSON.parse(userData);
     } catch {
       // Si le JSON est corrompu, on nettoie
-      localStorage.removeItem('currentUser');
-      localStorage.removeItem('token');
-      token = null;
+      corrompu = true;
     }
   }
+
+  // Pas de token (ou token expiré / données corrompues) => on vide tout
+  if (corrompu || !token || tokenEstExpire(token)) {
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('token');
+    return { token: null, user: null };
+  }
+
   return { token, user };
 }
 

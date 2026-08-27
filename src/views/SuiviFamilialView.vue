@@ -5,6 +5,7 @@ import { getProcheByUtilisateurId } from '@/services/procheService.js';
 import { getPelerins } from '@/services/pelerinService.js';
 import { getPlanningDuGroupe } from '@/services/planningService.js';
 import { getCategories } from '@/services/categorieService.js';
+import { getGroupes, getGuides, getUtilisateurs, getSos } from '@/services/index.js';
 import { useToast } from '@/composables/index.js';
 import { AppLoader } from '@/components/ui/index.js';
 

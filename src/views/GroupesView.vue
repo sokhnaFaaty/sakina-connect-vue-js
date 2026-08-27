@@ -17,7 +17,6 @@ import { useModal } from '@/composables/useModal.js';
 import PageHeader from '@/components/ui/PageHeader.vue';
 import AppButton from '@/components/ui/AppButton.vue';
 import ViewToggle from '@/components/ui/ViewToggle.vue';
-import GroupeForm from '@/components/forms/GroupeForm.vue';
 import GroupeDetail from '@/components/forms/GroupeDetail.vue';
 
 const router = useRouter();

@@ -272,12 +272,6 @@ function ouvrirRejet(evenement) {
     },
   })
 }
-function ouvrirFormulaire(evenement = null) {
-  openModal(PlanningForm, { title: evenement ? 'Modifier' : 'Ajouter', props: { evenement, categories: categories.value, groupeId: groupeId.value, userId: auth.utilisateur.id, role: auth.role, onSucces: charger } });
-}
-async function supprimer(e) {
-  try { await deletePlanningEvent(e.id); success('Événement supprimé.'); charger(); } catch (e) { error(e.message); }
-}
 </script>
 
 <template>
