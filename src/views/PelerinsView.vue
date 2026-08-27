@@ -178,6 +178,13 @@ function copierMotDePasse() {
 function fermerProcheCree() {
   procheCree.value = null;
 }
+
+const colonnes = [
+  { label: 'Nom', render: (p) => utilisateurMap.value[p.utilisateurId]?.nomComplet || '-' },
+  { label: 'Passeport', key: 'numeroPasseport' },
+  { label: 'Groupe', render: (p) => groupeMap.value[p.groupeId] || '-' },
+  { label: 'Visa', render: (p) => p.statutVisa === 'APPROUVE' ? '✅ Approuvé' : '⏳ En attente' }
+];
 </script>
 
 <template>

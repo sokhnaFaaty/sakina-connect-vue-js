@@ -57,7 +57,7 @@ async function seConnecter() {
     await auth.login(email.value.trim(), motDePasse.value);
     router.push('/' + (HOME_PAGE_BY_ROLE[auth.role] || 'login'));
   } catch (e) {
-    erreurMessage.value = e.message;
+    erreur.value = e.message;
   } finally {
     chargement.value = false;
   }
@@ -69,7 +69,6 @@ const bgStyle = {
   backgroundPosition: 'center'
 };
 </script>
-
 <template>
   <div class="flex min-h-screen flex-col lg:grid lg:grid-cols-2">
 
@@ -89,24 +88,38 @@ const bgStyle = {
 
       <ul class="mt-10 grid max-w-md gap-3">
         <li class="flex items-center gap-3">
-          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#BC7B3B]/20 text-[#BC7B3B]"><i class="fa-solid fa-users"></i></span>
+          <span
+            class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#BC7B3B]/20 text-[#BC7B3B]"
+            ><i class="fa-solid fa-users"></i
+          ></span>
           <span class="text-sm text-slate-200">Suivi des pèlerins, guides et groupes</span>
         </li>
         <li class="flex items-center gap-3">
-          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#BC7B3B]/20 text-[#BC7B3B]"><i class="fa-solid fa-route"></i></span>
+          <span
+            class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#BC7B3B]/20 text-[#BC7B3B]"
+            ><i class="fa-solid fa-route"></i
+          ></span>
           <span class="text-sm text-slate-200">Itinéraires et rituels planifiés</span>
         </li>
         <li class="flex items-center gap-3">
-          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#BC7B3B]/20 text-[#BC7B3B]"><i class="fa-solid fa-triangle-exclamation"></i></span>
+          <span
+            class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#BC7B3B]/20 text-[#BC7B3B]"
+            ><i class="fa-solid fa-triangle-exclamation"></i
+          ></span>
           <span class="text-sm text-slate-200">Assistance SOS géolocalisée</span>
         </li>
         <li class="flex items-center gap-3">
-          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#BC7B3B]/20 text-[#BC7B3B]"><i class="fa-solid fa-hand-holding-heart"></i></span>
+          <span
+            class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#BC7B3B]/20 text-[#BC7B3B]"
+            ><i class="fa-solid fa-hand-holding-heart"></i
+          ></span>
           <span class="text-sm text-slate-200">Portail famille pour les proches</span>
         </li>
       </ul>
 
-      <p class="mt-12 text-xs text-slate-400">Gestion sereine et organisation de la logistique physique.</p>
+      <p class="mt-12 text-xs text-slate-400">
+        Gestion sereine et organisation de la logistique physique.
+      </p>
     </div>
 
     <div class="flex items-center justify-center bg-[#F2F2DE] p-6 sm:p-10 lg:p-14">
@@ -135,7 +148,9 @@ const bgStyle = {
           </div>
 
           <div>
-            <label class="mb-1 block text-xs font-bold text-[#333D2A]" for="loginPassword">Mot de passe :</label>
+            <label class="mb-1 block text-xs font-bold text-[#333D2A]" for="loginPassword"
+              >Mot de passe :</label
+            >
             <div class="relative">
               <input
                 v-model="motDePasse"

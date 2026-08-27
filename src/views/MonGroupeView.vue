@@ -5,7 +5,6 @@ import { useToast } from '@/composables/index.js';
 import { useModal } from '@/composables/useModal.js';
 import { getGuideByUtilisateurId, getGroupeDuGuide } from '@/services/guideService.js';
 import { getPelerinsDuGroupe } from '@/services/pelerinService.js';
-import { getUtilisateurs } from '@/services/utilisateurService.js';
 import { getPlanningDuGroupe } from '@/services/planningService.js';
 import { getHotels } from '@/services/hotelService.js';
 import { getCategories } from '@/services/categorieService.js';
@@ -150,7 +149,6 @@ function ouvrirPlanningDetail(evenement) {
   });
 }
 </script>
-
 <template>
   <section v-if="!chargement && !guide" class="rounded-[2rem] border border-amber-200 bg-amber-50 p-8 text-center">
     <p class="text-sm font-semibold text-amber-700">Aucun profil guide associé à ce compte.</p>

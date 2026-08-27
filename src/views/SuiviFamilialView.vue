@@ -3,10 +3,6 @@ import { ref, computed, onMounted } from 'vue';
 import { useAuthStore } from '@/stores/auth.js';
 import { getProcheByUtilisateurId } from '@/services/procheService.js';
 import { getPelerins } from '@/services/pelerinService.js';
-import { getGroupes } from '@/services/groupeService.js';
-import { getGuides } from '@/services/guideService.js';
-import { getUtilisateurs } from '@/services/utilisateurService.js';
-import { getSos } from '@/services/sosService.js';
 import { getPlanningDuGroupe } from '@/services/planningService.js';
 import { getCategories } from '@/services/categorieService.js';
 import { useToast } from '@/composables/index.js';
@@ -135,7 +131,6 @@ onMounted(async () => {
   }
 });
 </script>
-
 <template>
   <section>
     <header class="mb-6 rounded-3xl bg-gradient-to-r from-[#8a5a1f] to-[#BC7B3B] p-6 text-white shadow-sm sm:p-7">

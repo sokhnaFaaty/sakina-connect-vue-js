@@ -74,7 +74,6 @@ async function charger() {
 }
 onMounted(charger)
 </script>
-
 <template>
   <section v-if="!chargement && !pelerin" class="rounded-[2rem] border border-amber-200 bg-amber-50 p-8 text-center">
     <p class="text-sm font-semibold text-amber-700">Aucun profil pèlerin associé à ce compte.</p>

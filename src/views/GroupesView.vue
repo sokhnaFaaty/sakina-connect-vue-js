@@ -3,10 +3,11 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { getGroupes, deleteGroupe } from '@/services/groupeService.js';
-import { getPelerins } from '@/services/pelerinService.js';
-import { getUtilisateurs } from '@/services/utilisateurService.js';
 import { getGuides } from '@/services/guideService.js';
 import { getHotels } from '@/services/hotelService.js';
+import { getPelerins } from '@/services/pelerinService.js';
+import { getUtilisateurs } from '@/services/utilisateurService.js';
+import GroupeForm from '@/components/forms/GroupeForm.vue';
 
 import { useToast } from '@/composables/useToast.js';
 import { useConfirm } from '@/composables/useConfirm.js';
@@ -56,21 +57,10 @@ const { open: ouvrirModale } = useModal();
 
 async function chargerDonnees() {
   try {
-    const [groupesData, pelerinsData, utilisateursData, guidesData, hotelsData] = await Promise.all([
-      getGroupes(),
-      getPelerins(),
-      getUtilisateurs(),
-      getGuides(),
-      getHotels(),
+    [groupes.value, guides.value, hotels.value, pelerins.value, utilisateurs.value] = await Promise.all([
+      getGroupes(), getGuides(), getHotels(), getPelerins(), getUtilisateurs()
     ]);
-    groupes.value = groupesData;
-    pelerins.value = pelerinsData;
-    utilisateurs.value = utilisateursData;
-    guides.value = guidesData;
-    hotels.value = hotelsData;
-  } catch (e) {
-    toastErreur(e.message);
-  }
+  } catch (e) { error(e.message); }
 }
 onMounted(chargerDonnees);
 
@@ -132,8 +122,14 @@ async function confirmerSuppression(groupe) {
     toastErreur(e.message);
   }
 }
-</script>
 
+// Colonnes pour AppTable
+const colonnes = [
+  { label: 'Nom', key: 'nom' },
+  { label: 'Guide', render: (g) => utilisateurMap.value[guideMap.value[g.guideId]?.utilisateurId]?.nomComplet || '-' },
+  { label: 'Pèlerins', render: (g) => `${pelerins.value.filter(p => p.groupeId === g.id).length} pèlerins` },
+];
+</script>
 <template>
   <section>
     <PageHeader

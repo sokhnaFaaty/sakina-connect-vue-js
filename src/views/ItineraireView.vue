@@ -272,6 +272,12 @@ function ouvrirRejet(evenement) {
     },
   })
 }
+function ouvrirFormulaire(evenement = null) {
+  openModal(PlanningForm, { title: evenement ? 'Modifier' : 'Ajouter', props: { evenement, categories: categories.value, groupeId: groupeId.value, userId: auth.utilisateur.id, role: auth.role, onSucces: charger } });
+}
+async function supprimer(e) {
+  try { await deletePlanningEvent(e.id); success('Événement supprimé.'); charger(); } catch (e) { error(e.message); }
+}
 </script>
 
 <template>
@@ -406,6 +412,7 @@ function ouvrirRejet(evenement) {
         <div v-if="placeholderCarte" class="flex h-full items-center justify-center text-sm text-slate-400">Aucune position définie pour ce voyage.</div>
         <div v-else id="carteItineraire" class="h-full w-full"></div>
       </div>
+      <div class="h-[500px] rounded-2xl border overflow-hidden"><div ref="conteneurCarte" id="carteItineraire" class="h-full w-full"></div></div>
     </div>
   </section>
 </template>
