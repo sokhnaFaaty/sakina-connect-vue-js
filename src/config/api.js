@@ -3,7 +3,7 @@
 // Aucune URL de production n'est codée en dur ici pour des raisons de sécurité.
 // const API_URL_DEFAUT = "http://localhost:3000";
 
-export const API_BASE_URL = import.meta.env.VITE_API_URL || API_URL_DEFAUT;
+export const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 export const ENDPOINTS = {
   utilisateurs: `${API_BASE_URL}/utilisateurs`,
