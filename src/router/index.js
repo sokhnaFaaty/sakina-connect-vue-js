@@ -23,6 +23,7 @@ import MonGroupeView from '@/views/MonGroupeView.vue';
 import PoleUrgenceView from '@/views/PoleUrgenceView.vue';
 import MonPoleUrgenceView from '@/views/MonPoleUrgenceView.vue';
 import PoleUrgencePelerinView from '@/views/PoleUrgencePelerinView.vue';
+import NotFoundView from '@/views/NotFoundView.vue';
 
 const routes = [
   { path: '/login', name: 'login', component: LoginView },
@@ -46,6 +47,8 @@ const routes = [
   { path: '/pole-urgence', name: 'pole-urgence', component: PoleUrgenceView, meta: { requiresAuth: true, roles: ['ADMIN'] } },
   { path: '/mon-pole-urgence', name: 'mon-pole-urgence', component: MonPoleUrgenceView, meta: { requiresAuth: true, roles: ['GUIDE'] } },
   { path: '/pole-urgence-pelerin', name: 'pole-urgence-pelerin', component: PoleUrgencePelerinView, meta: { requiresAuth: true, roles: ['PELERIN'] } },
+  // Toute URL inconnue => page 404
+  { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFoundView },
 ];
 
 const router = createRouter({
