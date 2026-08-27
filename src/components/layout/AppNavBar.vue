@@ -1,179 +1,273 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/stores/auth.js';
-import { getNotifications, countUnseen, markSeen } from '@/services/notificationService.js';
-import { useToast } from '@/composables/useToast.js';
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth.js'
+import { useToast } from '@/composables/useToast.js'
+import { useDrawer } from '@/composables/useDrawer.js'
+import { getNotifications, countUnseen, markSeen } from '@/services/notificationService.js'
+import { getPelerinByUtilisateurId } from '@/services/pelerinService.js'
+import ProfilEditForm from '@/components/forms/ProfilEditForm.vue'
 
-const emit = defineEmits(['toggle-sidebar']);
+const ROLE_LABELS = {
+  ADMIN: 'Admin',
+  GUIDE: 'Guide',
+  PELERIN: 'Pèlerin',
+  PROCHE: 'Proche',
+}
 
-const router = useRouter();
-const auth = useAuthStore();
-const { success } = useToast();
+// Rôles disposant d'une page "Mon profil" complète (barre latérale).
+// Pour eux, le bouton d'édition du menu y renvoie ; les autres (Admin, Guide)
+// ouvrent un drawer d'édition légère.
+const PROFILE_PAGE_BY_ROLE = {
+  PELERIN: 'mon-profil',
+  PROCHE: 'mon-profil-proche',
+}
 
-// État du menu déroulant "Profil"
-const dropdownOuvert = ref(false);
-const dropdownRef = ref(null);
+const router = useRouter()
+const auth = useAuthStore()
+const { success } = useToast()
+const { open: ouvrirDrawer } = useDrawer()
 
-// État du panneau "Notifications"
-const notifOuvert = ref(false);
-const notifRef = ref(null);
-const notifications = ref([]);
-const badgeNb = ref(0);
+const notifications = ref([])
+const nonVues = ref(0)
+const notifOuvert = ref(false)
+const profilOuvert = ref(false)
+const passeport = ref('')
 
-const roleLabel = computed(() => auth.role);
-const userInitial = computed(() => auth.user?.nomComplet?.charAt(0) || '?');
+const notifBtnRef = ref(null)
+const profilBtnRef = ref(null)
+const notifPanelRef = ref(null)
+const profilPanelRef = ref(null)
 
-// Charger les notifications au montage
+const roleLabel = computed(() => ROLE_LABELS[auth.role] || auth.role || '')
+const initiale = computed(() => auth.user?.nomComplet?.charAt(0).toUpperCase() || '?')
+
+function formatDateNotif(d) {
+  if (!d) return ''
+  return String(d).slice(0, 16).replace('T', ' à ')
+}
+
 async function chargerNotifications() {
-  if (!auth.user || !auth.role) return;
   try {
-    const items = await getNotifications(auth.user, auth.role);
-    notifications.value = items;
-    badgeNb.value = countUnseen(items, auth.user.id);
+    const items = await getNotifications(auth.user, auth.role)
+    notifications.value = items
+    nonVues.value = countUnseen(items, auth.user.id)
   } catch {
-    notifications.value = [];
+    notifications.value = []
+    nonVues.value = 0
   }
 }
-onMounted(chargerNotifications);
 
-// Logique de fermeture au clic extérieur pour le menu et les notifs
-function fermerTout(event) {
-  if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
-    dropdownOuvert.value = false;
-  }
-  if (notifRef.value && !notifRef.value.contains(event.target)) {
-    notifOuvert.value = false;
-  }
-}
-onMounted(() => document.addEventListener('click', fermerTout));
-onUnmounted(() => document.removeEventListener('click', fermerTout));
-
-function toggleDropdown() { dropdownOuvert.value = !dropdownOuvert.value; }
-function toggleNotif() { 
+function toggleNotifs() {
+  profilOuvert.value = false // un seul panneau ouvert à la fois
   if (!notifOuvert.value) {
-    markSeen(auth.user.id);
-    badgeNb.value = 0;
+    markSeen(auth.user.id) // ouvrir la cloche = tout marquer comme lu
+    nonVues.value = 0
   }
-  notifOuvert.value = !notifOuvert.value; 
+  notifOuvert.value = !notifOuvert.value
 }
 
-async function logout() {
-  dropdownOuvert.value = false;
-  auth.logout();
-  await router.replace('/login');
-  success('Déconnexion réussie.');
+function toggleProfil() {
+  notifOuvert.value = false // un seul panneau ouvert à la fois
+  if (!profilOuvert.value && auth.role === 'PELERIN' && !passeport.value) {
+    // Le passeport n'existe que pour un pèlerin ; chargé à la volée sans retarder l'ouverture
+    getPelerinByUtilisateurId(auth.user.id)
+      .then((p) => { passeport.value = p?.numeroPasseport || '' })
+      .catch(() => {})
+  }
+  profilOuvert.value = !profilOuvert.value
 }
+
+function aller(page) {
+  fermerPanels()
+  if (page) router.push('/' + page)
+}
+
+function modifierProfil() {
+  fermerPanels()
+  const dest = PROFILE_PAGE_BY_ROLE[auth.role]
+  if (dest) {
+    router.push('/' + dest)
+    return
+  }
+  ouvrirDrawer(ProfilEditForm, {
+    title: 'Modifier mon profil',
+    icon: 'fa-user-pen',
+    props: { user: { ...auth.user } },
+  })
+}
+
+function deconnexion() {
+  fermerPanels()
+  auth.logout()
+  router.replace('/login')
+  success('Déconnexion réussie.')
+}
+
+function fermerPanels() {
+  notifOuvert.value = false
+  profilOuvert.value = false
+}
+
+function clicDehors(e) {
+  const cible = e.target
+  if (
+    notifOuvert.value &&
+    notifPanelRef.value && !notifPanelRef.value.contains(cible) &&
+    notifBtnRef.value && !notifBtnRef.value.contains(cible)
+  ) {
+    notifOuvert.value = false
+  }
+  if (
+    profilOuvert.value &&
+    profilPanelRef.value && !profilPanelRef.value.contains(cible) &&
+    profilBtnRef.value && !profilBtnRef.value.contains(cible)
+  ) {
+    profilOuvert.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', clicDehors)
+  chargerNotifications()
+})
+
+onUnmounted(() => document.removeEventListener('click', clicDehors))
 </script>
 
 <template>
   <header class="flex h-16 shrink-0 items-center justify-between bg-[#333D2A] px-4">
-    
-    <!-- Zone gauche : Bouton burger + Logo -->
     <div class="flex items-center gap-3">
-      <button 
-        id="sidebarToggle" 
-        class="flex h-10 w-10 items-center justify-center rounded-xl text-white transition hover:bg-white/10 lg:hidden" 
-        @click="$emit('toggle-sidebar')"
-        aria-label="Ouvrir le menu"
-      >
-        <i class="fa-solid fa-bars"></i>
-      </button>
       <i class="fa-solid fa-moon text-[#BC7B3B]"></i>
       <span class="font-display text-base font-black text-white">Sakina Connect</span>
     </div>
 
-    <!-- Zone droite : Notifications + Menu profil -->
     <div class="flex items-center gap-2 sm:gap-4">
-      
       <!-- Cloche de notifications -->
-      <button 
-        ref="notifRef"
-        id="notifBtn" 
-        @click="toggleNotif"
-        class="relative flex h-10 w-10 items-center justify-center rounded-xl text-white transition hover:bg-white/10" 
+      <button
+        ref="notifBtnRef"
+        @click="toggleNotifs"
+        class="relative flex h-10 w-10 items-center justify-center rounded-xl text-white transition hover:bg-white/10"
         aria-label="Notifications"
       >
         <i class="fa-solid fa-bell"></i>
-        <span 
-          v-if="badgeNb > 0" 
+        <span
+          v-if="nonVues > 0"
           class="absolute right-1 top-1 min-w-[18px] rounded-full bg-[#B40909] px-1 text-center text-[10px] font-black leading-[18px] text-white"
-        >
-          {{ badgeNb > 9 ? '9+' : badgeNb }}
-        </span>
+        >{{ nonVues > 9 ? '9+' : nonVues }}</span>
       </button>
 
-      <!-- Panneau de notifications (déroulant) -->
-      <Teleport to="body">
-        <div 
-          v-if="notifOuvert"
-          ref="notifRef"
-          class="fixed right-3 top-16 z-[90] w-80 max-w-[92vw] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
-        >
-          <div class="flex items-center justify-between bg-[#333D2A] px-4 py-3 text-white">
-            <span class="font-black">Notifications</span>
-            <span class="text-xs text-slate-300">{{ notifications.length }}</span>
-          </div>
-          <div class="max-h-96 overflow-y-auto">
-            <button 
-              v-for="n in notifications" 
-              :key="n.id"
-              @click="router.push(n.page); notifOuvert = false"
-              class="flex w-full items-start gap-3 border-b border-slate-50 px-4 py-3 text-left transition hover:bg-slate-50 last:border-0"
-            >
-              <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg" :class="n.type === 'sos' ? 'bg-rose-100 text-rose-600' : 'bg-[#F2F2DE] text-[#333D2A]'">
-                <i class="fa-solid" :class="n.icon"></i>
-              </span>
-              <span class="min-w-0 flex-1">
-                <span class="flex items-center gap-2">
-                  <span class="truncate font-bold text-slate-800">{{ n.titre }}</span>
-                  <span v-if="n.urgent" class="shrink-0 rounded-full bg-rose-100 px-1.5 text-[9px] font-black text-rose-700">URGENT</span>
-                </span>
-                <span class="mt-0.5 block truncate text-xs text-slate-500">{{ n.sous }}</span>
-              </span>
-            </button>
-            <p v-if="notifications.length === 0" class="p-6 text-center text-sm text-slate-400">Aucune notification.</p>
-          </div>
+      <!-- Bouton utilisateur -->
+      <button
+        ref="profilBtnRef"
+        @click="toggleProfil"
+        class="flex items-center gap-2 rounded-xl px-2 py-1 transition hover:bg-white/10"
+        aria-label="Mon profil"
+      >
+        <div class="hidden text-right sm:block">
+          <p class="text-sm font-bold text-white">{{ auth.user?.nomComplet }}</p>
+          <span class="text-xs text-slate-300">{{ roleLabel }}</span>
         </div>
-      </Teleport>
+        <div class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-[#BC7B3B] text-sm font-bold text-white">
+          <img v-if="auth.user?.photo" :src="auth.user.photo" alt="" class="h-full w-full object-cover" />
+          <template v-else>{{ initiale }}</template>
+        </div>
+        <i class="fa-solid fa-chevron-down text-xs text-slate-300"></i>
+      </button>
+    </div>
 
-      <!-- Menu Utilisateur (Avatar) -->
-      <div ref="dropdownRef" class="relative">
-        <button 
-          type="button" 
-          @click="toggleDropdown" 
-          class="flex items-center gap-2 rounded-xl px-2 py-1 transition hover:bg-white/10" 
-          aria-haspopup="menu"
-        >
-          <div class="hidden text-right sm:block">
-            <p class="text-sm font-bold text-white">{{ auth.user?.nomComplet || '' }}</p>
-            <span class="text-xs text-slate-300">{{ roleLabel }}</span>
-          </div>
-          <div class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-[#BC7B3B] text-sm font-bold text-white">
-            <img v-if="auth.user?.photo" :src="auth.user.photo" alt="" class="h-full w-full object-cover" />
-            <span v-else>{{ userInitial }}</span>
-          </div>
-          <i class="fa-solid fa-chevron-down text-xs text-slate-300 transition-transform" :class="{ 'rotate-180': dropdownOuvert }"></i>
-        </button>
-
-        <!-- Panneau Menu déroulant -->
-        <div 
-          v-if="dropdownOuvert"
-          class="absolute right-0 z-50 mt-2 w-56 rounded-lg border bg-white py-1 shadow-lg"
-          role="menu"
-        >
-          <div class="border-b px-4 py-3">
-            <p class="text-sm font-semibold text-slate-800">{{ auth.user?.nomComplet || 'Utilisateur' }}</p>
-            <p class="truncate text-xs text-slate-500">{{ auth.user?.email || '-' }}</p>
-          </div>
-          <button 
-            @click="logout" 
-            class="flex w-full items-center gap-3 px-4 py-2 text-sm text-rose-600 hover:bg-rose-50"
+    <!-- Panneau des notifications (fidèle au Vanilla : ancré sous la cloche) -->
+    <div
+      v-if="notifOuvert"
+      ref="notifPanelRef"
+      class="fixed right-3 top-16 z-[90] w-80 max-w-[92vw] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
+    >
+      <div class="flex items-center justify-between bg-[#333D2A] px-4 py-3 text-white">
+        <span class="font-black">Notifications</span>
+        <span class="text-xs text-slate-300">{{ notifications.length }}</span>
+      </div>
+      <div class="max-h-96 overflow-y-auto">
+        <template v-if="notifications.length">
+          <button
+            v-for="item in notifications"
+            :key="item.id"
+            @click="aller(item.page)"
+            class="flex w-full items-start gap-3 border-b border-slate-50 px-4 py-3 text-left transition last:border-0 hover:bg-slate-50"
           >
-            <i class="fa-solid fa-right-from-bracket w-4 text-center"></i>
-            Déconnexion
+            <span
+              class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
+              :class="item.type === 'sos' ? 'bg-rose-100 text-rose-600' : 'bg-[#F2F2DE] text-[#333D2A]'"
+            >
+              <i class="fa-solid" :class="item.icon"></i>
+            </span>
+            <span class="min-w-0 flex-1">
+              <span class="flex items-center gap-2">
+                <span class="truncate font-bold text-slate-800">{{ item.titre }}</span>
+                <span v-if="item.urgent" class="shrink-0 rounded-full bg-rose-100 px-1.5 text-[9px] font-black text-rose-700">URGENT</span>
+              </span>
+              <span class="mt-0.5 block truncate text-xs text-slate-500">{{ item.sous }}</span>
+              <span class="mt-0.5 block text-[10px] text-slate-400">{{ formatDateNotif(item.date) }}</span>
+            </span>
           </button>
+        </template>
+        <p v-else class="p-6 text-center text-sm text-slate-400">Aucune notification pour le moment.</p>
+      </div>
+    </div>
+
+    <!-- Menu déroulant "Mon profil" (Avatar, Nom, Rôle, Email, Téléphone, actions) -->
+    <div
+      v-if="profilOuvert"
+      ref="profilPanelRef"
+      class="fixed right-3 top-16 z-[90] w-72 max-w-[92vw] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
+    >
+      <div class="flex flex-col items-center gap-2 bg-[#333D2A] px-4 py-5 text-center text-white">
+        <div class="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-[#BC7B3B] text-xl font-black">
+          <img v-if="auth.user?.photo" :src="auth.user.photo" alt="" class="h-full w-full object-cover" />
+          <template v-else>{{ initiale }}</template>
         </div>
+        <div>
+          <h3 class="text-base font-black">{{ auth.user?.nomComplet || '-' }}</h3>
+          <span class="mt-1 inline-block rounded-full bg-white/15 px-3 py-0.5 text-xs font-bold">{{ roleLabel }}</span>
+        </div>
+      </div>
+
+      <div class="grid gap-2 p-4">
+        <div class="flex items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-3">
+          <i class="fa-solid fa-envelope w-5 text-center text-[#333D2A]"></i>
+          <div>
+            <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Email</p>
+            <p class="truncate text-sm font-bold text-slate-800">{{ auth.user?.email || '-' }}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-3">
+          <i class="fa-solid fa-phone w-5 text-center text-[#333D2A]"></i>
+          <div>
+            <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Téléphone</p>
+            <p class="truncate text-sm font-bold text-slate-800">{{ auth.user?.telephone || '-' }}</p>
+          </div>
+        </div>
+        <div v-if="passeport" class="flex items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-3">
+          <i class="fa-solid fa-passport w-5 text-center text-[#333D2A]"></i>
+          <div>
+            <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Passeport</p>
+            <p class="truncate text-sm font-bold text-slate-800">{{ passeport }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid gap-2 border-t border-slate-100 p-3">
+        <button
+          @click="modifierProfil"
+          class="flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-extrabold text-slate-700 transition hover:bg-slate-50"
+        >
+          <i class="fa-solid fa-pen"></i> Modifier mon profil
+        </button>
+        <button
+          @click="deconnexion"
+          class="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#FA0404] px-4 py-2.5 text-sm font-extrabold text-white transition hover:opacity-90"
+        >
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Déconnexion
+        </button>
       </div>
     </div>
   </header>

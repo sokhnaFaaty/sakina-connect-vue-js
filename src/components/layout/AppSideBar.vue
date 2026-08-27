@@ -51,28 +51,22 @@ function naviguer(page) {
 </script>
 
 <template>
-  <aside class="flex h-full w-64 shrink-0 flex-col border-r border-slate-200 bg-white">
+  <aside class="hidden h-full w-64 shrink-0 flex-col border-r border-slate-200 bg-white lg:flex">
     <p class="px-5 pb-2 pt-6 text-xs font-extrabold uppercase tracking-widest text-slate-400">Vues système :</p>
-
-    <nav class="grid flex-1 content-start gap-1 overflow-y-auto px-4 pb-4" aria-label="Navigation principale">
+    <nav class="grid flex-1 content-start gap-1 overflow-y-auto px-4 pb-4">
       <button 
         v-for="link in links" 
         :key="link.page"
         @click="naviguer(link.page)"
         class="flex items-center gap-3 rounded-xl border-l-4 border-transparent px-4 py-3 text-left text-sm font-semibold text-slate-600 transition hover:bg-[#F2F2DE]/60"
-        :class="route.path.startsWith('/' + link.page) ? 'border-blue-500 bg-[#F2F2DE] text-[#333D2A]' : ''"
+        :class="route.path.startsWith('/' + link.page) ? 'border-[#333D2A] bg-[#F2F2DE] text-[#333D2A]' : ''"
       >
         <i class="fa-solid" :class="link.icon + ' w-5 text-center'"></i>
         <span>{{ link.label }}</span>
       </button>
     </nav>
-
-    <!-- Bouton SOS (non disponible pour PROCHE), collé en bas -->
     <div v-if="role !== 'PROCHE'" class="mt-auto grid w-full gap-3 px-5 pb-5">
-      <button 
-        @click="naviguer(POLE_URGENCE_BY_ROLE[role])"
-        class="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#B40909] px-4 py-2.5 text-sm font-bold text-white transition hover:opacity-90"
-      >
+      <button @click="naviguer(POLE_URGENCE_BY_ROLE[role])" class="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#B40909] px-4 py-2.5 text-sm font-bold text-white transition hover:opacity-90">
         <i class="fa-solid fa-triangle-exclamation"></i>
         <span>Urgence SOS</span>
       </button>

@@ -1,134 +1,285 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, watch, onMounted, defineComponent, h } from 'vue';
 import { useAuthStore } from '@/stores/auth.js';
+import { useToast } from '@/composables/index.js';
+import { useModal } from '@/composables/useModal.js';
 import { getGuideByUtilisateurId, getGroupeDuGuide } from '@/services/guideService.js';
 import { getPelerinsDuGroupe } from '@/services/pelerinService.js';
 import { getUtilisateurs } from '@/services/utilisateurService.js';
 import { getPlanningDuGroupe } from '@/services/planningService.js';
-import { getSos } from '@/services/sosService.js';
-import { useModal } from '@/composables/useModal.js';
+import { getHotels } from '@/services/hotelService.js';
+import { getCategories } from '@/services/categorieService.js';
+import Pagination from '@/components/ui/Pagination.vue';
+import PelerinDetailModal from '@/components/forms/PelerinDetailModal.vue';
+
+const PELERINS_PAR_PAGE = 8;
+const PLANNING_PAR_PAGE = 2;
 
 const auth = useAuthStore();
+const { error: toastErreur } = useToast();
+const { open: ouvrirModale } = useModal();
+
+const chargement = ref(true);
+const guide = ref(null);
+const groupe = ref(null);
 const pelerins = ref([]);
 const utilisateurs = ref([]);
 const planning = ref([]);
-const sosActifs = ref(0);
-const search = ref('');
-const groupeNom = ref('');
+const hotels = ref([]);
+const categorieMap = ref({});
 
-const { ouvrir: ouvrirModal } = useModal();
+const utilisateurMap = computed(() => Object.fromEntries(utilisateurs.value.map((u) => [u.id, u])));
+const nbApprouves = computed(() => pelerins.value.filter((p) => p.statutVisa === 'APPROUVE').length);
+const pourcentageApprouves = computed(() => (pelerins.value.length ? Math.round((nbApprouves.value / pelerins.value.length) * 100) : 0));
 
-const utilisateurMap = computed(() => 
-  Object.fromEntries(utilisateurs.value.map(u => [u.id, u]))
-);
+const termeRecherche = ref('');
+const pagePelerins = ref(1);
 
 const pelerinsFiltres = computed(() => {
-  if (!search.value) return pelerins.value;
-  const q = search.value.toLowerCase();
-  return pelerins.value.filter(p => 
-    (utilisateurMap.value[p.utilisateurId]?.nomComplet || '').toLowerCase().includes(q)
-  );
+  const t = termeRecherche.value.trim().toLowerCase();
+  return pelerins.value.filter((p) => {
+    const nom = String(utilisateurMap.value[p.utilisateurId]?.nomComplet || '').toLowerCase();
+    const passeport = String(p.numeroPasseport || '').toLowerCase();
+    return !t || nom.includes(t) || passeport.includes(t);
+  });
+});
+const pelerinsTotalPages = computed(() => Math.max(1, Math.ceil(pelerinsFiltres.value.length / PELERINS_PAR_PAGE)));
+const pelerinsPagines = computed(() => {
+  const debut = (pagePelerins.value - 1) * PELERINS_PAR_PAGE;
+  return pelerinsFiltres.value.slice(debut, debut + PELERINS_PAR_PAGE);
+});
+watch([pelerinsTotalPages, termeRecherche], () => {
+  if (pagePelerins.value > pelerinsTotalPages.value) pagePelerins.value = pelerinsTotalPages.value;
 });
 
+const pagePlanning = ref(1);
+const planningTotalPages = computed(() => Math.max(1, Math.ceil(planning.value.length / PLANNING_PAR_PAGE)));
+const planningPagines = computed(() => {
+  const debut = (pagePlanning.value - 1) * PLANNING_PAR_PAGE;
+  return planning.value.slice(debut, debut + PLANNING_PAR_PAGE);
+});
+watch(planningTotalPages, (t) => {
+  if (pagePlanning.value > t) pagePlanning.value = t;
+});
+
+function numeroJour(evenement) {
+  const joursUniques = [...new Set(planning.value.map((e) => e.date))].sort();
+  return joursUniques.indexOf(evenement.date) + 1;
+}
+
 async function charger() {
-  const guide = await getGuideByUtilisateurId(auth.utilisateur.id);
-  const groupe = await getGroupeDuGuide(guide.id);
-  if (groupe) {
-    groupeNom.value = groupe.nom;
-    const [pels, users, plans, allSos] = await Promise.all([
-      getPelerinsDuGroupe(groupe.id),
+  chargement.value = true;
+  try {
+    guide.value = await getGuideByUtilisateurId(auth.user?.id);
+    if (!guide.value) return;
+    groupe.value = await getGroupeDuGuide(guide.value.id);
+    if (!groupe.value) return;
+    const [pels, users, planningData, hotelsData, categories] = await Promise.all([
+      getPelerinsDuGroupe(groupe.value.id),
       getUtilisateurs(),
-      getPlanningDuGroupe(groupe.id),
-      getSos(),
+      getPlanningDuGroupe(groupe.value.id),
+      getHotels(),
+      getCategories(),
     ]);
     pelerins.value = pels;
     utilisateurs.value = users;
-    planning.value = plans;
-    const idsPelerins = new Set(pels.map(p => p.id));
-    sosActifs.value = allSos.filter(s => s.statut === 'EN_ATTENTE' && idsPelerins.has(s.pelerinId)).length;
+    planning.value = planningData;
+    hotels.value = hotelsData;
+    categorieMap.value = Object.fromEntries(categories.map((c) => [c.id, c.libelle]));
+  } catch (e) {
+    toastErreur(e.message);
+  } finally {
+    chargement.value = false;
   }
 }
+onMounted(charger);
 
-function ouvrirDetailEvenement(evenement) {
-  ouvrirModal(null, {
-    titre: evenement.titre,
-    body: `<div class="grid gap-3 text-sm">
-      <p><b>Date :</b> ${evenement.date} à ${evenement.heure}</p>
-      <p><b>Lieu :</b> ${evenement.lieu}</p>
-      <p>${evenement.description}</p>
-    </div>`
+function surRecherche() {
+  pagePelerins.value = 1;
+}
+
+function ouvrirFiche(pelerin) {
+  ouvrirModale(PelerinDetailModal, {
+    title: '',
+    props: {
+      pelerin,
+      utilisateurMap: utilisateurMap.value,
+      groupe: groupe.value,
+      hotels: hotels.value,
+      guides: guide.value ? [guide.value] : [],
+    },
   });
 }
 
-onMounted(charger);
+const PlanningDetailModal = defineComponent({
+  props: {
+    evenement: { type: Object, required: true },
+  },
+  emits: ['close'],
+  setup(modalProps, { emit }) {
+    return () =>
+      h('div', [
+        h('div', { class: 'grid gap-3 text-sm' }, [
+          h('div', { class: 'flex justify-between' }, [
+            h('span', { class: 'text-slate-500' }, 'Date :'),
+            h('span', { class: 'font-semibold' }, `${modalProps.evenement.date} à ${modalProps.evenement.heure}`),
+          ]),
+          h('div', { class: 'flex justify-between' }, [
+            h('span', { class: 'text-slate-500' }, 'Lieu :'),
+            h('span', { class: 'font-semibold' }, modalProps.evenement.lieu),
+          ]),
+          h('p', { class: 'mt-2 leading-6 text-slate-700' }, modalProps.evenement.description),
+        ]),
+        h(
+          'button',
+          {
+            type: 'button',
+            class: 'mt-5 w-full rounded-2xl bg-[#333D2A] px-4 py-3 text-sm font-extrabold text-white transition hover:opacity-90',
+            onClick: () => emit('close'),
+          },
+          'Fermer'
+        ),
+      ]);
+  },
+});
+
+function ouvrirPlanningDetail(evenement) {
+  ouvrirModale(PlanningDetailModal, {
+    title: evenement.titre,
+    props: { evenement },
+  });
+}
 </script>
 
 <template>
-  <section>
-    <div class="mb-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h1 class="text-2xl font-black text-slate-950">Mon groupe : {{ groupeNom }}</h1>
-      <p class="text-sm text-slate-500">Gérez la logistique et veillez sur la sécurité des pèlerins</p>
+  <section v-if="!chargement && !guide" class="rounded-[2rem] border border-amber-200 bg-amber-50 p-8 text-center">
+    <p class="text-sm font-semibold text-amber-700">Aucun profil guide associé à ce compte.</p>
+  </section>
+
+  <section v-else-if="!chargement && !groupe" class="rounded-[2rem] border border-slate-200 bg-white p-8 text-center">
+    <p class="text-sm font-semibold text-slate-500">Aucun groupe ne t'a encore été assigné.</p>
+  </section>
+
+  <section v-else>
+    <div class="mb-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-7">
+      <span class="mb-3 inline-block rounded-full bg-[#333D2A]/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#333D2A]">Espace Guide Staff</span>
+      <h1 class="font-display text-2xl font-black text-slate-950 sm:text-3xl">Mon groupe : {{ groupe?.nom }}</h1>
+      <p class="mt-1 text-sm text-slate-500">Gérez la logistique, suivez l'itinéraire et veillez sur la sécurité des pèlerins</p>
     </div>
 
-    <!-- Stats -->
     <div class="mb-6 grid gap-4 sm:grid-cols-4">
       <div class="rounded-2xl border border-slate-200 bg-white p-5">
-        <p class="text-xs font-extrabold uppercase text-slate-400">Effectif</p>
-        <p class="text-2xl font-black text-slate-950">{{ pelerins.length }}</p>
+        <div class="mb-2 flex h-9 w-9 items-center justify-center rounded-xl bg-[#F2F2DE] text-[#333D2A]"><i class="fa-solid fa-users"></i></div>
+        <p class="text-xs font-extrabold uppercase tracking-widest text-slate-400">Effectif pèlerins</p>
+        <p class="mt-1 text-2xl font-black text-slate-950">{{ pelerins.length }}</p>
       </div>
       <div class="rounded-2xl border border-slate-200 bg-white p-5">
-        <p class="text-xs font-extrabold uppercase text-slate-400">SOS actifs</p>
-        <p class="text-2xl font-black text-rose-700">{{ sosActifs }}</p>
+        <div class="flex items-center justify-between">
+          <p class="text-xs font-extrabold uppercase tracking-widest text-slate-400">Visas approuvés</p>
+          <span class="text-xs font-bold text-slate-500">{{ pourcentageApprouves }}%</span>
+        </div>
+        <p class="mt-1 text-2xl font-black text-slate-950">{{ nbApprouves }}/{{ pelerins.length }}</p>
+        <div class="mt-2 h-1.5 w-full rounded-full bg-slate-100">
+          <div class="h-1.5 rounded-full bg-[#333D2A]" :style="{ width: pourcentageApprouves + '%' }"></div>
+        </div>
+      </div>
+      <div class="rounded-2xl border border-rose-200 bg-rose-50 p-5">
+        <div class="mb-2 flex h-9 w-9 items-center justify-center rounded-xl bg-rose-100 text-rose-600"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <p class="text-xs font-extrabold uppercase tracking-widest text-rose-600">SOS actifs</p>
+        <p class="mt-1 text-2xl font-black text-rose-700">0</p>
+      </div>
+      <div class="rounded-2xl border border-slate-200 bg-white p-5">
+        <div class="mb-2 flex h-9 w-9 items-center justify-center rounded-xl bg-amber-100 text-amber-600"><i class="fa-solid fa-clock"></i></div>
+        <p class="text-xs font-extrabold uppercase tracking-widest text-slate-400">Annonces publiées</p>
+        <p class="mt-1 text-2xl font-black text-slate-950">0</p>
       </div>
     </div>
 
     <div class="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-      <!-- Liste des Pèlerins -->
-      <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <article class="min-w-0 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
         <h2 class="mb-4 text-lg font-black text-slate-950">Liste de mon Groupe ({{ pelerins.length }})</h2>
         <div class="relative mb-4">
-          <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-400"></i>
-          <input v-model="search" type="search" placeholder="Rechercher un pèlerin..." class="w-full rounded-2xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm" />
+          <i class="fa-solid fa-magnifying-glass pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-400"></i>
+          <input
+            v-model="termeRecherche"
+            type="search"
+            placeholder="Rechercher un pèlerin (nom, passeport)…"
+            class="w-full rounded-2xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm"
+            @input="surRecherche"
+          />
         </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-sm">
-            <thead class="bg-slate-50 text-xs font-bold uppercase text-slate-500">
-              <tr>
-                <th class="px-4 py-3">Image</th>
-                <th class="px-4 py-3">Nom Complet</th>
-                <th class="px-4 py-3">Passeport</th>
-                <th class="px-4 py-3">Visa</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-100">
-              <tr v-for="p in pelerinsFiltres" :key="p.id" class="hover:bg-slate-50">
-                <td class="px-4 py-3">
-                  <img v-if="utilisateurMap[p.utilisateurId]?.photo" :src="utilisateurMap[p.utilisateurId].photo" class="h-10 w-10 rounded-full object-cover" />
-                  <div v-else class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-400"><i class="fa-solid fa-user"></i></div>
-                </td>
-                <td class="px-4 py-3 font-bold">{{ utilisateurMap[p.utilisateurId]?.nomComplet || '-' }}</td>
-                <td class="px-4 py-3 text-slate-700">{{ p.numeroPasseport }}</td>
-                <td class="px-4 py-3">
-                  <span v-if="p.statutVisa === 'APPROUVE'" class="inline-block rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-700">Approuvé</span>
-                  <span v-else class="inline-block rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-700">{{ p.statutVisa }}</span>
-                </td>
-              </tr>
-              <tr v-if="pelerins.length === 0"><td colspan="4" class="px-4 py-8 text-center text-slate-400">Aucun pèlerin.</td></tr>
-            </tbody>
-          </table>
+        <div v-if="pelerinsFiltres.length === 0" class="rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-5 py-10 text-center text-sm font-semibold text-slate-500">
+          Aucun pèlerin ne correspond à votre recherche.
         </div>
-      </div>
+        <div v-else class="overflow-hidden rounded-3xl border border-slate-200 bg-white">
+          <div class="overflow-x-auto">
+            <table class="min-w-full border-collapse">
+              <thead class="bg-slate-50">
+                <tr>
+                  <th class="whitespace-nowrap px-5 py-4 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500">Image</th>
+                  <th class="whitespace-nowrap px-5 py-4 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500">Nom Complet</th>
+                  <th class="whitespace-nowrap px-5 py-4 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500">Numéro Visa</th>
+                  <th class="whitespace-nowrap px-5 py-4 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500">Statut Visa</th>
+                  <th class="whitespace-nowrap px-5 py-4 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500">Fiche</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr v-for="p in pelerinsPagines" :key="p.id" class="transition hover:bg-slate-50">
+                  <td class="border-t border-slate-100 px-5 py-4 align-middle text-sm text-slate-700">
+                    <img v-if="utilisateurMap[p.utilisateurId]?.photo" :src="utilisateurMap[p.utilisateurId].photo" class="h-10 w-10 rounded-full object-cover" />
+                    <div v-else class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-400"><i class="fa-solid fa-user"></i></div>
+                  </td>
+                  <td class="border-t border-slate-100 px-5 py-4 align-middle text-sm text-slate-700">
+                    <strong class="font-bold text-slate-950">{{ utilisateurMap[p.utilisateurId]?.nomComplet || '—' }}</strong>
+                  </td>
+                  <td class="border-t border-slate-100 px-5 py-4 align-middle text-sm text-slate-700">{{ p.numeroPasseport }}</td>
+                  <td class="border-t border-slate-100 px-5 py-4 align-middle text-sm text-slate-700">
+                    <span v-if="p.statutVisa === 'APPROUVE'" class="inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-700">Approuvé</span>
+                    <span v-else class="inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-700">{{ p.statutVisa }}</span>
+                  </td>
+                  <td class="border-t border-slate-100 px-5 py-4 align-middle text-sm text-slate-700">
+                    <button
+                      type="button"
+                      title="Voir la fiche"
+                      class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-extrabold text-[#333D2A] hover:bg-slate-50"
+                      @click="ouvrirFiche(p)"
+                    >
+                      <i class="fa-solid fa-eye"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <Pagination v-model:page="pagePelerins" :total-pages="pelerinsTotalPages" />
+      </article>
 
-      <!-- Planning -->
-      <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 class="mb-4 text-lg font-black text-slate-950">Planning de voyages</h2>
-        <div v-for="(e, index) in planning" :key="e.id" @click="ouvrirDetailEvenement(e)" class="cursor-pointer mb-3 rounded-xl border border-slate-100 bg-[#F2F2DE]/50 p-4 hover:bg-[#F2F2DE]">
-          <span class="inline-block rounded-full bg-[#333D2A] px-2.5 py-0.5 text-[10px] font-black text-white">Jour {{ index + 1 }}</span>
-          <h3 class="mt-1 font-black text-slate-900">{{ e.titre }}</h3>
-          <p class="mt-1 line-clamp-2 text-xs text-slate-500">{{ e.description }}</p>
+      <article class="min-w-0 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 class="mb-4 flex items-center gap-2 text-lg font-black text-slate-950">
+          <i class="fa-regular fa-clock text-[#BC7B3B]"></i> Planning de voyages
+        </h2>
+        <div class="grid gap-4">
+          <p v-if="planning.length === 0" class="text-sm text-slate-400">Aucun événement planifié pour ce groupe.</p>
+          <template v-else>
+            <div
+              v-for="e in planningPagines"
+              :key="e.id"
+              class="cursor-pointer rounded-2xl border border-slate-200 bg-white p-4 transition hover:bg-slate-50"
+              @click="ouvrirPlanningDetail(e)"
+            >
+              <div class="mb-1 flex items-center justify-between gap-2">
+                <span class="rounded-full bg-[#333D2A] px-2.5 py-0.5 text-[10px] font-black uppercase text-white">Jour {{ numeroJour(e) }}</span>
+                <span v-if="categorieMap[e.categorieId]" class="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-700">{{ categorieMap[e.categorieId] }}</span>
+              </div>
+              <h3 class="font-black text-slate-900">{{ e.titre }}</h3>
+              <p class="mt-1 line-clamp-2 text-sm text-slate-500">{{ e.description || '' }}</p>
+              <p class="mt-2 flex items-center gap-1 text-xs text-slate-500"><i class="fa-solid fa-location-dot"></i> {{ e.lieu || '-' }} · {{ e.heure || '' }}</p>
+            </div>
+          </template>
         </div>
-        <p v-if="planning.length === 0" class="text-sm text-slate-400">Aucun événement.</p>
-      </div>
+        <Pagination v-model:page="pagePlanning" :total-pages="planningTotalPages" />
+      </article>
     </div>
   </section>
 </template>

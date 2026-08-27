@@ -50,6 +50,27 @@ export async function declencherSos({ pelerinId, guideId, commentaire }) {
   });
 }
 
+// Création directe d'une alerte SOS — position (latitude/longitude) déjà captée côté vue
+export async function createSos({ pelerinId, guideId, latitude, longitude, dateHeure, commentaire, statut }) {
+  return apiRequest(
+    ENDPOINTS.sos,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        id: createId("sos"),
+        pelerinId,
+        guideId,
+        latitude,
+        longitude,
+        dateHeure,
+        commentaire: commentaire || "",
+        statut: statut || "EN_ATTENTE",
+      }),
+    },
+    "Impossible d'envoyer l'alerte SOS."
+  );
+}
+
 // Marque un SOS comme résolu — Guide ou Admin uniquement (jamais le pèlerin)
 export async function marquerSosResolu(id) {
   return apiRequest(

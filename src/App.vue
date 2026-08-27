@@ -8,8 +8,9 @@ import ConfirmDialog from '@/components/ui/ConfirmDialog.vue'
 import AppModal from '@/components/ui/AppModal.vue'
 import AppDrawer from '@/components/ui/AppDrawer.vue'
 
-import AppSidebar from '@/components/layout/AppSideBar.vue'
-import AppNavbar from '@/components/layout/AppNavBar.vue'
+import AppSidebar from '@/components/layout/AppSidebar.vue'
+import AppNavbar from '@/components/layout/AppNavbar.vue'
+import AppBottomBar from '@/components/layout/AppBottomBar.vue'
 
 const auth = useAuthStore()
 const isAuthenticated = computed(() => auth.isAuthenticated)
@@ -17,23 +18,31 @@ const isAuthenticated = computed(() => auth.isAuthenticated)
 
 <template>
   <div class="min-h-screen bg-[#F2F2DE]">
-    <!-- Layout Connecté : Sidebar à gauche, Navbar + Main à droite -->
-    <div v-if="isAuthenticated" class="flex h-screen w-full overflow-hidden">
-      <AppSidebar />
+    <!-- Layout Connecté -->
+    <div v-if="isAuthenticated" class="flex h-screen flex-col">
+      
+      <!-- Navbar en HAUT (pleine largeur) -->
+      <AppNavbar />
 
-      <!-- Conteneur vertical : Navbar en haut, Main en dessous -->
-      <div class="flex flex-1 flex-col overflow-hidden">
-        <AppNavbar />
-        <main class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
+      <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar : gère elle-même sa visibilité (cachée sur mobile uniquement) -->
+        <AppSidebar />
+
+        <!-- Contenu principal (à droite de la sidebar) -->
+        <main class="flex-1 overflow-y-auto p-4 pb-24 lg:p-8">
           <RouterView />
         </main>
       </div>
+
+      <!-- BottomBar visible sur mobile (< lg), cachée sur desktop -->
+      <AppBottomBar class="lg:hidden" />
     </div>
 
-    <!-- Page publique (Login/Register) : plein écran sans Sidebar/Navbar -->
-    <RouterView v-else />
+    <!-- Page publique (Login) -->
+    <div v-else class="min-h-screen">
+      <RouterView />
+    </div>
 
-    <!-- Composants globaux -->
     <ToastContainer />
     <ConfirmDialog />
     <AppModal />

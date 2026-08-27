@@ -10,7 +10,7 @@ const props = defineProps({
 });
 const emit = defineEmits(['success', 'close']);
 
-const { succes, erreur } = useToast();
+const { success, error } = useToast();
 const chargement = ref(false);
 
 const nom = ref('');
@@ -20,7 +20,7 @@ const nombreEtoiles = ref('5');
 
 async function soumettre() {
   if (!nom.value) {
-    erreur("Le nom de l'hôtel est obligatoire.");
+    error("Le nom de l'hôtel est obligatoire.");
     return;
   }
 
@@ -33,11 +33,11 @@ async function soumettre() {
       telephone: telephone.value,
       nombreEtoiles: Number(nombreEtoiles.value),
     });
-    succes("Hôtel ajouté avec succès.");
+    success("Hôtel ajouté avec succès.");
     emit('success', nouvelHotel); // Envoie le nouvel hôtel au parent pour qu'il le rajoute à sa liste
     emit('close');
   } catch (e) {
-    erreur(e.message);
+    error(e.message);
   } finally {
     chargement.value = false;
   }
