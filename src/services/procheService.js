@@ -1,8 +1,8 @@
 import { ENDPOINTS } from "../config/api.js";
 import { apiRequest } from "./apiClient.js";
-import { createId } from "../utils/id.js";
-import { required } from "../utils/validators.js";
-import { generateTempPassword } from "../utils/password.js";
+import { createId } from "../utils/id.js"; 
+import { required } from "../utils/validators.js"; 
+import { generateTempPassword } from "../utils/password.js"; 
 
 function normalizeProche(data) {
   return {
@@ -19,13 +19,11 @@ export async function getProches() {
   return proches.filter((p) => p.isActive !== false);
 }
 
-// Proches archivés (soft delete) — pour la page Archives
 export async function getProchesArchives() {
   const proches = await apiRequest(ENDPOINTS.proches, {}, "Impossible de charger les proches archivés.");
   return proches.filter((p) => p.isActive === false);
 }
 
-// Retrouve la fiche proche liée au compte utilisateur connecté
 export async function getProcheByUtilisateurId(utilisateurId) {
   const proches = await apiRequest(
     `${ENDPOINTS.proches}?utilisateurId=${utilisateurId}`,
@@ -35,7 +33,6 @@ export async function getProcheByUtilisateurId(utilisateurId) {
   return proches[0] || null;
 }
 
-// Retrouve l'unique proche d'un pèlerin (un pèlerin n'a qu'un seul proche)
 export async function getProcheByPelerinId(pelerinId) {
   const proches = await apiRequest(
     `${ENDPOINTS.proches}?pelerinId=${pelerinId}`,
@@ -45,21 +42,14 @@ export async function getProcheByPelerinId(pelerinId) {
   return proches.find((p) => p.isActive !== false) || null;
 }
 
-/**
- * Crée le compte utilisateur (rôle PROCHE) ET sa fiche proche, liée à un pèlerin
- * @param {Object} data - { nomComplet, telephone, email (facultatif), lienParente, pelerinId }
- * @returns {Object} - { proche, motDePasseGenere } pour que l'admin puisse le communiquer
- */
 export async function createProche(data) {
   required(data.nomComplet, "Le nom complet du proche est obligatoire.");
   required(data.telephone, "Le téléphone du proche est obligatoire.");
   required(data.lienParente, "Le lien de parenté est obligatoire.");
   required(data.pelerinId, "Le pèlerin associé est obligatoire.");
 
-  // 1. Générer un mot de passe temporaire
   const motDePasseGenere = generateTempPassword();
 
-  // 2. Créer le compte utilisateur (rôle PROCHE)
   const utilisateurId = createId("user");
   const nouvelUtilisateur = {
     id: utilisateurId,
@@ -79,7 +69,6 @@ export async function createProche(data) {
     "Impossible de créer le compte utilisateur du proche."
   );
 
-  // 3. Créer la fiche proche, liée au pèlerin
   const proche = normalizeProche({
     id: createId("proc"),
     utilisateurId,
@@ -93,17 +82,9 @@ export async function createProche(data) {
     "Impossible de créer le proche."
   );
 
-  // On renvoie le mot de passe généré pour que l'admin puisse le donner au proche
   return { proche: procheCree, motDePasseGenere };
 }
 
-/**
- * Met à jour un proche existant : son compte utilisateur (nom, email, téléphone)
- * et son lien de parenté.
- * @param {string} procheId
- * @param {string} utilisateurId - le compte utilisateur du proche
- * @param {Object} data - { nomComplet, telephone, email (facultatif), lienParente }
- */
 export async function updateProche(procheId, utilisateurId, data) {
   required(data.nomComplet, "Le nom complet du proche est obligatoire.");
   required(data.telephone, "Le téléphone du proche est obligatoire.");
@@ -132,7 +113,6 @@ export async function updateProche(procheId, utilisateurId, data) {
   );
 }
 
-// Soft delete : archive la fiche proche ET son compte utilisateur lié
 export async function deleteProche(id) {
   const proche = await apiRequest(`${ENDPOINTS.proches}/${id}`, {}, "Impossible de charger le proche.");
   await apiRequest(`${ENDPOINTS.proches}/${id}`, { method: "PATCH", body: JSON.stringify({ isActive: false }) }, "Impossible d'archiver le proche.");
