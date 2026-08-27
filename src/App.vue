@@ -7,9 +7,8 @@ import ToastContainer from '@/components/ui/ToastContainer.vue'
 import ConfirmDialog from '@/components/ui/ConfirmDialog.vue'
 import AppModal from '@/components/ui/AppModal.vue'
 import AppDrawer from '@/components/ui/AppDrawer.vue'
-
-import AppSidebar from '@/components/layout/AppSidebar.vue'
 import AppNavbar from '@/components/layout/AppNavbar.vue'
+import AppSidebar from '@/components/layout/AppSideBar.vue'
 import AppBottomBar from '@/components/layout/AppBottomBar.vue'
 
 const auth = useAuthStore()
