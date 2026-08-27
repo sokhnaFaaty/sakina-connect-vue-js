@@ -1,7 +1,7 @@
 // L'URL du backend est fournie via la variable d'environnement VITE_API_URL
 // (fichier .env local, jamais versionné, ou variables d'environnement Vercel).
 // Aucune URL de production n'est codée en dur ici pour des raisons de sécurité.
-const API_URL_DEFAUT = "https://backendsakinaconnectapi.onrender.com/";
+const API_URL_DEFAUT = "https://backendsakinaconnectapi.onrender.com";
 
 export const API_BASE_URL = import.meta.env.VITE_API_URL || API_URL_DEFAUT;
 
