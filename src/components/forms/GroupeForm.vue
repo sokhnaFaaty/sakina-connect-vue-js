@@ -164,11 +164,11 @@ async function soumettre() {
     <AppInput v-model="nom" label="Nom du Groupe *" placeholder="Ex: Groupe A1" :error="erreurNom" />
 
     <div>
-      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500">Guide responsable *</label>
+      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Guide responsable *</label>
       <select
         v-model="guideId"
-        class="w-full rounded-2xl border bg-white px-4 py-3 text-sm"
-        :class="erreurGuide ? 'border-rose-500' : 'border-slate-200'"
+        class="w-full rounded-2xl border bg-white px-4 py-3 text-sm dark:bg-slate-800 dark:text-slate-100"
+        :class="erreurGuide ? 'border-rose-500' : 'border-slate-200 dark:border-slate-600'"
       >
         <option value="">Choisir un guide</option>
         <option v-for="g in guideOptions" :key="g.value" :value="g.value">{{ g.label }}</option>
@@ -178,12 +178,12 @@ async function soumettre() {
 
     <div class="grid gap-4 sm:grid-cols-2">
       <div>
-        <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500">Hôtel Mecque *</label>
+        <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Hôtel Mecque *</label>
         <div class="flex items-center gap-2">
           <select
             v-model="hotelMecqueId"
-            class="w-full rounded-2xl border bg-white px-4 py-3 text-sm"
-            :class="erreurHotelMecque ? 'border-rose-500' : 'border-slate-200'"
+            class="w-full rounded-2xl border bg-white px-4 py-3 text-sm dark:bg-slate-800 dark:text-slate-100"
+            :class="erreurHotelMecque ? 'border-rose-500' : 'border-slate-200 dark:border-slate-600'"
           >
             <option value="" disabled hidden>Ex: Fairmont Clock Tower</option>
             <option v-for="h in hotelsMecque" :key="h.id" :value="h.id">{{ h.nom }}</option>
@@ -200,12 +200,12 @@ async function soumettre() {
         <p v-if="erreurHotelMecque" class="mt-1 text-xs text-rose-600">{{ erreurHotelMecque }}</p>
       </div>
       <div>
-        <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500">Hôtel Médine *</label>
+        <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Hôtel Médine *</label>
         <div class="flex items-center gap-2">
           <select
             v-model="hotelMedineId"
-            class="w-full rounded-2xl border bg-white px-4 py-3 text-sm"
-            :class="erreurHotelMedine ? 'border-rose-500' : 'border-slate-200'"
+            class="w-full rounded-2xl border bg-white px-4 py-3 text-sm dark:bg-slate-800 dark:text-slate-100"
+            :class="erreurHotelMedine ? 'border-rose-500' : 'border-slate-200 dark:border-slate-600'"
           >
             <option value="" disabled hidden>Ex: Anwar Al Madina Hotel</option>
             <option v-for="h in hotelsMedine" :key="h.id" :value="h.id">{{ h.nom }}</option>
@@ -231,18 +231,18 @@ async function soumettre() {
         class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm"
         @click.self="fermerAjoutHotel"
       >
-        <div class="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl">
+        <div class="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl dark:bg-slate-800">
           <div class="mb-5 flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F2F2DE] text-[#333D2A]">
+              <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F2F2DE] text-[#333D2A] dark:bg-slate-700/50 dark:text-[#BC7B3B]">
                 <i class="fa-solid fa-hotel"></i>
               </div>
-              <h2 class="text-xl font-black tracking-tight text-slate-950">Ajouter un hôtel à {{ hotelVille }}</h2>
+              <h2 class="text-xl font-black tracking-tight text-slate-950 dark:text-slate-100">Ajouter un hôtel à {{ hotelVille }}</h2>
             </div>
             <button
               type="button"
               aria-label="Fermer"
-              class="flex h-9 w-9 items-center justify-center rounded-xl text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+              class="flex h-9 w-9 items-center justify-center rounded-xl text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-slate-100"
               @click="fermerAjoutHotel"
             >
               <i class="fa-solid fa-xmark"></i>
@@ -251,51 +251,51 @@ async function soumettre() {
 
           <form class="grid gap-4" @submit.prevent="validerHotel">
             <div>
-              <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500" for="hotelNom">Nom de l'hôtel *</label>
+              <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400" for="hotelNom">Nom de l'hôtel *</label>
               <input
                 v-model="hotelNom"
                 id="hotelNom"
                 type="text"
                 placeholder="Ex: Fairmont Clock Tower"
-                class="w-full rounded-2xl border bg-white px-4 py-3 text-sm"
-                :class="erreurHotelNom ? 'border-rose-500' : 'border-slate-200'"
+                class="w-full rounded-2xl border bg-white px-4 py-3 text-sm dark:bg-slate-800 dark:text-slate-100"
+                :class="erreurHotelNom ? 'border-rose-500' : 'border-slate-200 dark:border-slate-600'"
               />
               <p v-if="erreurHotelNom" class="mt-1 text-xs text-rose-600">{{ erreurHotelNom }}</p>
             </div>
             <div>
-              <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500" for="hotelVille">Ville</label>
+              <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400" for="hotelVille">Ville</label>
               <input
                 :value="hotelVille"
                 id="hotelVille"
                 type="text"
                 readonly
-                class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-500"
+                class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-400"
               />
             </div>
             <div>
-              <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500" for="hotelAdresse">Adresse</label>
+              <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400" for="hotelAdresse">Adresse</label>
               <input
                 v-model="hotelAdresse"
                 id="hotelAdresse"
                 type="text"
                 placeholder="Ex: Abraj Al Bait"
-                class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm"
+                class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
               />
             </div>
             <div class="grid gap-4 sm:grid-cols-2">
               <div>
-                <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500" for="hotelTel">Téléphone</label>
+                <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400" for="hotelTel">Téléphone</label>
                 <input
                   v-model="hotelTel"
                   id="hotelTel"
                   type="text"
                   placeholder="+966 ..."
-                  class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm"
+                  class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
                 />
               </div>
               <div>
-                <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500" for="hotelEtoiles">Étoiles</label>
-                <select v-model="hotelEtoiles" id="hotelEtoiles" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm">
+                <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400" for="hotelEtoiles">Étoiles</label>
+                <select v-model="hotelEtoiles" id="hotelEtoiles" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100">
                   <option value="5">5 étoiles</option>
                   <option value="4">4 étoiles</option>
                   <option value="3">3 étoiles</option>
@@ -307,7 +307,7 @@ async function soumettre() {
             <div class="mt-2 flex justify-end gap-3">
               <button
                 type="button"
-                class="rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-slate-50"
+                class="rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600"
                 @click="fermerAjoutHotel"
               >
                 Annuler

@@ -2,6 +2,20 @@
 <html lang="">
   <head>
     <meta charset="UTF-8">
+    <!-- Script anti-flash : applique le thème (sombre/clair) AVANT le rendu pour éviter le flash blanc -->
+    <script>
+      (function () {
+        var t = 'light';
+        try {
+          var s = localStorage.getItem('sakina-theme');
+          if (s === 'dark' || s === 'light') t = s;
+          else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) t = 'dark';
+        } catch (e) {}
+        var r = document.documentElement;
+        r.classList.toggle('dark', t === 'dark');
+        r.setAttribute('data-theme', t);
+      })();
+    </script>
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />

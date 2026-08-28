@@ -161,56 +161,56 @@ async function supprimer(annonce) {
       </template>
     </PageHeader>
 
-    <div class="mb-6 flex flex-col gap-3 rounded-[2rem] border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center">
+    <div class="mb-6 flex flex-col gap-3 rounded-[2rem] border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center dark:border-slate-700 dark:bg-slate-800">
       <div class="relative flex-1">
-        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-        <input v-model="search" type="text" placeholder="Rechercher des communiqués" class="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm" />
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500"></i>
+        <input v-model="search" type="text" placeholder="Rechercher des communiqués" class="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100" />
       </div>
-      <button @click="urgentOnly = !urgentOnly" type="button" class="rounded-2xl border px-4 py-3 text-sm font-bold transition" :class="urgentOnly ? 'bg-rose-600 text-white border-rose-600' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'">
+      <button @click="urgentOnly = !urgentOnly" type="button" class="rounded-2xl border px-4 py-3 text-sm font-bold transition" :class="urgentOnly ? 'bg-rose-600 text-white border-rose-600' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50 dark:bg-slate-700 dark:text-slate-100 dark:border-slate-600 dark:hover:bg-slate-600'">
         {{ urgentOnly ? 'Afficher tous les communiqués' : 'Afficher uniquement les urgentes' }}
       </button>
     </div>
 
     <div v-if="isAdmin" class="mb-6 flex flex-wrap gap-2">
-      <button v-for="tab in STATUT_TABS" :key="tab.key" @click="statutFilter = tab.key" class="inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold transition" :class="statutFilter === tab.key ? 'bg-[#333D2A] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'">
+      <button v-for="tab in STATUT_TABS" :key="tab.key" @click="statutFilter = tab.key" class="inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold transition" :class="statutFilter === tab.key ? 'bg-[#333D2A] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600'">
         <i class="fa-solid" :class="tab.icon"></i> {{ tab.label }}
-        <span class="rounded-full px-2 py-0.5 text-xs font-black" :class="statutFilter === tab.key ? 'bg-white/20 text-white' : 'bg-white text-slate-600'">{{ countStatut(tab.key) }}</span>
+        <span class="rounded-full px-2 py-0.5 text-xs font-black" :class="statutFilter === tab.key ? 'bg-white/20 text-white' : 'bg-white text-slate-600 dark:bg-slate-600 dark:text-slate-100'">{{ countStatut(tab.key) }}</span>
       </button>
     </div>
 
     <AppLoader v-if="chargement" />
     <template v-else>
       <div class="grid gap-4">
-        <div v-if="annoncesPagines.length === 0" class="rounded-[2rem] border border-slate-200 bg-white p-10 text-center text-sm text-slate-400 shadow-sm">Aucun communiqué{{ urgentOnly || search ? ' ne correspond à ce filtre' : '' }}.</div>
-        <article v-for="annonce in annoncesPagines" :key="annonce.id" class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm" :class="annonce.urgence ? 'border-l-4 border-l-[#B40909]' : ''">
+        <div v-if="annoncesPagines.length === 0" class="rounded-[2rem] border border-slate-200 bg-white p-10 text-center text-sm text-slate-400 shadow-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-500">Aucun communiqué{{ urgentOnly || search ? ' ne correspond à ce filtre' : '' }}.</div>
+        <article v-for="annonce in annoncesPagines" :key="annonce.id" class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800" :class="annonce.urgence ? 'border-l-4 border-l-[#B40909]' : ''">
           <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
             <div class="flex items-center gap-2">
-              <span class="rounded-md bg-[#F2F2DE] px-2 py-0.5 text-xs font-bold text-[#333D2A]">A-{{ String(numeroDe(annonce)).padStart(2, '0') }}</span>
-              <span v-if="annonce.groupeId" class="rounded-full bg-violet-100 px-2.5 py-0.5 text-xs font-bold text-violet-700"><i class="fa-solid fa-people-group"></i> {{ libelleCible(annonce) }}</span>
-              <span v-else class="rounded-full bg-sky-100 px-2.5 py-0.5 text-xs font-bold text-sky-700"><i class="fa-solid fa-globe"></i> Général</span>
-              <span v-if="annonce.urgence" class="rounded-full bg-rose-100 px-2.5 py-0.5 text-xs font-black text-rose-700">Alerte Urgente</span>
-              <span v-if="statutDe(annonce) === STATUT_ANNONCE.EN_ATTENTE" class="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-700"><i class="fa-solid fa-clock"></i> En attente de validation</span>
-              <span v-if="statutDe(annonce) === STATUT_ANNONCE.REJETE" class="rounded-full bg-rose-100 px-2.5 py-0.5 text-xs font-bold text-rose-700"><i class="fa-solid fa-circle-xmark"></i> Rejeté</span>
+              <span class="rounded-md bg-[#F2F2DE] px-2 py-0.5 text-xs font-bold text-[#333D2A] dark:bg-slate-700/50 dark:text-[#BC7B3B]">A-{{ String(numeroDe(annonce)).padStart(2, '0') }}</span>
+              <span v-if="annonce.groupeId" class="rounded-full bg-violet-100 px-2.5 py-0.5 text-xs font-bold text-violet-700 dark:bg-violet-500/20 dark:text-violet-400"><i class="fa-solid fa-people-group"></i> {{ libelleCible(annonce) }}</span>
+              <span v-else class="rounded-full bg-sky-100 px-2.5 py-0.5 text-xs font-bold text-sky-700 dark:bg-sky-500/20 dark:text-sky-400"><i class="fa-solid fa-globe"></i> Général</span>
+              <span v-if="annonce.urgence" class="rounded-full bg-rose-100 px-2.5 py-0.5 text-xs font-black text-rose-700 dark:bg-rose-500/20 dark:text-rose-400">Alerte Urgente</span>
+              <span v-if="statutDe(annonce) === STATUT_ANNONCE.EN_ATTENTE" class="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-700 dark:bg-amber-500/20 dark:text-amber-400"><i class="fa-solid fa-clock"></i> En attente de validation</span>
+              <span v-if="statutDe(annonce) === STATUT_ANNONCE.REJETE" class="rounded-full bg-rose-100 px-2.5 py-0.5 text-xs font-bold text-rose-700 dark:bg-rose-500/20 dark:text-rose-400"><i class="fa-solid fa-circle-xmark"></i> Rejeté</span>
             </div>
-            <div class="flex items-center gap-4 text-xs text-slate-500">
+            <div class="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
               <span><i class="fa-regular fa-calendar"></i> {{ (annonce.datePublication || '').slice(0, 10) }}</span>
               <span><i class="fa-regular fa-user"></i> {{ auteur(annonce) }}</span>
-              <button v-if="peutModifier(annonce)" class="text-amber-500 hover:text-amber-700" title="Modifier" @click="ouvrirForm(annonce)"><i class="fa-solid fa-pen"></i></button>
-              <button v-if="peutSupprimer(annonce)" class="text-rose-500 hover:text-rose-700" title="Supprimer" @click="supprimer(annonce)"><i class="fa-solid fa-trash"></i></button>
+              <button v-if="peutModifier(annonce)" class="text-amber-500 hover:text-amber-700 dark:text-amber-400" title="Modifier" @click="ouvrirForm(annonce)"><i class="fa-solid fa-pen"></i></button>
+              <button v-if="peutSupprimer(annonce)" class="text-rose-500 hover:text-rose-700 dark:text-rose-400" title="Supprimer" @click="supprimer(annonce)"><i class="fa-solid fa-trash"></i></button>
             </div>
           </div>
-          <h3 class="font-black text-slate-950">{{ annonce.titre }}</h3>
-          <p class="mt-1 whitespace-pre-line text-sm text-slate-600">{{ annonce.contenu }}</p>
+          <h3 class="font-black text-slate-950 dark:text-slate-100">{{ annonce.titre }}</h3>
+          <p class="mt-1 whitespace-pre-line text-sm text-slate-600 dark:text-slate-300">{{ annonce.contenu }}</p>
 
-          <div v-if="statutDe(annonce) === STATUT_ANNONCE.REJETE && annonce.motifRejet" class="mt-3 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-700">
+          <div v-if="statutDe(annonce) === STATUT_ANNONCE.REJETE && annonce.motifRejet" class="mt-3 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-700 dark:border-rose-500/40 dark:bg-rose-500/10 dark:text-rose-400">
             <i class="fa-solid fa-circle-exclamation"></i> Motif du rejet : {{ annonce.motifRejet }}
           </div>
 
-          <div v-if="isAdmin && (statutDe(annonce) === STATUT_ANNONCE.EN_ATTENTE || statutDe(annonce) === STATUT_ANNONCE.REJETE)" class="mt-4 flex flex-wrap gap-3 border-t border-slate-100 pt-4">
+          <div v-if="isAdmin && (statutDe(annonce) === STATUT_ANNONCE.EN_ATTENTE || statutDe(annonce) === STATUT_ANNONCE.REJETE)" class="mt-4 flex flex-wrap gap-3 border-t border-slate-100 pt-4 dark:border-slate-700">
             <button @click="approuver(annonce)" class="inline-flex items-center gap-2 rounded-2xl bg-emerald-600 px-4 py-2 text-sm font-extrabold text-white transition hover:bg-emerald-700">
               <i class="fa-solid fa-check"></i> Approuver
             </button>
-            <button v-if="statutDe(annonce) === STATUT_ANNONCE.EN_ATTENTE" @click="ouvrirRejet(annonce)" class="inline-flex items-center gap-2 rounded-2xl border border-rose-200 bg-white px-4 py-2 text-sm font-extrabold text-rose-600 transition hover:bg-rose-50">
+            <button v-if="statutDe(annonce) === STATUT_ANNONCE.EN_ATTENTE" @click="ouvrirRejet(annonce)" class="inline-flex items-center gap-2 rounded-2xl border border-rose-200 bg-white px-4 py-2 text-sm font-extrabold text-rose-600 transition hover:bg-rose-50 dark:border-rose-500/40 dark:bg-slate-700 dark:text-rose-400 dark:hover:bg-rose-500/10">
               <i class="fa-solid fa-ban"></i> Rejeter
             </button>
           </div>

@@ -16,7 +16,7 @@ function onChildSuccess() {
     </Transition>
 
     <Transition name="slide">
-      <div v-if="isOpen" class="fixed inset-y-0 right-0 z-50 flex h-full w-full max-w-md flex-col bg-white shadow-2xl">
+      <div v-if="isOpen" class="fixed inset-y-0 right-0 z-50 flex h-full w-full max-w-md flex-col bg-white shadow-2xl dark:bg-slate-800">
         
         <!-- En-tête -->
         <div class="flex items-center justify-between border-b border-slate-100 bg-[#333D2A] px-6 py-5">

@@ -3,6 +3,7 @@ import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.js';
 import { HOME_PAGE_BY_ROLE } from '@/config/roles.js';
+import { useTheme } from '@/composables/useTheme.js';
 import { validateLoginEmail, validateLoginPassword } from '@/utils/validators.js';
 
 import coverImage from '@/assets/CouvertureLogin.jpg';
@@ -16,6 +17,7 @@ const chargement = ref(false);
 const erreurMessage = ref('');
 const router = useRouter();
 const auth = useAuthStore();
+const { isDark, toggleTheme } = useTheme();
 
 watch(email, (valeur) => {
   if (String(valeur).trim()) erreurEmail.value = '';
@@ -72,6 +74,15 @@ const bgStyle = {
 <template>
   <div class="flex min-h-screen flex-col lg:grid lg:grid-cols-2">
 
+    <!-- Bascule Sombre / Clair -->
+    <button
+      @click="toggleTheme"
+      class="fixed right-4 top-4 z-50 flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white shadow-lg backdrop-blur transition hover:bg-white/20"
+      :aria-label="isDark ? 'Passer en mode clair' : 'Passer en mode sombre'"
+    >
+      <i class="fa-solid" :class="isDark ? 'fa-sun' : 'fa-moon'"></i>
+    </button>
+
     <div class="relative flex flex-col justify-center overflow-hidden p-8 text-white lg:p-14" :style="bgStyle">
       <div class="flex items-center gap-3">
         <i class="fa-solid fa-moon text-2xl text-[#BC7B3B]"></i>
@@ -122,10 +133,10 @@ const bgStyle = {
       </p>
     </div>
 
-    <div class="flex items-center justify-center bg-[#F2F2DE] p-6 sm:p-10 lg:p-14">
+    <div class="flex items-center justify-center bg-[#F2F2DE] p-6 sm:p-10 lg:p-14 dark:bg-slate-950">
       <div class="w-full max-w-md">
         <h2 class="text-2xl font-black text-[#333D2A]">Connexion</h2>
-        <p class="mt-1 text-sm text-slate-500">Accédez à votre espace personnel.</p>
+        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Accédez à votre espace personnel.</p>
 
         <div v-if="erreurMessage" class="mt-6 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-600">
           <i class="fa-solid fa-circle-exclamation mr-2"></i>
@@ -137,8 +148,8 @@ const bgStyle = {
             <label class="mb-1 block text-xs font-bold text-[#333D2A]" for="loginEmail">Adresse email :</label>
             <input
               v-model="email"
-              class="w-full rounded-xl border bg-white px-4 py-3 text-sm outline-none focus:ring-2"
-              :class="erreurEmail ? 'border-rose-500 focus:border-rose-500 focus:ring-rose-100' : 'border-slate-300 focus:border-[#BC7B3B] focus:ring-[#BC7B3B]/30'"
+              class="w-full rounded-xl border bg-white px-4 py-3 text-sm outline-none focus:ring-2 dark:bg-slate-800 dark:text-slate-100"
+              :class="erreurEmail ? 'border-rose-500 focus:border-rose-500 focus:ring-rose-100' : 'border-slate-300 focus:border-[#BC7B3B] focus:ring-[#BC7B3B]/30 dark:border-slate-600'"
               type="email"
               id="loginEmail"
               placeholder="nom@gmail.com"
@@ -155,8 +166,8 @@ const bgStyle = {
               <input
                 v-model="motDePasse"
                 @keyup.enter="seConnecter"
-                class="w-full rounded-xl border bg-white px-4 py-3 pr-12 text-sm outline-none focus:ring-2"
-                :class="erreurMotDePasse ? 'border-rose-500 focus:border-rose-500 focus:ring-rose-100' : 'border-slate-300 focus:border-[#BC7B3B] focus:ring-[#BC7B3B]/30'"
+                class="w-full rounded-xl border bg-white px-4 py-3 pr-12 text-sm outline-none focus:ring-2 dark:bg-slate-800 dark:text-slate-100"
+                :class="erreurMotDePasse ? 'border-rose-500 focus:border-rose-500 focus:ring-rose-100' : 'border-slate-300 focus:border-[#BC7B3B] focus:ring-[#BC7B3B]/30 dark:border-slate-600'"
                 :type="motDePasseVisible ? 'text' : 'password'"
                 id="loginPassword"
                 placeholder="••••••••••••"
@@ -165,7 +176,7 @@ const bgStyle = {
               <button
                 type="button"
                 @click="basculerMotDePasse"
-                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-100"
                 aria-label="Afficher/masquer le mot de passe"
               >
                 <i class="fa-solid" :class="motDePasseVisible ? 'fa-eye-slash' : 'fa-eye'"></i>

@@ -141,76 +141,76 @@ onMounted(async () => {
     </header>
 
     <AppLoader v-if="!charge" />
-    <div v-else-if="!proche" class="rounded-[2rem] border border-slate-200 bg-white p-10 text-center text-sm text-slate-500 shadow-sm">
+    <div v-else-if="!proche" class="rounded-[2rem] border border-slate-200 bg-white p-10 text-center text-sm text-slate-500 shadow-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400">
       Aucun pèlerin associé à votre compte.
     </div>
-    <div v-else-if="!pelerin" class="rounded-[2rem] border border-slate-200 bg-white p-10 text-center text-sm text-slate-500 shadow-sm">
+    <div v-else-if="!pelerin" class="rounded-[2rem] border border-slate-200 bg-white p-10 text-center text-sm text-slate-500 shadow-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400">
       Le pèlerin suivi est introuvable.
     </div>
 
     <template v-else>
-      <article class="mb-6 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
-        <p class="mb-3 text-xs font-extrabold uppercase tracking-widest text-slate-400">Vous suivez actuellement</p>
+      <article class="mb-6 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+        <p class="mb-3 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Vous suivez actuellement</p>
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div class="flex items-center gap-3">
-            <div class="h-12 w-12 overflow-hidden rounded-full bg-slate-100">
+            <div class="h-12 w-12 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
               <img v-if="pelerinUtilisateur?.photo" :src="pelerinUtilisateur.photo" class="h-full w-full object-cover" />
-              <div v-else class="flex h-full w-full items-center justify-center text-slate-300"><i class="fa-solid fa-user"></i></div>
+              <div v-else class="flex h-full w-full items-center justify-center text-slate-300 dark:text-slate-500"><i class="fa-solid fa-user"></i></div>
             </div>
             <div>
-              <p class="font-black text-slate-900">{{ pelerinUtilisateur?.nomComplet || '-' }}</p>
-              <p class="text-xs text-slate-500">Passeport : {{ pelerin.numeroPasseport }}</p>
+              <p class="font-black text-slate-900 dark:text-slate-100">{{ pelerinUtilisateur?.nomComplet || '-' }}</p>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Passeport : {{ pelerin.numeroPasseport }}</p>
             </div>
           </div>
           <div class="text-sm">
-            <p class="text-slate-500">Groupe :</p>
-            <p class="font-bold text-slate-800">{{ groupe?.nom || '-' }}</p>
-            <p class="mt-1 text-slate-500">Guide responsable :</p>
-            <p class="font-bold text-slate-800">{{ guideUtilisateur?.nomComplet || '-' }}</p>
+            <p class="text-slate-500 dark:text-slate-400">Groupe :</p>
+            <p class="font-bold text-slate-800 dark:text-slate-100">{{ groupe?.nom || '-' }}</p>
+            <p class="mt-1 text-slate-500 dark:text-slate-400">Guide responsable :</p>
+            <p class="font-bold text-slate-800 dark:text-slate-100">{{ guideUtilisateur?.nomComplet || '-' }}</p>
           </div>
           <div class="text-sm">
-            <p class="text-slate-500">Dernière position :</p>
-            <p class="flex items-center gap-1 font-bold text-slate-800"><i class="fa-solid fa-location-dot text-rose-500"></i> {{ localisation }}</p>
+            <p class="text-slate-500 dark:text-slate-400">Dernière position :</p>
+            <p class="flex items-center gap-1 font-bold text-slate-800 dark:text-slate-100"><i class="fa-solid fa-location-dot text-rose-500"></i> {{ localisation }}</p>
           </div>
-          <div class="rounded-2xl bg-[#F2F2DE]/60 p-3 text-sm">
-            <p class="text-xs font-extrabold uppercase tracking-widest text-slate-400">Dernière mise à jour</p>
-            <p class="font-bold text-slate-800">{{ derniereMaj }}</p>
+          <div class="rounded-2xl bg-[#F2F2DE]/60 p-3 text-sm dark:bg-slate-700/50">
+            <p class="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Dernière mise à jour</p>
+            <p class="font-bold text-slate-800 dark:text-slate-100">{{ derniereMaj }}</p>
           </div>
         </div>
       </article>
 
       <div class="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
-        <article class="rounded-[2rem] border border-t-4 border-slate-200 border-t-[#0B6E4F] bg-white p-6 shadow-sm">
+        <article class="rounded-[2rem] border border-t-4 border-slate-200 border-t-[#0B6E4F] bg-white p-6 shadow-sm dark:border-slate-700 dark:border-t-[#0B6E4F] dark:bg-slate-800">
           <div class="mb-4 flex items-start justify-between gap-2">
             <div>
-              <p class="text-xs text-slate-400">Dossier de suivi : {{ pelerin.id.slice(0, 6).toUpperCase() }}</p>
-              <h2 class="text-base font-black text-slate-950">Données de Voyages Consolidées</h2>
+              <p class="text-xs text-slate-400 dark:text-slate-500">Dossier de suivi : {{ pelerin.id.slice(0, 6).toUpperCase() }}</p>
+              <h2 class="text-base font-black text-slate-950 dark:text-slate-100">Données de Voyages Consolidées</h2>
             </div>
             <div class="text-right">
-              <span class="rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-black text-emerald-700">Départ approuvé</span>
-              <p class="mt-1 text-[10px] text-slate-400">Vérifié par le Siège Sakina</p>
+              <span class="rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-black text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400">Départ approuvé</span>
+              <p class="mt-1 text-[10px] text-slate-400 dark:text-slate-500">Vérifié par le Siège Sakina</p>
             </div>
           </div>
 
           <p class="mb-2 flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-[#0B6E4F]"><i class="fa-solid fa-clipboard-check"></i> Liste de validation administrative</p>
           <div class="mb-5 grid gap-3 sm:grid-cols-3">
-            <div v-for="v in validations" :key="v.label" class="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm">
-              <span class="text-slate-600">{{ v.label }}</span>
-              <span v-if="v.ok" class="inline-flex items-center gap-1 font-bold text-emerald-600"><i class="fa-solid fa-circle-check"></i> Complet</span>
-              <span v-else class="inline-flex items-center gap-1 font-bold text-amber-600"><i class="fa-solid fa-clock"></i> En attente</span>
+            <div v-for="v in validations" :key="v.label" class="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-800">
+              <span class="text-slate-600 dark:text-slate-300">{{ v.label }}</span>
+              <span v-if="v.ok" class="inline-flex items-center gap-1 font-bold text-emerald-600 dark:text-emerald-400"><i class="fa-solid fa-circle-check"></i> Complet</span>
+              <span v-else class="inline-flex items-center gap-1 font-bold text-amber-600 dark:text-amber-400"><i class="fa-solid fa-clock"></i> En attente</span>
             </div>
           </div>
 
-          <p class="mb-2 flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-[#0B6E4F]"><i class="fa-solid fa-clock"></i> Planning de groupe actif <span class="normal-case text-slate-400">(évitez d'appeler durant les rituels)</span></p>
+          <p class="mb-2 flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-[#0B6E4F]"><i class="fa-solid fa-clock"></i> Planning de groupe actif <span class="normal-case text-slate-400 dark:text-slate-500">(évitez d'appeler durant les rituels)</span></p>
           <div class="grid gap-3">
-            <div v-if="planning.length === 0" class="text-sm text-slate-400">Aucun événement planifié pour l'instant.</div>
-            <div v-for="e in evenementsPage" :key="e.id" class="rounded-2xl border border-slate-200 bg-[#F2F2DE]/40 p-4">
+            <div v-if="planning.length === 0" class="text-sm text-slate-400 dark:text-slate-500">Aucun événement planifié pour l'instant.</div>
+            <div v-for="e in evenementsPage" :key="e.id" class="rounded-2xl border border-slate-200 bg-[#F2F2DE]/40 p-4 dark:border-slate-700 dark:bg-slate-700/50">
               <div class="mb-1 flex items-center justify-between gap-2">
                 <span class="text-xs font-black uppercase tracking-wider text-[#BC7B3B]">Jour {{ numeroJour(e) }} · {{ e.heure || '' }}</span>
-                <span v-if="categorieLabel(e)" class="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-700">{{ categorieLabel(e) }}</span>
+                <span v-if="categorieLabel(e)" class="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-700 dark:bg-amber-500/20 dark:text-amber-400">{{ categorieLabel(e) }}</span>
               </div>
-              <h3 class="font-black text-slate-900">{{ e.titre }}</h3>
-              <p class="mt-1 text-xs text-slate-500">{{ e.lieu || '' }}</p>
+              <h3 class="font-black text-slate-900 dark:text-slate-100">{{ e.titre }}</h3>
+              <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ e.lieu || '' }}</p>
             </div>
           </div>
           <div v-if="totalPages > 1" class="mt-4 flex items-center justify-center gap-2">
@@ -222,7 +222,7 @@ onMounted(async () => {
             >
               Précédent
             </button>
-            <span class="text-sm font-bold text-slate-600">Page {{ pageSure }} / {{ totalPages }}</span>
+            <span class="text-sm font-bold text-slate-600 dark:text-slate-300">Page {{ pageSure }} / {{ totalPages }}</span>
             <button
               type="button"
               @click="pageSuivante"
@@ -235,12 +235,12 @@ onMounted(async () => {
         </article>
 
         <div class="grid gap-6">
-          <article class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
-            <h2 class="mb-3 text-base font-black text-slate-950">Guide assigné</h2>
-            <p class="font-bold text-slate-900">{{ guideUtilisateur?.nomComplet || 'Non assigné' }}</p>
-            <p class="text-xs uppercase tracking-widest text-slate-400">Guide &amp; chef de groupe</p>
-            <p class="mt-3 text-sm"><span class="text-slate-500">Mobile :</span> <span class="font-bold text-slate-800">{{ guideUtilisateur?.telephone ? String(guideUtilisateur.telephone) : '-' }}</span></p>
-            <p class="text-sm"><span class="text-slate-500">Email :</span> <span class="font-bold text-slate-800">{{ guideUtilisateur?.email || '-' }}</span></p>
+          <article class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+            <h2 class="mb-3 text-base font-black text-slate-950 dark:text-slate-100">Guide assigné</h2>
+            <p class="font-bold text-slate-900 dark:text-slate-100">{{ guideUtilisateur?.nomComplet || 'Non assigné' }}</p>
+            <p class="text-xs uppercase tracking-widest text-slate-400 dark:text-slate-500">Guide &amp; chef de groupe</p>
+            <p class="mt-3 text-sm"><span class="text-slate-500 dark:text-slate-400">Mobile :</span> <span class="font-bold text-slate-800 dark:text-slate-100">{{ guideUtilisateur?.telephone ? String(guideUtilisateur.telephone) : '-' }}</span></p>
+            <p class="text-sm"><span class="text-slate-500 dark:text-slate-400">Email :</span> <span class="font-bold text-slate-800 dark:text-slate-100">{{ guideUtilisateur?.email || '-' }}</span></p>
             <a
               v-if="guideUtilisateur?.telephone"
               :href="'tel:' + guideUtilisateur.telephone"
@@ -250,10 +250,10 @@ onMounted(async () => {
             </a>
           </article>
 
-          <article class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
-            <h2 class="mb-2 text-base font-black text-slate-950">Message au guide</h2>
-            <p class="mb-3 text-xs text-slate-500">Besoin de signaler au guide une consigne médicale importante ou un besoin d'assistance ? Laissez un message ici.</p>
-            <textarea v-model="messageGuide" rows="3" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm" placeholder="Ex: Mon père a besoin de son inhalateur de secours…"></textarea>
+          <article class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+            <h2 class="mb-2 text-base font-black text-slate-950 dark:text-slate-100">Message au guide</h2>
+            <p class="mb-3 text-xs text-slate-500 dark:text-slate-400">Besoin de signaler au guide une consigne médicale importante ou un besoin d'assistance ? Laissez un message ici.</p>
+            <textarea v-model="messageGuide" rows="3" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100" placeholder="Ex: Mon père a besoin de son inhalateur de secours…"></textarea>
             <button type="button" @click="envoyerMessage" class="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#333D2A] px-4 py-2.5 text-sm font-extrabold text-white transition hover:opacity-90">
               <i class="fa-solid fa-paper-plane"></i> Envoyer le message
             </button>

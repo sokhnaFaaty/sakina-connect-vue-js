@@ -52,8 +52,8 @@ async function soumettre() {
     <div class="grid gap-4 sm:grid-cols-2">
       <AppInput v-model="telephone" label="Téléphone (facultatif)" />
       <div>
-        <label class="mb-2 block text-xs font-extrabold uppercase text-slate-500">Nombre d'étoiles</label>
-        <select v-model="nombreEtoiles" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm">
+        <label class="mb-2 block text-xs font-extrabold uppercase text-slate-500 dark:text-slate-400">Nombre d'étoiles</label>
+        <select v-model="nombreEtoiles" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100">
           <option value="5">5 étoiles</option>
           <option value="4">4 étoiles</option>
           <option value="3">3 étoiles</option>

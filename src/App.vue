@@ -16,7 +16,7 @@ const isAuthenticated = computed(() => auth.isAuthenticated)
 </script>
 
 <template>
-  <div class="min-h-screen bg-[#F2F2DE]">
+  <div class="min-h-screen bg-[#F2F2DE] dark:bg-slate-900">
     <!-- Layout Connecté -->
     <div v-if="isAuthenticated" class="flex h-screen flex-col">
       

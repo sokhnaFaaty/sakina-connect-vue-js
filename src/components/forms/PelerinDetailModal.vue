@@ -35,21 +35,21 @@ const procheUtilisateur = computed(() => (procheAssocie.value ? props.utilisateu
 
 <template>
   <div>
-    <div class="-m-6 mb-0 flex items-start gap-4 border-b border-slate-100 p-6 pb-5">
-      <div class="h-16 w-16 overflow-hidden rounded-full bg-slate-100">
+    <div class="-m-6 mb-0 flex items-start gap-4 border-b border-slate-100 p-6 pb-5 dark:border-slate-700">
+      <div class="h-16 w-16 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
         <img v-if="utilisateur?.photo" :src="utilisateur.photo" class="h-full w-full object-cover" />
-        <div v-else class="flex h-full w-full items-center justify-center text-slate-300"><i class="fa-solid fa-user text-2xl"></i></div>
+        <div v-else class="flex h-full w-full items-center justify-center text-slate-300 dark:text-slate-500"><i class="fa-solid fa-user text-2xl"></i></div>
       </div>
       <div>
         <div class="flex items-center gap-2">
-          <h2 class="text-lg font-black text-slate-950">{{ utilisateur?.nomComplet || '-' }}</h2>
-          <span class="rounded-full bg-[#F2F2DE] px-2 py-0.5 text-xs font-bold text-[#333D2A]">{{ pelerin.id.slice(0, 5).toUpperCase() }}</span>
+          <h2 class="text-lg font-black text-slate-950 dark:text-slate-100">{{ utilisateur?.nomComplet || '-' }}</h2>
+          <span class="rounded-full bg-[#F2F2DE] px-2 py-0.5 text-xs font-bold text-[#333D2A] dark:bg-slate-700/50 dark:text-[#BC7B3B]">{{ pelerin.id.slice(0, 5).toUpperCase() }}</span>
         </div>
-        <p class="text-sm text-slate-500">Passeport : {{ pelerin.numeroPasseport }}</p>
-        <p class="mt-1 flex items-center gap-2 text-sm text-slate-500">
+        <p class="text-sm text-slate-500 dark:text-slate-400">Passeport : {{ pelerin.numeroPasseport }}</p>
+        <p class="mt-1 flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
           Statut du Visa :
-          <span v-if="pelerin.statutVisa === 'APPROUVE'" class="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-700"><i class="fa-solid fa-check"></i> Approuvé</span>
-          <span v-else class="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-700">{{ pelerin.statutVisa }}</span>
+           <span v-if="pelerin.statutVisa === 'APPROUVE'" class="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400"><i class="fa-solid fa-check"></i> Approuvé</span>
+          <span v-else class="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-700 dark:bg-amber-500/20 dark:text-amber-400">{{ pelerin.statutVisa }}</span>
         </p>
       </div>
     </div>
@@ -59,24 +59,24 @@ const procheUtilisateur = computed(() => (procheAssocie.value ? props.utilisateu
         <p class="mb-2 flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-[#0B6E4F]">
           <i class="fa-solid fa-route"></i> Logistique &amp; Accompagnement
         </p>
-        <div class="rounded-2xl bg-[#F2F2DE] p-4 text-sm">
-          <p class="text-slate-500">Guide spirituel assigné :</p>
-          <p class="mb-3 font-bold text-slate-800">{{ guideNom }}</p>
-          <p class="text-slate-500">Groupe de voyage :</p>
-          <p class="font-bold text-slate-800">{{ groupe?.nom || '-' }}</p>
+        <div class="rounded-2xl bg-[#F2F2DE] p-4 text-sm dark:bg-slate-700/50">
+          <p class="text-slate-500 dark:text-slate-400">Guide spirituel assigné :</p>
+          <p class="mb-3 font-bold text-slate-800 dark:text-slate-100">{{ guideNom }}</p>
+          <p class="text-slate-500 dark:text-slate-400">Groupe de voyage :</p>
+          <p class="font-bold text-slate-800 dark:text-slate-100">{{ groupe?.nom || '-' }}</p>
         </div>
 
         <p class="mb-2 mt-4 flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-[#0B6E4F]">
           <i class="fa-solid fa-hotel"></i> Hébergements d'hôtels
         </p>
         <div class="grid grid-cols-2 gap-3">
-          <div class="rounded-2xl bg-[#F2F2DE] p-3 text-sm">
-            <p class="text-xs font-bold text-slate-500">LA MECQUE :</p>
-            <p class="font-bold text-slate-800">{{ hotelMecque }}</p>
+          <div class="rounded-2xl bg-[#F2F2DE] p-3 text-sm dark:bg-slate-700/50">
+            <p class="text-xs font-bold text-slate-500 dark:text-slate-400">LA MECQUE :</p>
+            <p class="font-bold text-slate-800 dark:text-slate-100">{{ hotelMecque }}</p>
           </div>
-          <div class="rounded-2xl bg-[#F2F2DE] p-3 text-sm">
-            <p class="text-xs font-bold text-slate-500">MÉDINE :</p>
-            <p class="font-bold text-slate-800">{{ hotelMedine }}</p>
+          <div class="rounded-2xl bg-[#F2F2DE] p-3 text-sm dark:bg-slate-700/50">
+            <p class="text-xs font-bold text-slate-500 dark:text-slate-400">MÉDINE :</p>
+            <p class="font-bold text-slate-800 dark:text-slate-100">{{ hotelMedine }}</p>
           </div>
         </div>
       </div>
@@ -85,21 +85,21 @@ const procheUtilisateur = computed(() => (procheAssocie.value ? props.utilisateu
         <p class="mb-2 flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-rose-600">
           <i class="fa-solid fa-heart-pulse"></i> Fiche médicale &amp; pathologies
         </p>
-        <div class="rounded-2xl bg-rose-50 p-4 text-sm">
-          <p class="text-xs font-bold text-rose-700">PATHOLOGIES SIGNALÉES :</p>
-          <p class="mt-1 text-slate-700">{{ pelerin.informationsMedicales || 'Aucune pathologie signalée.' }}</p>
+        <div class="rounded-2xl bg-rose-50 p-4 text-sm dark:bg-rose-500/10">
+          <p class="text-xs font-bold text-rose-700 dark:text-rose-400">PATHOLOGIES SIGNALÉES :</p>
+          <p class="mt-1 text-slate-700 dark:text-slate-300">{{ pelerin.informationsMedicales || 'Aucune pathologie signalée.' }}</p>
         </div>
 
         <p class="mb-2 mt-4 flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-rose-600">
           <i class="fa-solid fa-hand-holding-heart"></i> Proches &amp; contacts d'urgence
         </p>
-        <div class="rounded-2xl bg-[#F2F2DE] p-4 text-sm">
-          <p class="text-slate-500">Contact d'urgence — Proche associé (Portail Famille) :</p>
+        <div class="rounded-2xl bg-[#F2F2DE] p-4 text-sm dark:bg-slate-700/50">
+          <p class="text-slate-500 dark:text-slate-400">Contact d'urgence — Proche associé (Portail Famille) :</p>
           <template v-if="procheUtilisateur">
-            <p class="font-bold text-slate-800">{{ procheUtilisateur.nomComplet }}{{ procheAssocie.lienParente ? ` (${procheAssocie.lienParente})` : '' }}</p>
-            <p class="text-slate-600">{{ procheUtilisateur.telephone || '' }}</p>
+            <p class="font-bold text-slate-800 dark:text-slate-100">{{ procheUtilisateur.nomComplet }}{{ procheAssocie.lienParente ? ` (${procheAssocie.lienParente})` : '' }}</p>
+            <p class="text-slate-600 dark:text-slate-300">{{ procheUtilisateur.telephone || '' }}</p>
           </template>
-          <p v-else class="font-bold text-slate-800">Aucun proche associé.</p>
+          <p v-else class="font-bold text-slate-800 dark:text-slate-100">Aucun proche associé.</p>
         </div>
 
         <p class="mb-2 mt-4 flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-rose-600">

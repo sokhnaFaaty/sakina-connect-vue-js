@@ -113,23 +113,23 @@ async function save() {
   <section>
     <PageHeader kicker="Identité" title="Mon Profil de Proche" subtitle="Gérez vos informations de contact personnelles." />
 
-    <article class="mx-auto max-w-2xl rounded-[2rem] border border-t-4 border-slate-200 border-t-[#0B6E4F] bg-white p-6 shadow-sm">
-      <h2 class="mb-5 flex items-center gap-2 text-base font-black text-slate-950"><i class="fa-solid fa-user text-[#333D2A]"></i> Mes informations de contact</h2>
+    <article class="mx-auto max-w-2xl rounded-[2rem] border border-t-4 border-slate-200 border-t-[#0B6E4F] bg-white p-6 shadow-sm dark:border-slate-700 dark:border-t-[#0B6E4F] dark:bg-slate-800">
+      <h2 class="mb-5 flex items-center gap-2 text-base font-black text-slate-950 dark:text-slate-100"><i class="fa-solid fa-user text-[#333D2A] dark:text-[#BC7B3B]"></i> Mes informations de contact</h2>
 
       <div class="mb-5 flex items-start gap-4">
-        <div class="h-16 w-16 shrink-0 overflow-hidden rounded-full bg-slate-100">
+        <div class="h-16 w-16 shrink-0 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
           <img v-if="photo" :src="photo" class="h-full w-full object-cover" />
-          <div v-else class="flex h-full w-full items-center justify-center text-slate-300"><i class="fa-solid fa-user text-2xl"></i></div>
+          <div v-else class="flex h-full w-full items-center justify-center text-slate-300 dark:text-slate-500"><i class="fa-solid fa-user text-2xl"></i></div>
         </div>
         <div class="flex-1">
-          <p class="font-bold text-slate-900">Photo de Profil</p>
-          <p class="text-xs text-slate-500">Choisissez une photo représentative pour faciliter votre identification par l'agence sur place.</p>
-          <button type="button" @click="togglePhotoInput" class="mt-1 text-xs font-bold text-[#333D2A] underline">Choisissez un avatar ou entrer une URL.</button>
+          <p class="font-bold text-slate-900 dark:text-slate-100">Photo de Profil</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Choisissez une photo représentative pour faciliter votre identification par l'agence sur place.</p>
+          <button type="button" @click="togglePhotoInput" class="mt-1 text-xs font-bold text-[#333D2A] underline dark:text-[#BC7B3B]">Choisissez un avatar ou entrer une URL.</button>
           <input
             v-show="montrerPhotoInput"
             ref="champPhoto"
             v-model="photo"
-            class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm"
+            class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
             type="text"
             placeholder="https://…"
           />
@@ -137,11 +137,11 @@ async function save() {
       </div>
 
       <div class="mb-4">
-        <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500" for="procheNom">Nom complet</label>
+        <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400" for="procheNom">Nom complet</label>
         <input
           id="procheNom"
           v-model="nom"
-          class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm"
+          class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
           :class="{ 'border-rose-500': !!erreurs.nom }"
           type="text"
         />
@@ -150,11 +150,11 @@ async function save() {
 
       <div class="grid gap-4 sm:grid-cols-2">
         <div>
-          <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500" for="procheTel">Numéro de téléphone</label>
+          <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400" for="procheTel">Numéro de téléphone</label>
           <input
             id="procheTel"
             v-model="telephone"
-            class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm"
+            class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
             :class="{ 'border-rose-500': !!erreurs.telephone }"
             type="text"
             placeholder="77 123 45 67"
@@ -162,11 +162,11 @@ async function save() {
           <p v-if="erreurs.telephone" class="mt-1 text-xs text-rose-600">{{ erreurs.telephone }}</p>
         </div>
         <div>
-          <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500" for="procheEmail">Adresse email</label>
+          <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400" for="procheEmail">Adresse email</label>
           <input
             id="procheEmail"
             v-model="email"
-            class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm"
+            class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
             :class="{ 'border-rose-500': !!erreurs.email }"
             type="email"
             placeholder="email@exemple.com"
@@ -177,11 +177,11 @@ async function save() {
 
       <div class="mt-4 grid gap-4 sm:grid-cols-2">
         <div>
-          <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500" for="procheMotDePasse">Mot de passe de connexion</label>
+          <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400" for="procheMotDePasse">Mot de passe de connexion</label>
           <input
             id="procheMotDePasse"
             v-model="motDePasse"
-            class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm"
+            class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
             :class="{ 'border-rose-500': !!erreurs.motDePasse }"
             type="password"
             placeholder="Laisser vide pour ne pas changer"
@@ -189,11 +189,11 @@ async function save() {
           <p v-if="erreurs.motDePasse" class="mt-1 text-xs text-rose-600">{{ erreurs.motDePasse }}</p>
         </div>
         <div>
-          <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500" for="procheMotDePasseConfirm">Confirmer le mot de passe</label>
+          <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400" for="procheMotDePasseConfirm">Confirmer le mot de passe</label>
           <input
             id="procheMotDePasseConfirm"
             v-model="motDePasseConfirm"
-            class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm"
+            class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
             :class="{ 'border-rose-500': !!erreurs.motDePasseConfirm }"
             type="password"
             placeholder="Retapez le nouveau mot de passe"

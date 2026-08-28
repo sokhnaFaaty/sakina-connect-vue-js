@@ -1,6 +1,5 @@
 // L'URL du backend est fournie uniquement via la variable d'environnement
-// VITE_API_URL (fichier .env local, jamais versionné, ou variables d'environnement).
-// Aucune URL n'est codée en dur ici pour des raisons de sécurité.
+// VITE_API_URL 
 const API_URL = import.meta.env.VITE_API_URL;
 
 if (!API_URL) {

@@ -63,37 +63,37 @@ async function soumettre() {
 <template>
   <form @submit.prevent="soumettre" class="grid gap-4">
     <div v-if="isAdmin">
-      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500" for="annonceGroupe">Destinataires du communiqué *</label>
-      <select id="annonceGroupe" v-model="cible" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm">
+      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400" for="annonceGroupe">Destinataires du communiqué *</label>
+      <select id="annonceGroupe" v-model="cible" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100">
         <option value="">Tous les pèlerins (communiqué général)</option>
         <option v-for="g in groupes" :key="g.id" :value="g.id">Groupe : {{ g.nom }}</option>
       </select>
     </div>
 
-    <div v-else class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs font-semibold text-slate-600">
+    <div v-else class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs font-semibold text-slate-600 dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-300">
       <i class="fa-solid fa-circle-info text-[#333D2A]"></i>
       Ce communiqué sera adressé aux <span class="font-black text-[#333D2A]">pèlerins de ton groupe</span>, après validation par l'administrateur.
     </div>
 
     <div>
-      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500" for="annonceTitre">Titre du communiqué *</label>
-      <input id="annonceTitre" v-model="titre" type="text" placeholder="Ex: Modification de la ligne de Bus de la Mecque" class="w-full rounded-2xl border bg-white px-4 py-3 text-sm" :class="titreError ? 'border-rose-500 focus:border-rose-500' : 'border-slate-200'" />
+      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400" for="annonceTitre">Titre du communiqué *</label>
+      <input id="annonceTitre" v-model="titre" type="text" placeholder="Ex: Modification de la ligne de Bus de la Mecque" class="w-full rounded-2xl border bg-white px-4 py-3 text-sm dark:bg-slate-800 dark:text-slate-100" :class="titreError ? 'border-rose-500 focus:border-rose-500' : 'border-slate-200 dark:border-slate-600'" />
       <p v-if="titreError" class="mt-1 text-xs text-rose-600">{{ titreError }}</p>
     </div>
 
     <div>
-      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500" for="annonceContenu">Contenu du message *</label>
-      <textarea id="annonceContenu" v-model="contenu" rows="4" placeholder="Décrivez clairement et précisément les détails ..." class="w-full rounded-2xl border bg-white px-4 py-3 text-sm" :class="contenuError ? 'border-rose-500 focus:border-rose-500' : 'border-slate-200'"></textarea>
+      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400" for="annonceContenu">Contenu du message *</label>
+      <textarea id="annonceContenu" v-model="contenu" rows="4" placeholder="Décrivez clairement et précisément les détails ..." class="w-full rounded-2xl border bg-white px-4 py-3 text-sm dark:bg-slate-800 dark:text-slate-100" :class="contenuError ? 'border-rose-500 focus:border-rose-500' : 'border-slate-200 dark:border-slate-600'"></textarea>
       <p v-if="contenuError" class="mt-1 text-xs text-rose-600">{{ contenuError }}</p>
     </div>
 
-    <label class="flex items-center gap-3 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-slate-700">
+    <label class="flex items-center gap-3 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-slate-700 dark:border-rose-500/40 dark:bg-rose-500/10 dark:text-slate-200">
       <input type="checkbox" v-model="urgence" class="h-5 w-5 accent-rose-600" />
       <span>Marquer comme urgent (affiche un bandeau rouge chez {{ porteeUrgence }})</span>
     </label>
 
     <div class="mt-2 flex justify-end gap-3">
-      <button type="button" @click="$emit('close')" class="rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-slate-50">Annuler</button>
+      <button type="button" @click="$emit('close')" class="rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600">Annuler</button>
       <button type="submit" :disabled="chargement" class="inline-flex items-center gap-2 rounded-2xl bg-[#333D2A] px-4 py-2.5 text-sm font-extrabold text-white shadow-lg shadow-[#333D2A]/20 transition hover:opacity-90 disabled:opacity-60">
         <i class="fa-solid" :class="isEdit ? 'fa-floppy-disk' : 'fa-paper-plane'"></i>
         <span>{{ isEdit ? 'Enregistrer' : "Publier l'annonce" }}</span>

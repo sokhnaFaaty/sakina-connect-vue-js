@@ -93,37 +93,37 @@ async function soumettre() {
   <form @submit.prevent="soumettre" class="grid gap-4">
     <div class="grid gap-4 sm:grid-cols-2">
       <div>
-        <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500" for="evtJour">Jour de Voyage (Numéro)</label>
-        <input id="evtJour" v-model="jourNumero" type="text" placeholder="Ex: 1" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm" />
+        <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400" for="evtJour">Jour de Voyage (Numéro)</label>
+        <input id="evtJour" v-model="jourNumero" type="text" placeholder="Ex: 1" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100" />
       </div>
       <div>
-        <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500" for="evtHeure">Heure (ex: 14h 30 ou 08h 00)</label>
-        <input id="evtHeure" v-model="heure" type="text" placeholder="08h 00" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm" />
+        <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400" for="evtHeure">Heure (ex: 14h 30 ou 08h 00)</label>
+        <input id="evtHeure" v-model="heure" type="text" placeholder="08h 00" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100" />
         <p v-if="heureError" class="mt-1 text-xs text-rose-600">{{ heureError }}</p>
       </div>
     </div>
 
     <div>
-      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500" for="evtDate">Date de l'événement *</label>
-      <input id="evtDate" v-model="date" type="date" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm" />
+      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400" for="evtDate">Date de l'événement *</label>
+      <input id="evtDate" v-model="date" type="date" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100" />
       <p v-if="dateError" class="mt-1 text-xs text-rose-600">{{ dateError }}</p>
     </div>
 
     <div>
-      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500" for="evtTitre">Titre de l'événement *</label>
-      <input id="evtTitre" v-model="titre" type="text" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm" />
+      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400" for="evtTitre">Titre de l'événement *</label>
+      <input id="evtTitre" v-model="titre" type="text" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100" />
       <p v-if="titreError" class="mt-1 text-xs text-rose-600">{{ titreError }}</p>
     </div>
 
     <div>
-      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500" for="evtLieu">Nom de Lieu *</label>
-      <input id="evtLieu" v-model="lieu" type="text" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm" />
+      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400" for="evtLieu">Nom de Lieu *</label>
+      <input id="evtLieu" v-model="lieu" type="text" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100" />
       <p v-if="lieuError" class="mt-1 text-xs text-rose-600">{{ lieuError }}</p>
     </div>
 
     <div>
-      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500" for="evtCategorie">Catégorie *</label>
-      <select id="evtCategorie" v-model="categorieId" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm">
+      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400" for="evtCategorie">Catégorie *</label>
+      <select id="evtCategorie" v-model="categorieId" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100">
         <option value="">-- Choisir --</option>
         <option v-for="c in categories" :key="c.id" :value="c.id">{{ c.libelle }}</option>
       </select>
@@ -131,13 +131,13 @@ async function soumettre() {
     </div>
 
     <div>
-      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500" for="evtEtapeGuide">Guide ou étape spirituel</label>
-      <input id="evtEtapeGuide" v-model="etapeGuide" type="text" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm" />
+      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400" for="evtEtapeGuide">Guide ou étape spirituel</label>
+      <input id="evtEtapeGuide" v-model="etapeGuide" type="text" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100" />
     </div>
 
     <div>
-      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500" for="evtDescription">Description</label>
-      <textarea id="evtDescription" v-model="description" rows="3" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm"></textarea>
+      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400" for="evtDescription">Description</label>
+      <textarea id="evtDescription" v-model="description" rows="3" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"></textarea>
     </div>
 
     <div class="flex justify-end gap-3 pt-2">

@@ -30,19 +30,19 @@ function aller(p) {
     <button
       type="button"
       :disabled="page <= 1"
-      class="flex h-9 min-w-9 items-center justify-center rounded-lg px-3 text-sm font-bold text-slate-600 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
+      class="flex h-9 min-w-9 items-center justify-center rounded-lg px-3 text-sm font-bold text-slate-600 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:text-slate-300 dark:hover:bg-slate-700"
       @click="aller(page - 1)"
     >
       <i class="fa-solid fa-chevron-left"></i>
     </button>
 
     <template v-for="(p, i) in pages" :key="i">
-      <span v-if="p === '…'" class="flex h-9 min-w-9 items-center justify-center px-1 text-sm font-bold text-slate-400">…</span>
+      <span v-if="p === '…'" class="flex h-9 min-w-9 items-center justify-center px-1 text-sm font-bold text-slate-400 dark:text-slate-500">…</span>
       <button
         v-else
         type="button"
         class="flex h-9 min-w-9 items-center justify-center rounded-lg px-3 text-sm font-bold transition"
-        :class="p === page ? 'bg-[#333D2A] text-white' : 'text-slate-600 hover:bg-slate-100'"
+        :class="p === page ? 'bg-[#333D2A] text-white' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'"
         @click="aller(p)"
       >
         {{ p }}
@@ -52,7 +52,7 @@ function aller(p) {
     <button
       type="button"
       :disabled="page >= totalPages"
-      class="flex h-9 min-w-9 items-center justify-center rounded-lg px-3 text-sm font-bold text-slate-600 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
+      class="flex h-9 min-w-9 items-center justify-center rounded-lg px-3 text-sm font-bold text-slate-600 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:text-slate-300 dark:hover:bg-slate-700"
       @click="aller(page + 1)"
     >
       <i class="fa-solid fa-chevron-right"></i>
