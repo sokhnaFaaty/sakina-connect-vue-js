@@ -47,8 +47,8 @@ const routes = [
   { path: '/pole-urgence', name: 'pole-urgence', component: PoleUrgenceView, meta: { requiresAuth: true, roles: ['ADMIN'] } },
   { path: '/mon-pole-urgence', name: 'mon-pole-urgence', component: MonPoleUrgenceView, meta: { requiresAuth: true, roles: ['GUIDE'] } },
   { path: '/pole-urgence-pelerin', name: 'pole-urgence-pelerin', component: PoleUrgencePelerinView, meta: { requiresAuth: true, roles: ['PELERIN'] } },
-  // Toute URL inconnue => page 404
-  { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFoundView },
+  // Toute URL inconnue => page 404 (rendue seule, pleine page, sans layout)
+  { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFoundView, meta: { layout: 'blank' } },
 ];
 
 const router = createRouter({
