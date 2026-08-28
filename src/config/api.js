@@ -1,9 +1,15 @@
-// L'URL du backend est fournie via la variable d'environnement VITE_API_URL
-// (fichier .env local, jamais versionné, ou variables d'environnement Vercel).
-// Aucune URL de production n'est codée en dur ici pour des raisons de sécurité.
-const API_URL_DEFAUT = "https://backendsakinaconnectapi.onrender.com";
+// L'URL du backend est fournie uniquement via la variable d'environnement
+// VITE_API_URL (fichier .env local, jamais versionné, ou variables d'environnement).
+// Aucune URL n'est codée en dur ici pour des raisons de sécurité.
+const API_URL = import.meta.env.VITE_API_URL;
 
-export const API_BASE_URL = import.meta.env.VITE_API_URL || API_URL_DEFAUT;
+if (!API_URL) {
+  throw new Error(
+    "Variable d'environnement VITE_API_URL manquante. Ajoutez-la dans le fichier .env."
+  );
+}
+
+export const API_BASE_URL = API_URL;
 
 export const ENDPOINTS = {
   utilisateurs: `${API_BASE_URL}/utilisateurs`,

@@ -51,6 +51,29 @@ const liens = computed(() => NAV_LINKS_BY_ROLE[role.value] || []);
 const raccourcis = computed(() => liens.value.filter((l) => !l.page.startsWith('dashboard')).slice(0, 2));
 const menuOuvert = ref(false);
 
+const RAYON = 92;
+const ANGLE_DEPART = 250;
+const ANGLE_FIN = -70;
+
+const iconesRadiales = computed(() => {
+  const n = liens.value.length;
+  return liens.value.map((lien, index) => {
+    const angle =
+      n === 1
+        ? 180
+        : ((ANGLE_DEPART - ANGLE_FIN) / (n - 1)) * index + ANGLE_FIN;
+    const rad = (angle * Math.PI) / 180;
+    const x = Math.cos(rad) * RAYON;
+    const y = Math.sin(rad) * RAYON;
+    return {
+      ...lien,
+      style: {
+        transform: `translate(${x}px, ${-y}px)`,
+      },
+    };
+  });
+});
+
 function naviguer(page) {
   menuOuvert.value = false;
   if (page) router.push('/' + page);
@@ -67,23 +90,43 @@ function estActif(page) {
 
 <template>
   <nav class="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white lg:hidden" aria-label="Navigation mobile">
-    <!-- Menu du Centre de contrôle (ADMIN / GUIDE uniquement) -->
+    <!-- Centre de contrôle (ADMIN / GUIDE) : cercle central + icônes autour -->
     <div
-      v-if="menuOuvert"
-      class="absolute bottom-full inset-x-2 mb-3 rounded-3xl border border-slate-200 bg-white p-3 shadow-2xl"
+      v-if="menuOuvert && estStaff"
+      class="pointer-events-none absolute bottom-24 inset-x-0 flex items-center justify-center"
     >
-      <p class="px-1 pb-2 text-xs font-extrabold uppercase tracking-widest text-slate-400">Centre de contrôle</p>
-      <div class="grid grid-cols-3 gap-2">
+      <!-- Cercle central -->
+      <div class="pointer-events-auto relative flex flex-col items-center gap-1">
         <button
-          v-for="lien in liens"
-          :key="lien.page"
-          @click="naviguer(lien.page)"
-          class="flex flex-col items-center gap-1 rounded-2xl border-l-4 border-transparent px-2 py-3 text-[11px] font-bold text-slate-600 transition"
-          :class="estActif(lien.page) ? 'border-[#225BBF] bg-[#F2F2DE] text-[#333D2A]' : 'hover:bg-slate-50'"
+          @click="menuOuvert = false"
+          class="relative z-20 flex h-16 w-16 items-center justify-center rounded-full border-4 border-white bg-[#333D2A] text-2xl text-white shadow-xl transition hover:opacity-90"
+          aria-label="Fermer le centre de contrôle"
         >
-          <i class="fa-solid text-lg" :class="lien.icon"></i>
-          <span>{{ lien.label }}</span>
+          <i class="fa-solid fa-xmark"></i>
         </button>
+        <span class="text-[10px] font-extrabold text-[#333D2A]">Fermer</span>
+
+        <!-- Icônes disposées en cercle autour du centre -->
+        <div class="absolute left-1/2 top-8 -translate-x-1/2">
+          <button
+            v-for="lien in iconesRadiales"
+            :key="lien.page"
+            :style="lien.style"
+            @click="naviguer(lien.page)"
+            class="absolute left-0 top-0 flex w-14 flex-col items-center gap-1"
+          >
+            <span
+              class="flex h-12 w-12 items-center justify-center rounded-full text-white shadow-lg transition"
+              :class="estActif(lien.page) ? 'bg-[#225BBF]' : 'bg-[#BC7B3B] hover:opacity-90'"
+            >
+              <i class="fa-solid text-lg" :class="lien.icon"></i>
+            </span>
+            <span
+              class="whitespace-nowrap rounded-full bg-white/90 px-2 py-0.5 text-[9px] font-bold text-[#333D2A] shadow"
+              >{{ lien.label }}</span
+            >
+          </button>
+        </div>
       </div>
     </div>
 
