@@ -139,7 +139,7 @@ watch(sosActif, async () => {
     <div class="grid gap-6 lg:grid-cols-2">
       <article class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
         <SosPanel :sos-actifs="sosActifs" :resolve-nom="nomResolver" @resolved="charger" />
-        <div v-if="sosActif" id="sosMapContainer" class="mt-4 h-64 w-full"></div>
+        <div v-if="sosActif" id="sosMapContainer" class="mt-4 h-40 w-full overflow-hidden rounded-xl sm:h-64"></div>
       </article>
 
       <article class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
