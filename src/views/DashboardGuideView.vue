@@ -90,53 +90,53 @@ function allerItineraire() {
       <p class="mt-1 max-w-2xl text-sm text-white/80">Mettez à jour les plannings, consultez le manifeste des pèlerins et suivez les alertes SOS de votre groupe.</p>
     </header>
 
-    <div v-if="!guide" class="rounded-[2rem] border border-slate-200 bg-white p-10 text-center text-sm text-slate-500 shadow-sm">Aucun profil guide associé à ce compte.</div>
+    <div v-if="!guide" class="rounded-[2rem] border border-slate-200 bg-white p-10 text-center text-sm text-slate-500 shadow-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400">Aucun profil guide associé à ce compte.</div>
 
-    <div v-else-if="!groupe" class="rounded-[2rem] border border-slate-200 bg-white p-10 text-center text-sm text-slate-500 shadow-sm">Aucun groupe ne vous est encore assigné.</div>
+    <div v-else-if="!groupe" class="rounded-[2rem] border border-slate-200 bg-white p-10 text-center text-sm text-slate-500 shadow-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400">Aucun groupe ne vous est encore assigné.</div>
 
     <template v-else>
       <div class="mb-6 grid gap-4 sm:grid-cols-3">
-        <article v-for="carte in statCards" :key="carte.label" class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+        <article v-for="carte in statCards" :key="carte.label" class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
           <div class="mb-3 flex items-center justify-between">
-            <p class="text-xs font-extrabold uppercase tracking-widest text-slate-400">{{ carte.label }}</p>
+            <p class="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">{{ carte.label }}</p>
             <i class="fa-solid" :class="[carte.icon, carte.accent]"></i>
           </div>
-          <p class="text-2xl font-black text-slate-950">{{ carte.valeur }}</p>
+          <p class="text-2xl font-black text-slate-950 dark:text-slate-100">{{ carte.valeur }}</p>
         </article>
       </div>
 
       <div class="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-        <article class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 class="mb-4 text-lg font-black text-slate-950">Liste des Pèlerins Assignés</h2>
+        <article class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <h2 class="mb-4 text-lg font-black text-slate-950 dark:text-slate-100">Liste des Pèlerins Assignés</h2>
           <div class="relative mb-4">
             <i class="fa-solid fa-magnifying-glass pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-400"></i>
             <input
               v-model="terme"
               type="search"
               placeholder="Rechercher un pèlerin (nom, passeport)…"
-              class="w-full rounded-2xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm"
+              class="w-full rounded-2xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
               @input="surRecherche"
             />
           </div>
           <div class="grid gap-3">
-            <p v-if="filtres.length === 0" class="text-sm text-slate-400">{{ pelerins.length ? 'Aucun pèlerin ne correspond à votre recherche.' : 'Aucun pèlerin dans ce groupe.' }}</p>
+            <p v-if="filtres.length === 0" class="text-sm text-slate-400 dark:text-slate-500">{{ pelerins.length ? 'Aucun pèlerin ne correspond à votre recherche.' : 'Aucun pèlerin dans ce groupe.' }}</p>
             <template v-else>
-              <div v-for="p in pageItems" :key="p.id" class="flex items-center justify-between rounded-2xl bg-[#F2F2DE]/60 px-4 py-3">
+              <div v-for="p in pageItems" :key="p.id" class="flex items-center justify-between rounded-2xl bg-[#F2F2DE]/60 px-4 py-3 dark:bg-slate-700/50">
                 <div>
-                  <p class="font-bold text-slate-800">{{ utilisateurMap[p.utilisateurId]?.nomComplet || '-' }}</p>
-                  <p class="text-xs text-slate-500">Passeport : {{ p.numeroPasseport }}</p>
+                  <p class="font-bold text-slate-800 dark:text-slate-100">{{ utilisateurMap[p.utilisateurId]?.nomComplet || '-' }}</p>
+                  <p class="text-xs text-slate-500 dark:text-slate-400">Passeport : {{ p.numeroPasseport }}</p>
                 </div>
-                <span v-if="p.statutVisa === 'APPROUVE'" class="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-700">Approuvé</span>
-                <span v-else class="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-700">{{ p.statutVisa }}</span>
+                <span v-if="p.statutVisa === 'APPROUVE'" class="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400">Approuvé</span>
+                <span v-else class="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-700 dark:bg-amber-500/20 dark:text-amber-400">{{ p.statutVisa }}</span>
               </div>
             </template>
           </div>
           <Pagination v-model:page="page" :total-pages="totalPages" />
         </article>
 
-        <article class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 class="mb-3 text-lg font-black text-slate-950">Directives Rapides du Guide</h2>
-          <p class="text-sm leading-6 text-slate-600">Utilisez le panneau d'itinéraire de voyage pour ajouter des consignes sur les points de rassemblement. Informer régulièrement les pèlerins sur les rituels du jour permet de prévenir les égarements dans les foules.</p>
+        <article class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <h2 class="mb-3 text-lg font-black text-slate-950 dark:text-slate-100">Directives Rapides du Guide</h2>
+          <p class="text-sm leading-6 text-slate-600 dark:text-slate-300">Utilisez le panneau d'itinéraire de voyage pour ajouter des consignes sur les points de rassemblement. Informer régulièrement les pèlerins sur les rituels du jour permet de prévenir les égarements dans les foules.</p>
           <button
             type="button"
             class="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#BC7B3B] px-4 py-3 text-sm font-extrabold text-white transition hover:opacity-90"

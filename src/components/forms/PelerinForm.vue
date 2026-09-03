@@ -261,14 +261,14 @@ async function soumettre() {
 <template>
   <form @submit.prevent="soumettre" class="grid gap-4">
     <div>
-      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500">Nom Complet *</label>
+      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Nom Complet *</label>
       <input
         v-model="nomComplet"
         type="text"
         placeholder="Nom du pèlerin"
         :readonly="isEdit"
-        class="w-full rounded-2xl border bg-white px-4 py-3 text-sm transition focus:outline-none focus:ring-2"
-        :class="erreurNom ? 'border-rose-500 focus:ring-rose-100' : 'border-slate-200 focus:ring-[#333D2A]/30'"
+        class="w-full rounded-2xl border bg-white px-4 py-3 text-sm transition focus:outline-none focus:ring-2 dark:bg-slate-800 dark:text-slate-100"
+        :class="erreurNom ? 'border-rose-500 focus:ring-rose-100' : 'border-slate-200 focus:ring-[#333D2A]/30 dark:border-slate-600'"
       />
       <p v-if="erreurNom" class="mt-1 text-xs text-rose-600">{{ erreurNom }}</p>
     </div>
@@ -281,8 +281,8 @@ async function soumettre() {
     </template>
 
     <div>
-      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500">Statut du Visa *</label>
-      <select v-model="statutVisa" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm">
+      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Statut du Visa *</label>
+      <select v-model="statutVisa" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100">
         <option value="EN_ATTENTE">En cours</option>
         <option value="APPROUVE">Approuvé</option>
         <option value="REFUSE">Refusé</option>
@@ -290,11 +290,11 @@ async function soumettre() {
     </div>
 
     <div>
-      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500">Numéro de Groupe *</label>
+      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Numéro de Groupe *</label>
       <select
         v-model="groupeId"
-        class="w-full rounded-2xl border bg-white px-4 py-3 text-sm transition focus:outline-none focus:ring-2"
-        :class="erreurGroupe ? 'border-rose-500 focus:ring-rose-100' : 'border-slate-200 focus:ring-[#333D2A]/30'"
+        class="w-full rounded-2xl border bg-white px-4 py-3 text-sm transition focus:outline-none focus:ring-2 dark:bg-slate-800 dark:text-slate-100"
+        :class="erreurGroupe ? 'border-rose-500 focus:ring-rose-100' : 'border-slate-200 focus:ring-[#333D2A]/30 dark:border-slate-600'"
       >
         <option value="">-- Choisir un groupe --</option>
         <option v-for="g in groupeOptions" :key="g.value" :value="g.value">{{ g.label }}</option>
@@ -303,37 +303,37 @@ async function soumettre() {
     </div>
 
     <div v-if="!isEdit">
-      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500">Image</label>
+      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Image</label>
       <img v-if="apercuPhoto" :src="apercuPhoto" alt="" class="mb-2 h-14 w-14 rounded-full object-cover" />
       <input
         type="file"
         accept="image/*"
         @change="surChangementPhoto"
-        class="w-full rounded-2xl border bg-white px-4 py-2.5 text-sm focus:outline-none"
-        :class="erreurPhoto ? 'border-rose-500' : 'border-slate-200'"
+        class="w-full rounded-2xl border bg-white px-4 py-2.5 text-sm focus:outline-none dark:bg-slate-800 dark:text-slate-100"
+        :class="erreurPhoto ? 'border-rose-500' : 'border-slate-200 dark:border-slate-600'"
       />
       <p v-if="erreurPhoto" class="mt-1 text-xs text-rose-600">{{ erreurPhoto }}</p>
     </div>
 
     <div>
-      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500">Problèmes de Santé Chroniques (ex: Asthme, Diabète, Fauteuil roulant)</label>
+      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Problèmes de Santé Chroniques (ex: Asthme, Diabète, Fauteuil roulant)</label>
       <textarea
         v-model="informationsMedicales"
         rows="2"
         placeholder="Texte saisi"
-        class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm"
+        class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
       ></textarea>
     </div>
 
-    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-      <p class="mb-3 text-sm font-extrabold text-slate-800">{{ aProcheExistant ? "Contact d'urgence (proche)" : "Ajouter un Proche ?" }}</p>
+    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-600 dark:bg-slate-700/50">
+      <p class="mb-3 text-sm font-extrabold text-slate-800 dark:text-slate-100">{{ aProcheExistant ? "Contact d'urgence (proche)" : "Ajouter un Proche ?" }}</p>
 
       <div v-if="!aProcheExistant" class="flex gap-4">
-        <label class="flex items-center gap-2 text-sm">
+        <label class="flex items-center gap-2 text-sm dark:text-slate-200">
           <input type="radio" value="oui" v-model="ajouterProche" />
           OUI
         </label>
-        <label class="flex items-center gap-2 text-sm">
+        <label class="flex items-center gap-2 text-sm dark:text-slate-200">
           <input type="radio" value="non" v-model="ajouterProche" />
           NON
         </label>
@@ -341,46 +341,46 @@ async function soumettre() {
 
       <div v-if="aProcheExistant || ajouterProche === 'oui'" class="grid gap-4" :class="{ 'mt-4': !aProcheExistant }">
         <div>
-          <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500">Nom Complet *</label>
+          <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Nom Complet *</label>
           <input
             v-model="procheNomComplet"
             type="text"
             placeholder="Entrez le nom du proche"
-            class="w-full rounded-2xl border bg-white px-4 py-3 text-sm transition focus:outline-none focus:ring-2"
-            :class="erreurProcheNom ? 'border-rose-500 focus:ring-rose-100' : 'border-slate-200 focus:ring-[#333D2A]/30'"
+            class="w-full rounded-2xl border bg-white px-4 py-3 text-sm transition focus:outline-none focus:ring-2 dark:bg-slate-800 dark:text-slate-100"
+            :class="erreurProcheNom ? 'border-rose-500 focus:ring-rose-100' : 'border-slate-200 focus:ring-[#333D2A]/30 dark:border-slate-600'"
           />
           <p v-if="erreurProcheNom" class="mt-1 text-xs text-rose-600">{{ erreurProcheNom }}</p>
         </div>
         <div>
-          <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500">Téléphone *</label>
+          <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Téléphone *</label>
           <input
             v-model="procheTelephone"
             type="text"
             placeholder="Entrez le téléphone"
-            class="w-full rounded-2xl border bg-white px-4 py-3 text-sm transition focus:outline-none focus:ring-2"
-            :class="erreurProcheTelephone ? 'border-rose-500 focus:ring-rose-100' : 'border-slate-200 focus:ring-[#333D2A]/30'"
+            class="w-full rounded-2xl border bg-white px-4 py-3 text-sm transition focus:outline-none focus:ring-2 dark:bg-slate-800 dark:text-slate-100"
+            :class="erreurProcheTelephone ? 'border-rose-500 focus:ring-rose-100' : 'border-slate-200 focus:ring-[#333D2A]/30 dark:border-slate-600'"
           />
           <p v-if="erreurProcheTelephone" class="mt-1 text-xs text-rose-600">{{ erreurProcheTelephone }}</p>
         </div>
         <div>
-          <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500">Email (facultatif)</label>
+          <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Email (facultatif)</label>
           <input
             v-model="procheEmail"
             type="email"
             placeholder="Entrez l'email du proche"
-            class="w-full rounded-2xl border bg-white px-4 py-3 text-sm transition focus:outline-none focus:ring-2"
-            :class="erreurProcheEmail ? 'border-rose-500 focus:ring-rose-100' : 'border-slate-200 focus:ring-[#333D2A]/30'"
+            class="w-full rounded-2xl border bg-white px-4 py-3 text-sm transition focus:outline-none focus:ring-2 dark:bg-slate-800 dark:text-slate-100"
+            :class="erreurProcheEmail ? 'border-rose-500 focus:ring-rose-100' : 'border-slate-200 focus:ring-[#333D2A]/30 dark:border-slate-600'"
           />
           <p v-if="erreurProcheEmail" class="mt-1 text-xs text-rose-600">{{ erreurProcheEmail }}</p>
         </div>
         <div>
-          <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500">Lien de Parenté *</label>
+          <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Lien de Parenté *</label>
           <input
             v-model="procheLienParente"
             type="text"
             placeholder="Entrez le lien de parenté"
-            class="w-full rounded-2xl border bg-white px-4 py-3 text-sm transition focus:outline-none focus:ring-2"
-            :class="erreurProcheLien ? 'border-rose-500 focus:ring-rose-100' : 'border-slate-200 focus:ring-[#333D2A]/30'"
+            class="w-full rounded-2xl border bg-white px-4 py-3 text-sm transition focus:outline-none focus:ring-2 dark:bg-slate-800 dark:text-slate-100"
+            :class="erreurProcheLien ? 'border-rose-500 focus:ring-rose-100' : 'border-slate-200 focus:ring-[#333D2A]/30 dark:border-slate-600'"
           />
           <p v-if="erreurProcheLien" class="mt-1 text-xs text-rose-600">{{ erreurProcheLien }}</p>
         </div>

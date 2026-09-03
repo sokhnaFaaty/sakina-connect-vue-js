@@ -99,52 +99,52 @@ watch(sosActif, async () => {
     </header>
 
     <div class="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      <article class="rounded-3xl border-b-4 border-b-[#333D2A] border border-slate-200 bg-white p-5 shadow-sm">
+      <article class="rounded-3xl border-b-4 border-b-[#333D2A] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
         <div class="mb-3 flex items-center justify-between">
-          <p class="text-xs font-extrabold uppercase tracking-widest text-slate-400">Total des pèlerins</p>
-          <i class="fa-solid fa-users text-[#333D2A]"></i>
+          <p class="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Total des pèlerins</p>
+          <i class="fa-solid fa-users text-[#333D2A] dark:text-[#BC7B3B]"></i>
         </div>
-        <p class="text-3xl font-black text-slate-950">{{ pelerins.length }}</p>
-        <p class="mt-2 text-xs text-slate-400">Actifs avant départ &amp; sur place</p>
+        <p class="text-3xl font-black text-slate-950 dark:text-slate-100">{{ pelerins.length }}</p>
+        <p class="mt-2 text-xs text-slate-400 dark:text-slate-500">Actifs avant départ &amp; sur place</p>
       </article>
 
-      <article class="rounded-3xl border-b-4 border-b-amber-500 border border-slate-200 bg-white p-5 shadow-sm">
+      <article class="rounded-3xl border-b-4 border-b-amber-500 border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
         <div class="mb-3 flex items-center justify-between">
-          <p class="text-xs font-extrabold uppercase tracking-widest text-slate-400">Problèmes de visa</p>
+          <p class="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Problèmes de visa</p>
           <i class="fa-solid fa-file-circle-exclamation text-amber-500"></i>
         </div>
-        <p class="text-3xl font-black text-slate-950">{{ problemesVisa }}</p>
-        <p class="mt-2 text-xs text-slate-400">En cours / manquants</p>
+        <p class="text-3xl font-black text-slate-950 dark:text-slate-100">{{ problemesVisa }}</p>
+        <p class="mt-2 text-xs text-slate-400 dark:text-slate-500">En cours / manquants</p>
       </article>
 
-      <article class="rounded-3xl border-b-4 border-b-rose-600 border border-slate-200 bg-white p-5 shadow-sm">
+      <article class="rounded-3xl border-b-4 border-b-rose-600 border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
         <div class="mb-3 flex items-center justify-between">
-          <p class="text-xs font-extrabold uppercase tracking-widest text-slate-400">SOS actives</p>
+          <p class="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">SOS actives</p>
           <i class="fa-solid fa-circle-exclamation text-rose-600"></i>
         </div>
-        <p class="text-3xl font-black text-slate-950">{{ sosActifs.length }}</p>
-        <p class="mt-2 text-xs text-slate-400">Secours immédiat requis !</p>
+        <p class="text-3xl font-black text-slate-950 dark:text-slate-100">{{ sosActifs.length }}</p>
+        <p class="mt-2 text-xs text-slate-400 dark:text-slate-500">Secours immédiat requis !</p>
       </article>
 
-      <article class="rounded-3xl border-b-4 border-b-[#333D2A] border border-slate-200 bg-white p-5 shadow-sm">
+      <article class="rounded-3xl border-b-4 border-b-[#333D2A] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
         <div class="mb-3 flex items-center justify-between">
-          <p class="text-xs font-extrabold uppercase tracking-widest text-slate-400">Guides assignés</p>
-          <i class="fa-solid fa-user-tie text-[#333D2A]"></i>
+          <p class="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Guides assignés</p>
+          <i class="fa-solid fa-user-tie text-[#333D2A] dark:text-[#BC7B3B]"></i>
         </div>
-        <p class="text-3xl font-black text-slate-950">{{ guidesAssignes }}</p>
-        <p class="mt-2 text-xs text-slate-400">Actifs avant départ &amp; sur place</p>
+        <p class="text-3xl font-black text-slate-950 dark:text-slate-100">{{ guidesAssignes }}</p>
+        <p class="mt-2 text-xs text-slate-400 dark:text-slate-500">Actifs avant départ &amp; sur place</p>
       </article>
     </div>
 
     <div class="grid gap-6 lg:grid-cols-2">
-      <article class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+      <article class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
         <SosPanel :sos-actifs="sosActifs" :resolve-nom="nomResolver" @resolved="charger" />
         <div v-if="sosActif" id="sosMapContainer" class="mt-4 h-64 w-full"></div>
       </article>
 
-      <article class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+      <article class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
         <div class="mb-4 flex items-center justify-between">
-          <h2 class="flex items-center gap-2 text-lg font-black text-slate-950"><i class="fa-solid fa-bell text-[#333D2A]"></i> Bulletins Système Actifs</h2>
+          <h2 class="flex items-center gap-2 text-lg font-black text-slate-950 dark:text-slate-100"><i class="fa-solid fa-bell text-[#333D2A] dark:text-[#BC7B3B]"></i> Bulletins Système Actifs</h2>
           <button type="button" class="text-sm font-bold text-[#BC7B3B] hover:underline" @click="router.push('/annonces')">Gérer les Posts</button>
         </div>
         <div class="grid gap-3">
@@ -152,18 +152,18 @@ watch(sosActif, async () => {
             <div
               v-for="a in bulletinsItems"
               :key="a.id"
-              class="rounded-2xl border border-slate-100 bg-slate-50 p-4"
+              class="rounded-2xl border border-slate-100 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-700/50"
               :class="a.urgence ? 'border-l-4 border-l-[#B40909]' : ''"
             >
               <div class="mb-1 flex items-center justify-between gap-2">
-                <p class="font-bold text-slate-800">{{ a.titre }}</p>
-                <span v-if="a.urgence" class="rounded-full bg-rose-100 px-2 py-0.5 text-[10px] font-black text-rose-700">URGENT</span>
+                <p class="font-bold text-slate-800 dark:text-slate-100">{{ a.titre }}</p>
+                <span v-if="a.urgence" class="rounded-full bg-rose-100 px-2 py-0.5 text-[10px] font-black text-rose-700 dark:bg-rose-500/20 dark:text-rose-400">URGENT</span>
               </div>
-              <p class="text-xs text-slate-500 line-clamp-2">{{ a.contenu }}</p>
-              <p class="mt-2 text-[10px] font-bold uppercase tracking-widest text-slate-400">{{ auteurAnnonce(a) }} · {{ (a.datePublication || '').slice(0, 10) }}</p>
+              <p class="text-xs text-slate-500 line-clamp-2 dark:text-slate-400">{{ a.contenu }}</p>
+              <p class="mt-2 text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">{{ auteurAnnonce(a) }} · {{ (a.datePublication || '').slice(0, 10) }}</p>
             </div>
           </template>
-          <p v-else class="text-sm text-slate-400">Aucun communiqué publié.</p>
+          <p v-else class="text-sm text-slate-400 dark:text-slate-500">Aucun communiqué publié.</p>
         </div>
         <Pagination v-model:page="bulletinsPage" :total-pages="bulletinsTotalPages" />
       </article>

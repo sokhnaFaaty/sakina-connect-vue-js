@@ -124,8 +124,8 @@ function conformite(ok) {
 
 <template>
   <!-- Garde : aucun profil pèlerin associé -->
-  <section v-if="!chargement && !pelerin" class="rounded-[2rem] border border-amber-200 bg-amber-50 p-8 text-center">
-    <p class="text-sm font-semibold text-amber-700">Aucun profil pèlerin associé à ce compte.</p>
+  <section v-if="!chargement && !pelerin" class="rounded-[2rem] border border-amber-200 bg-amber-50 p-8 text-center dark:border-amber-500/40 dark:bg-amber-500/10">
+    <p class="text-sm font-semibold text-amber-700 dark:text-amber-400">Aucun profil pèlerin associé à ce compte.</p>
   </section>
 
   <section v-else>
@@ -137,74 +137,74 @@ function conformite(ok) {
 
     <div class="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
       <!-- Carte gauche : Informations Personnelles -->
-      <article class="rounded-[2rem] border border-t-4 border-slate-200 border-t-[#0B6E4F] bg-white p-6 shadow-sm">
+      <article class="rounded-[2rem] border border-t-4 border-slate-200 border-t-[#0B6E4F] bg-white p-6 shadow-sm dark:border-slate-700 dark:border-t-[#0B6E4F] dark:bg-slate-800">
         <div class="mb-5 flex items-center justify-between">
-          <h2 class="flex items-center gap-2 text-base font-black text-slate-950"><i class="fa-solid fa-user text-[#333D2A]"></i> Informations Personnelles</h2>
-          <span class="rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-black text-emerald-700">Modifiable par vous</span>
+          <h2 class="flex items-center gap-2 text-base font-black text-slate-950 dark:text-slate-100"><i class="fa-solid fa-user text-[#333D2A] dark:text-[#BC7B3B]"></i> Informations Personnelles</h2>
+          <span class="rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-black text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400">Modifiable par vous</span>
         </div>
 
         <div class="mb-5 flex items-start gap-4">
-          <div class="h-16 w-16 shrink-0 overflow-hidden rounded-full bg-slate-100">
+          <div class="h-16 w-16 shrink-0 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
             <img v-if="auth.user?.photo" :src="auth.user.photo" class="h-full w-full object-cover" />
-            <div v-else class="flex h-full w-full items-center justify-center text-slate-300"><i class="fa-solid fa-user text-2xl"></i></div>
+            <div v-else class="flex h-full w-full items-center justify-center text-slate-300 dark:text-slate-500"><i class="fa-solid fa-user text-2xl"></i></div>
           </div>
           <div class="flex-1">
-            <p class="font-bold text-slate-900">Photo de Profil</p>
-            <p class="text-xs text-slate-500">Choisissez une photo représentative pour faciliter votre identification par l'agence sur place.</p>
-            <button type="button" @click="photoVisible = !photoVisible" class="mt-1 text-xs font-bold text-[#333D2A] underline">Choisissez un avatar ou entrer une URL.</button>
+            <p class="font-bold text-slate-900 dark:text-slate-100">Photo de Profil</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Choisissez une photo représentative pour faciliter votre identification par l'agence sur place.</p>
+            <button type="button" @click="photoVisible = !photoVisible" class="mt-1 text-xs font-bold text-[#333D2A] underline dark:text-[#BC7B3B]">Choisissez un avatar ou entrer une URL.</button>
             <input
               v-show="photoVisible"
               v-model="photo"
               type="text"
               placeholder="https://…"
-              class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm"
+              class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
             />
           </div>
         </div>
 
         <div class="mb-5 grid gap-4 sm:grid-cols-2">
           <div>
-            <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500">Numéro de téléphone</label>
-            <input v-model="telephone" type="text" placeholder="77 123 45 67" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm" />
+            <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Numéro de téléphone</label>
+            <input v-model="telephone" type="text" placeholder="77 123 45 67" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100" />
             <p v-if="errTel" class="mt-1 text-xs text-rose-600">{{ errTel }}</p>
           </div>
           <div>
-            <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500">Adresse email</label>
-            <input v-model="email" type="email" placeholder="email@exemple.com" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm" />
+            <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Adresse email</label>
+            <input v-model="email" type="email" placeholder="email@exemple.com" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100" />
             <p v-if="errEmail" class="mt-1 text-xs text-rose-600">{{ errEmail }}</p>
           </div>
         </div>
 
         <!-- Contact d'urgence : votre proche (lecture seule) -->
-        <div v-if="procheUser" class="mt-5 rounded-2xl bg-rose-50 p-4">
-          <p class="mb-3 flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-rose-600"><i class="fa-solid fa-hand-holding-heart"></i> Contact d'urgence — votre proche</p>
+        <div v-if="procheUser" class="mt-5 rounded-2xl bg-rose-50 p-4 dark:bg-rose-500/10">
+          <p class="mb-3 flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-rose-600 dark:text-rose-400"><i class="fa-solid fa-hand-holding-heart"></i> Contact d'urgence — votre proche</p>
           <div class="grid gap-4 sm:grid-cols-2 text-sm">
             <div>
-              <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Nom complet</p>
-              <p class="mt-0.5 font-bold text-slate-800">{{ procheUser.nomComplet || '-' }}{{ lienParente ? ` (${lienParente})` : '' }}</p>
+              <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Nom complet</p>
+              <p class="mt-0.5 font-bold text-slate-800 dark:text-slate-100">{{ procheUser.nomComplet || '-' }}{{ lienParente ? ` (${lienParente})` : '' }}</p>
             </div>
             <div>
-              <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Téléphone</p>
-              <p class="mt-0.5 font-bold text-slate-800">{{ procheUser.telephone || '-' }}</p>
+              <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Téléphone</p>
+              <p class="mt-0.5 font-bold text-slate-800 dark:text-slate-100">{{ procheUser.telephone || '-' }}</p>
             </div>
           </div>
         </div>
 
         <div class="mt-5">
-          <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500">Informations médicales de sécurité</label>
-          <textarea v-model="informationsMedicales" rows="2" placeholder="Ex: Hypertension, prendre régulièrement mes médicaments" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm"></textarea>
-          <p class="mt-1 text-[11px] italic text-slate-400">Ces données médicales sont exclusivement transmises aux guides référents et à l'admin pour assurer votre sécurité en cas d'urgence médicale.</p>
+          <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Informations médicales de sécurité</label>
+          <textarea v-model="informationsMedicales" rows="2" placeholder="Ex: Hypertension, prendre régulièrement mes médicaments" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"></textarea>
+          <p class="mt-1 text-[11px] italic text-slate-400 dark:text-slate-500">Ces données médicales sont exclusivement transmises aux guides référents et à l'admin pour assurer votre sécurité en cas d'urgence médicale.</p>
         </div>
 
         <div class="mt-5 grid gap-4 sm:grid-cols-2">
           <div>
-            <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500">Mot de passe de connexion</label>
-            <input v-model="motDePasse" type="password" placeholder="Laisser vide pour ne pas changer" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm" />
+            <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Mot de passe de connexion</label>
+            <input v-model="motDePasse" type="password" placeholder="Laisser vide pour ne pas changer" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100" />
             <p v-if="errMdp" class="mt-1 text-xs text-rose-600">{{ errMdp }}</p>
           </div>
           <div>
-            <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500">Confirmer le mot de passe</label>
-            <input v-model="motDePasseConfirm" type="password" placeholder="Retapez le nouveau mot de passe" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm" />
+            <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Confirmer le mot de passe</label>
+            <input v-model="motDePasseConfirm" type="password" placeholder="Retapez le nouveau mot de passe" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100" />
             <p v-if="errMdpConfirm" class="mt-1 text-xs text-rose-600">{{ errMdpConfirm }}</p>
           </div>
         </div>
@@ -218,17 +218,17 @@ function conformite(ok) {
 
       <!-- Colonne droite : Conformité + Guide -->
       <div class="grid gap-6">
-        <article class="rounded-[2rem] border border-t-4 border-slate-200 border-t-[#225BBF] bg-white p-6 shadow-sm">
-          <h2 class="mb-3 flex items-center gap-2 text-base font-black text-slate-950"><i class="fa-solid fa-file-shield text-[#333D2A]"></i> Conformité réglementaire</h2>
-          <p class="mb-3 text-xs text-slate-500">Vérifiez la validité de vos documents officiels avant votre présentation à l'aéroport.</p>
-          <div class="flex items-center justify-between border-b border-slate-100 py-2.5 text-sm">
-            <span class="text-slate-600">Passeport scanné</span><span v-html="conformite(!!pelerin?.numeroPasseport)"></span>
+        <article class="rounded-[2rem] border border-t-4 border-slate-200 border-t-[#225BBF] bg-white p-6 shadow-sm dark:border-slate-700 dark:border-t-[#225BBF] dark:bg-slate-800">
+          <h2 class="mb-3 flex items-center gap-2 text-base font-black text-slate-950 dark:text-slate-100"><i class="fa-solid fa-file-shield text-[#333D2A] dark:text-[#BC7B3B]"></i> Conformité réglementaire</h2>
+          <p class="mb-3 text-xs text-slate-500 dark:text-slate-400">Vérifiez la validité de vos documents officiels avant votre présentation à l'aéroport.</p>
+          <div class="flex items-center justify-between border-b border-slate-100 py-2.5 text-sm dark:border-slate-700">
+            <span class="text-slate-600 dark:text-slate-300">Passeport scanné</span><span v-html="conformite(!!pelerin?.numeroPasseport)"></span>
           </div>
-          <div class="flex items-center justify-between border-b border-slate-100 py-2.5 text-sm">
-            <span class="text-slate-600">Visa Omra / Hajj</span><span v-html="conformite(pelerin?.statutVisa === 'APPROUVE')"></span>
+          <div class="flex items-center justify-between border-b border-slate-100 py-2.5 text-sm dark:border-slate-700">
+            <span class="text-slate-600 dark:text-slate-300">Visa Omra / Hajj</span><span v-html="conformite(pelerin?.statutVisa === 'APPROUVE')"></span>
           </div>
           <div class="flex items-center justify-between py-2.5 text-sm">
-            <span class="text-slate-600">Vaccin obligatoire ACWY</span><span v-html="conformite(!!pelerin?.certificatVaccin)"></span>
+            <span class="text-slate-600 dark:text-slate-300">Vaccin obligatoire ACWY</span><span v-html="conformite(!!pelerin?.certificatVaccin)"></span>
           </div>
         </article>
 
@@ -243,8 +243,8 @@ function conformite(ok) {
     </div>
 
     <!-- Informations administratives (lecture seule) -->
-    <article class="mt-6 rounded-[2rem] border border-t-4 border-slate-200 border-t-[#0B6E4F] bg-white p-6 shadow-sm">
-      <h2 class="mb-4 flex items-center gap-2 text-base font-black text-slate-950"><i class="fa-solid fa-clipboard-list text-[#333D2A]"></i> Informations administratives</h2>
+    <article class="mt-6 rounded-[2rem] border border-t-4 border-slate-200 border-t-[#0B6E4F] bg-white p-6 shadow-sm dark:border-slate-700 dark:border-t-[#0B6E4F] dark:bg-slate-800">
+      <h2 class="mb-4 flex items-center gap-2 text-base font-black text-slate-950 dark:text-slate-100"><i class="fa-solid fa-clipboard-list text-[#333D2A] dark:text-[#BC7B3B]"></i> Informations administratives</h2>
       <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <div v-for="info in [
           ['Nom complet', auth.user?.nomComplet || '-'],
@@ -257,9 +257,9 @@ function conformite(ok) {
           ['Hôtel Médine', hotelMedine],
           ['Date de départ', groupe?.dateDepart || '-'],
           ['Date de retour', groupe?.dateRetour || '-'],
-        ]" :key="info[0]" class="rounded-2xl bg-[#F2F2DE]/60 px-4 py-3">
-          <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">{{ info[0] }}</p>
-          <p class="mt-0.5 text-sm font-bold text-slate-800">{{ info[1] }}</p>
+        ]" :key="info[0]" class="rounded-2xl bg-[#F2F2DE]/60 px-4 py-3 dark:bg-slate-700/50">
+          <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">{{ info[0] }}</p>
+          <p class="mt-0.5 text-sm font-bold text-slate-800 dark:text-slate-100">{{ info[1] }}</p>
         </div>
       </div>
     </article>

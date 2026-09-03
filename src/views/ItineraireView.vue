@@ -64,8 +64,8 @@ async function chargerGroupes() {
     const groupe = await getGroupeDuGuide(guide.id)
     if (!groupe) {
       etatVide.value = {
-        classes: 'rounded-[2rem] border border-slate-200 bg-white',
-        texteClasse: 'text-slate-500',
+        classes: 'rounded-[2rem] border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800',
+        texteClasse: 'text-slate-500 dark:text-slate-400',
         message: "Aucun groupe ne t'a encore été assigné.",
       }
       return false
@@ -77,8 +77,8 @@ async function chargerGroupes() {
     const groupe = pelerin ? tousGroupes.find((g) => g.id === pelerin.groupeId) : null
     if (!groupe) {
       etatVide.value = {
-        classes: 'rounded-[2rem] border border-slate-200 bg-white',
-        texteClasse: 'text-slate-500',
+        classes: 'rounded-[2rem] border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800',
+        texteClasse: 'text-slate-500 dark:text-slate-400',
         message: "Aucun groupe ne t'est encore assigné.",
       }
       return false
@@ -91,8 +91,8 @@ async function chargerGroupes() {
   groupeId.value = groupes.value[0]?.id || null
   if (!groupeId.value) {
     etatVide.value = {
-      classes: 'rounded-[2rem] border border-slate-200 bg-white',
-      texteClasse: 'text-slate-500',
+      classes: 'rounded-[2rem] border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800',
+      texteClasse: 'text-slate-500 dark:text-slate-400',
       message: 'Aucun groupe disponible.',
     }
     return false
@@ -144,7 +144,9 @@ const compteStatut = (key) =>
   key === 'tous' ? planning.value.length : planning.value.filter((e) => statutEvenement(e) === key).length
 
 function classeFiltre(actif) {
-  return actif ? 'bg-[#333D2A] text-white' : 'bg-slate-100 text-slate-600'
+  return actif
+    ? 'bg-[#333D2A] text-white'
+    : 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
 }
 
 function choisirJour(jour) {
@@ -292,15 +294,15 @@ function ouvrirRejet(evenement) {
 
     <!-- Sélecteur de groupe : admin uniquement si plusieurs groupes -->
     <div v-if="auth.role === 'ADMIN' && groupes.length > 1" class="mb-4">
-      <select id="selectGroupeItineraire" v-model="groupeId" @change="surChangementGroupe" class="w-full max-w-xs rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm">
+      <select id="selectGroupeItineraire" v-model="groupeId" @change="surChangementGroupe" class="w-full max-w-xs rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100">
         <option v-for="g in groupes" :key="g.id" :value="g.id">{{ g.nom }}</option>
       </select>
     </div>
 
     <div class="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
       <div>
-        <div class="mb-4 rounded-3xl border border-slate-200 bg-white p-4">
-          <p class="mb-1.5 text-[11px] font-extrabold uppercase tracking-widest text-slate-400">Filtrer par jour</p>
+        <div class="mb-4 rounded-3xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-800">
+          <p class="mb-1.5 text-[11px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Filtrer par jour</p>
           <div class="flex flex-wrap gap-1.5">
             <button
               v-for="b in boutonsJour"
@@ -313,7 +315,7 @@ function ouvrirRejet(evenement) {
             </button>
           </div>
 
-          <p class="mb-1.5 mt-3 text-[11px] font-extrabold uppercase tracking-widest text-slate-400">Catégories</p>
+          <p class="mb-1.5 mt-3 text-[11px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Catégories</p>
           <div class="flex flex-wrap gap-1.5">
             <button
               v-for="b in boutonsCategorie"
@@ -327,7 +329,7 @@ function ouvrirRejet(evenement) {
           </div>
 
           <template v-if="auth.role === 'ADMIN'">
-            <p class="mb-1.5 mt-3 text-[11px] font-extrabold uppercase tracking-widest text-slate-400">Statut de validation</p>
+            <p class="mb-1.5 mt-3 text-[11px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Statut de validation</p>
             <div class="flex flex-wrap gap-1.5">
               <button
                 v-for="t in STATUT_TABS_EVT"
@@ -337,54 +339,54 @@ function ouvrirRejet(evenement) {
                 :class="classeFiltre(filtreStatut === t.key)"
               >
                 {{ t.label }}
-                <span class="rounded-full bg-white px-1.5 py-0.5 text-[10px] font-black text-slate-600">{{ compteStatut(t.key) }}</span>
+                <span class="rounded-full bg-white px-1.5 py-0.5 text-[10px] font-black text-slate-600 dark:bg-slate-700 dark:text-slate-300">{{ compteStatut(t.key) }}</span>
               </button>
             </div>
           </template>
         </div>
 
         <div class="grid gap-4">
-          <div v-for="e in evenementsPagines" :key="e.id" class="rounded-2xl border border-slate-200 bg-white p-5">
+          <div v-for="e in evenementsPagines" :key="e.id" class="rounded-2xl border border-slate-200 bg-white p-5 dark:border-slate-700 dark:bg-slate-800">
             <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
               <div class="flex items-center gap-2">
                 <span class="rounded-full bg-[#333D2A] px-2.5 py-0.5 text-[10px] font-black uppercase text-white">Jour {{ numeroJour(e) }}</span>
-                <span class="text-xs font-bold text-slate-400">{{ e.heure }}</span>
-                <span class="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-700">{{ categorieMap[e.categorieId] || '' }}</span>
-                <span v-if="statutBadge(e) === STATUT_EVENEMENT.EN_ATTENTE" class="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-700"><i class="fa-solid fa-clock"></i> En attente</span>
-                <span v-if="statutBadge(e) === STATUT_EVENEMENT.REJETE" class="rounded-full bg-rose-100 px-2 py-0.5 text-[10px] font-bold uppercase text-rose-700"><i class="fa-solid fa-circle-xmark"></i> Rejeté</span>
+                <span class="text-xs font-bold text-slate-400 dark:text-slate-500">{{ e.heure }}</span>
+                <span class="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-700 dark:bg-amber-500/20 dark:text-amber-400">{{ categorieMap[e.categorieId] || '' }}</span>
+                <span v-if="statutBadge(e) === STATUT_EVENEMENT.EN_ATTENTE" class="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-700 dark:bg-amber-500/20 dark:text-amber-400"><i class="fa-solid fa-clock"></i> En attente</span>
+                <span v-if="statutBadge(e) === STATUT_EVENEMENT.REJETE" class="rounded-full bg-rose-100 px-2 py-0.5 text-[10px] font-bold uppercase text-rose-700 dark:bg-rose-500/20 dark:text-rose-400"><i class="fa-solid fa-circle-xmark"></i> Rejeté</span>
               </div>
-              <button @click="voirSurCarte(e)" class="flex items-center gap-1 text-xs font-bold text-[#333D2A] hover:underline">
+              <button @click="voirSurCarte(e)" class="flex items-center gap-1 text-xs font-bold text-[#333D2A] hover:underline dark:text-[#BC7B3B]">
                 <i class="fa-solid fa-location-dot"></i> {{ e.lieu }}
               </button>
             </div>
 
-            <div v-if="e.etapeGuide" class="mb-2 rounded-xl bg-[#F2F2DE] px-3 py-2 text-xs font-semibold text-[#333D2A]">
+            <div v-if="e.etapeGuide" class="mb-2 rounded-xl bg-[#F2F2DE] px-3 py-2 text-xs font-semibold text-[#333D2A] dark:bg-slate-700/50 dark:text-[#BC7B3B]">
               Étape de guidage : {{ e.etapeGuide }}
             </div>
 
-            <h3 class="font-black text-slate-900">{{ e.titre }}</h3>
-            <p class="mt-1 text-sm text-slate-500">{{ e.description }}</p>
+            <h3 class="font-black text-slate-900 dark:text-slate-100">{{ e.titre }}</h3>
+            <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ e.description }}</p>
 
-            <div v-if="statutBadge(e) === STATUT_EVENEMENT.REJETE && e.motifRejet" class="mt-3 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-700">
+            <div v-if="statutBadge(e) === STATUT_EVENEMENT.REJETE && e.motifRejet" class="mt-3 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-700 dark:border-rose-500/40 dark:bg-rose-500/10 dark:text-rose-400">
               <i class="fa-solid fa-circle-exclamation"></i> Motif du rejet : {{ e.motifRejet }}
             </div>
 
             <div v-if="canEdit" class="mt-3 flex gap-4 text-xs font-extrabold">
-              <button @click="ouvrirForm(e)" class="text-amber-600 hover:underline">Modifier</button>
-              <button @click="supprimer(e)" class="text-rose-600 hover:underline">Supprimer</button>
+              <button @click="ouvrirForm(e)" class="text-amber-600 hover:underline dark:text-amber-400">Modifier</button>
+              <button @click="supprimer(e)" class="text-rose-600 hover:underline dark:text-rose-400">Supprimer</button>
             </div>
 
-            <div v-if="montrerModeration(e)" class="mt-3 flex flex-wrap gap-2 border-t border-slate-100 pt-3">
+            <div v-if="montrerModeration(e)" class="mt-3 flex flex-wrap gap-2 border-t border-slate-100 pt-3 dark:border-slate-700">
               <button @click="approuver(e)" class="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3 py-1.5 text-xs font-extrabold text-white transition hover:bg-emerald-700"><i class="fa-solid fa-check"></i> Approuver</button>
-              <button v-if="statutBadge(e) === STATUT_EVENEMENT.EN_ATTENTE" @click="ouvrirRejet(e)" class="inline-flex items-center gap-1.5 rounded-xl border border-rose-200 bg-white px-3 py-1.5 text-xs font-extrabold text-rose-600 transition hover:bg-rose-50"><i class="fa-solid fa-ban"></i> Rejeter</button>
+              <button v-if="statutBadge(e) === STATUT_EVENEMENT.EN_ATTENTE" @click="ouvrirRejet(e)" class="inline-flex items-center gap-1.5 rounded-xl border border-rose-200 bg-white px-3 py-1.5 text-xs font-extrabold text-rose-600 transition hover:bg-rose-50 dark:border-rose-500/40 dark:bg-slate-700 dark:text-rose-400 dark:hover:bg-rose-500/10"><i class="fa-solid fa-ban"></i> Rejeter</button>
             </div>
           </div>
-          <p v-if="evenementsPagines.length === 0" class="text-sm text-slate-400">Aucun événement pour ce filtre.</p>
+          <p v-if="evenementsPagines.length === 0" class="text-sm text-slate-400 dark:text-slate-500">Aucun événement pour ce filtre.</p>
         </div>
 
         <!-- Pagination : chevrons + numéros ronds -->
         <div v-if="totalPages > 1" class="mt-4 flex items-center justify-center gap-2">
-          <button @click="changerPage(pageActuelle - 1)" class="h-8 w-8 rounded-full text-xs font-bold text-slate-500 hover:bg-slate-100">
+          <button @click="changerPage(pageActuelle - 1)" class="h-8 w-8 rounded-full text-xs font-bold text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700">
             <i class="fa-solid fa-chevron-left"></i>
           </button>
           <button
@@ -392,18 +394,18 @@ function ouvrirRejet(evenement) {
             :key="page"
             @click="changerPage(page)"
             class="h-8 w-8 rounded-full text-xs font-bold transition"
-            :class="page === pageActuelle ? 'bg-[#333D2A] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
+            :class="page === pageActuelle ? 'bg-[#333D2A] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600'"
           >
             {{ page }}
           </button>
-          <button @click="changerPage(pageActuelle + 1)" class="h-8 w-8 rounded-full text-xs font-bold text-slate-500 hover:bg-slate-100">
+          <button @click="changerPage(pageActuelle + 1)" class="h-8 w-8 rounded-full text-xs font-bold text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700">
             <i class="fa-solid fa-chevron-right"></i>
           </button>
         </div>
       </div>
 
-      <div class="h-[500px] overflow-hidden rounded-[2rem] border border-slate-200 lg:sticky lg:top-20">
-        <div v-if="placeholderCarte" class="flex h-full items-center justify-center text-sm text-slate-400">Aucune position définie pour ce voyage.</div>
+      <div class="h-[500px] overflow-hidden rounded-[2rem] border border-slate-200 lg:sticky lg:top-20 dark:border-slate-700">
+        <div v-if="placeholderCarte" class="flex h-full items-center justify-center text-sm text-slate-400 dark:text-slate-500">Aucune position définie pour ce voyage.</div>
         <div v-else id="carteItineraire" class="h-full w-full"></div>
       </div>
     </div>

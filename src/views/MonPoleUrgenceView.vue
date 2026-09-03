@@ -55,11 +55,11 @@ onMounted(charger);
       subtitle="Pôle d'assistance critique d'égarement pour les pèlerins de ton groupe."
     />
 
-    <div v-if="!guide" class="rounded-[2rem] border border-slate-200 bg-white p-10 text-center text-sm text-slate-500 shadow-sm">Aucun profil guide associé à ce compte.</div>
+    <div v-if="!guide" class="rounded-[2rem] border border-slate-200 bg-white p-10 text-center text-sm text-slate-500 shadow-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400">Aucun profil guide associé à ce compte.</div>
 
-    <div v-else-if="!groupe" class="rounded-[2rem] border border-slate-200 bg-white p-10 text-center text-sm text-slate-500 shadow-sm">Aucun groupe ne t'a encore été assigné.</div>
+    <div v-else-if="!groupe" class="rounded-[2rem] border border-slate-200 bg-white p-10 text-center text-sm text-slate-500 shadow-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400">Aucun groupe ne t'a encore été assigné.</div>
 
-    <article v-else class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+    <article v-else class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
       <SosPanel :sos-actifs="sosActifs" :resolve-nom="nomResolver" @resolved="charger" />
     </article>
   </section>

@@ -90,8 +90,8 @@ onMounted(charger)
 </script>
 
 <template>
-  <section v-if="!chargement && !pelerin" class="rounded-[2rem] border border-amber-200 bg-amber-50 p-8 text-center">
-    <p class="text-sm font-semibold text-amber-700">Aucun profil pèlerin associé à ce compte.</p>
+  <section v-if="!chargement && !pelerin" class="rounded-[2rem] border border-amber-200 bg-amber-50 p-8 text-center dark:border-amber-500/40 dark:bg-amber-500/10">
+    <p class="text-sm font-semibold text-amber-700 dark:text-amber-400">Aucun profil pèlerin associé à ce compte.</p>
   </section>
 
   <section v-else>
@@ -107,36 +107,36 @@ onMounted(charger)
     <div class="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
       <div class="grid gap-6">
         <template v-if="sosActif">
-          <div class="rounded-[2rem] border border-slate-200 bg-white p-6">
+          <div class="rounded-[2rem] border border-slate-200 bg-white p-6 dark:border-slate-700 dark:bg-slate-800">
             <div class="mb-4 flex items-center justify-between">
-              <h2 class="text-base font-black text-slate-950">État de l'alerte active :</h2>
-              <span class="text-xs text-slate-400">Date et Heure de l'alerte : {{ new Date(sosActif.dateHeure).toLocaleString('fr-FR') }}</span>
+              <h2 class="text-base font-black text-slate-950 dark:text-slate-100">État de l'alerte active :</h2>
+              <span class="text-xs text-slate-400 dark:text-slate-500">Date et Heure de l'alerte : {{ new Date(sosActif.dateHeure).toLocaleString('fr-FR') }}</span>
             </div>
-            <span class="mb-4 inline-block rounded-full bg-rose-100 px-3 py-1 text-xs font-black text-rose-700">En attente de secours</span>
+            <span class="mb-4 inline-block rounded-full bg-rose-100 px-3 py-1 text-xs font-black text-rose-700 dark:bg-rose-500/20 dark:text-rose-400">En attente de secours</span>
 
             <div class="mt-4 grid gap-4 sm:grid-cols-2">
               <div>
-                <p class="text-xs font-extrabold uppercase tracking-widest text-slate-400">Localisation déclarée :</p>
-                <p class="mt-1 flex items-center gap-1 text-sm font-bold text-slate-800">
+                <p class="text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Localisation déclarée :</p>
+                <p class="mt-1 flex items-center gap-1 text-sm font-bold text-slate-800 dark:text-slate-100">
                   <i class="fa-solid fa-location-dot text-rose-500"></i> {{ sosActif.latitude.toFixed(4) }}, {{ sosActif.longitude.toFixed(4) }}
                 </p>
-                <p v-if="sosActif.commentaire" class="mt-1 text-xs italic text-slate-500">"{{ sosActif.commentaire }}"</p>
-                <p class="mt-3 text-xs font-extrabold uppercase tracking-widest text-slate-400">Guide responsable :</p>
-                <p class="mt-1 text-sm font-bold text-slate-800">{{ guideUtilisateur?.nomComplet || 'Non assigné' }}</p>
-                <p class="text-xs text-slate-500">Guide Accompagnateur</p>
-                <p v-if="guideUtilisateur?.telephone" class="mt-0.5 flex items-center gap-1 text-sm text-slate-600"><i class="fa-solid fa-phone text-rose-500"></i> {{ guideUtilisateur.telephone }}</p>
+                <p v-if="sosActif.commentaire" class="mt-1 text-xs italic text-slate-500 dark:text-slate-400">"{{ sosActif.commentaire }}"</p>
+                <p class="mt-3 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Guide responsable :</p>
+                <p class="mt-1 text-sm font-bold text-slate-800 dark:text-slate-100">{{ guideUtilisateur?.nomComplet || 'Non assigné' }}</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Guide Accompagnateur</p>
+                <p v-if="guideUtilisateur?.telephone" class="mt-0.5 flex items-center gap-1 text-sm text-slate-600 dark:text-slate-300"><i class="fa-solid fa-phone text-rose-500"></i> {{ guideUtilisateur.telephone }}</p>
               </div>
-              <div class="rounded-2xl bg-rose-50 p-4">
-                <p class="text-xs font-extrabold uppercase tracking-widest text-rose-600">Commentaire et Actions :</p>
-                <p class="mt-1 text-sm text-rose-700">L'admin et le guide ont été notifiés. Un premier commentaire de secours s'affichera ici dès qu'un membre de l'équipe aura débuté l'intervention.</p>
+              <div class="rounded-2xl bg-rose-50 p-4 dark:bg-rose-500/10">
+                <p class="text-xs font-extrabold uppercase tracking-widest text-rose-600 dark:text-rose-400">Commentaire et Actions :</p>
+                <p class="mt-1 text-sm text-rose-700 dark:text-rose-300">L'admin et le guide ont été notifiés. Un premier commentaire de secours s'affichera ici dès qu'un membre de l'équipe aura débuté l'intervention.</p>
               </div>
             </div>
 
-            <div class="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4">
-              <p class="mb-1 flex items-center gap-2 text-sm font-black text-amber-700">
+            <div class="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-500/40 dark:bg-amber-500/10">
+              <p class="mb-1 flex items-center gap-2 text-sm font-black text-amber-700 dark:text-amber-400">
                 <i class="fa-solid fa-triangle-exclamation"></i> Que faire en attendant ?
               </p>
-              <p class="text-sm text-amber-700">
+              <p class="text-sm text-amber-700 dark:text-amber-300">
                 Reste là où tu es, si possible dans un endroit visible et sécurisé. Ne panique pas. Ton guide ou un membre
                 de notre équipe d'assistance t'appellera sur ton téléphone ou te rejoindra directement aux coordonnées indiquées.
               </p>
@@ -145,12 +145,12 @@ onMounted(charger)
         </template>
 
         <template v-else>
-          <div class="flex flex-col items-center gap-4 rounded-3xl border-2 border-rose-200 bg-rose-50 p-6 sm:flex-row sm:justify-between sm:text-left">
+          <div class="flex flex-col items-center gap-4 rounded-3xl border-2 border-rose-200 bg-rose-50 p-6 sm:flex-row sm:justify-between sm:text-left dark:border-rose-500/40 dark:bg-rose-500/10">
             <div>
-              <h2 class="flex items-center gap-2 text-lg font-black text-rose-700">
+              <h2 class="flex items-center gap-2 text-lg font-black text-rose-700 dark:text-rose-400">
                 <i class="fa-solid fa-shield-halved"></i> Aide d'urgence en Cas d'Égarement
               </h2>
-              <p class="mt-1 max-w-xl text-sm text-rose-600">
+              <p class="mt-1 max-w-xl text-sm text-rose-600 dark:text-rose-300">
                 Si tu te perds dans la foule, perds de vue ton groupe, ou si tu as besoin d'une assistance immédiate,
                 appuie sur le <strong>GRAND BOUTON ROUGE</strong>. Ton guide et le centre de contrôle seront alertés à l'instant.
               </p>
@@ -161,17 +161,17 @@ onMounted(charger)
           </div>
         </template>
 
-        <article class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 class="mb-4 text-base font-black text-slate-950">Mes SOS Précédents Résolus ({{ sosResolus.length }})</h2>
+        <article class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <h2 class="mb-4 text-base font-black text-slate-950 dark:text-slate-100">Mes SOS Précédents Résolus ({{ sosResolus.length }})</h2>
           <div class="grid gap-3">
-            <p v-if="sosResolus.length === 0" class="text-sm text-slate-400">Aucun SOS résolu pour l'instant.</p>
+            <p v-if="sosResolus.length === 0" class="text-sm text-slate-400 dark:text-slate-500">Aucun SOS résolu pour l'instant.</p>
             <template v-else>
-              <div v-for="s in resolusPagines" :key="s.id" class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+              <div v-for="s in resolusPagines" :key="s.id" class="rounded-2xl border border-slate-100 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-700/50">
                 <div class="mb-1 flex items-center justify-between">
-                  <span class="rounded-full bg-slate-200 px-2 py-0.5 text-xs font-black text-slate-600">{{ s.id.slice(0, 6).toUpperCase() }}</span>
-                  <span class="text-xs text-slate-400">{{ new Date(s.dateHeure).toLocaleString('fr-FR') }}</span>
+                  <span class="rounded-full bg-slate-200 px-2 py-0.5 text-xs font-black text-slate-600 dark:bg-slate-600 dark:text-slate-300">{{ s.id.slice(0, 6).toUpperCase() }}</span>
+                  <span class="text-xs text-slate-400 dark:text-slate-500">{{ new Date(s.dateHeure).toLocaleString('fr-FR') }}</span>
                 </div>
-                <p class="flex items-center gap-1 text-sm text-slate-600"><i class="fa-solid fa-location-dot"></i> {{ s.latitude.toFixed(4) }}, {{ s.longitude.toFixed(4) }}</p>
+                <p class="flex items-center gap-1 text-sm text-slate-600 dark:text-slate-300"><i class="fa-solid fa-location-dot"></i> {{ s.latitude.toFixed(4) }}, {{ s.longitude.toFixed(4) }}</p>
               </div>
             </template>
           </div>
@@ -180,21 +180,21 @@ onMounted(charger)
       </div>
 
       <div class="grid gap-6">
-        <article class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 class="mb-3 flex items-center gap-2 text-base font-black text-slate-950">
-            <i class="fa-solid fa-user-shield text-[#333D2A]"></i> Mon guide
+        <article class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <h2 class="mb-3 flex items-center gap-2 text-base font-black text-slate-950 dark:text-slate-100">
+            <i class="fa-solid fa-user-shield text-[#333D2A] dark:text-[#BC7B3B]"></i> Mon guide
           </h2>
           <div class="flex items-center gap-3">
-            <div class="h-12 w-12 overflow-hidden rounded-full bg-slate-100">
+            <div class="h-12 w-12 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
               <img v-if="guideUtilisateur?.photo" :src="guideUtilisateur.photo" class="h-full w-full object-cover" />
-              <div v-else class="flex h-full w-full items-center justify-center text-slate-300"><i class="fa-solid fa-user"></i></div>
+              <div v-else class="flex h-full w-full items-center justify-center text-slate-300 dark:text-slate-500"><i class="fa-solid fa-user"></i></div>
             </div>
             <div>
-              <p class="text-sm font-bold text-slate-900">{{ guideUtilisateur?.nomComplet || 'Non assigné' }}</p>
-              <p class="text-xs text-slate-500">À votre écoute 24h/24</p>
+              <p class="text-sm font-bold text-slate-900 dark:text-slate-100">{{ guideUtilisateur?.nomComplet || 'Non assigné' }}</p>
+              <p class="text-xs text-slate-500 dark:text-slate-400">À votre écoute 24h/24</p>
             </div>
           </div>
-          <p class="mt-3 text-xs text-slate-500">Votre guide spirituel et logistique dispose d'un accès à votre profil de santé et à votre contact d'urgence.</p>
+          <p class="mt-3 text-xs text-slate-500 dark:text-slate-400">Votre guide spirituel et logistique dispose d'un accès à votre profil de santé et à votre contact d'urgence.</p>
           <a v-if="guideUtilisateur?.telephone" :href="`tel:${guideUtilisateur.telephone}`" class="mt-4 flex items-center justify-center gap-2 rounded-2xl bg-[#333D2A] px-4 py-2.5 text-sm font-bold text-white transition hover:opacity-90">
             <i class="fa-solid fa-phone"></i> Appeler mon guide
           </a>

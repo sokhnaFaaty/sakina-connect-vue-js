@@ -51,15 +51,15 @@ function naviguer(page) {
 </script>
 
 <template>
-  <aside class="hidden h-full w-64 shrink-0 flex-col border-r border-slate-200 bg-white lg:flex">
-    <p class="px-5 pb-2 pt-6 text-xs font-extrabold uppercase tracking-widest text-slate-400">Vues système :</p>
+  <aside class="hidden h-full w-64 shrink-0 flex-col border-r border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 lg:flex">
+    <p class="px-5 pb-2 pt-6 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Vues système :</p>
     <nav class="grid flex-1 content-start gap-1 overflow-y-auto px-4 pb-4">
       <button 
         v-for="link in links" 
         :key="link.page"
         @click="naviguer(link.page)"
-        class="flex items-center gap-3 rounded-xl border-l-4 border-transparent px-4 py-3 text-left text-sm font-semibold text-slate-600 transition hover:bg-[#F2F2DE]/60"
-        :class="route.path.startsWith('/' + link.page) ? 'border-[#333D2A] bg-[#F2F2DE] text-[#333D2A]' : ''"
+        class="flex items-center gap-3 rounded-xl border-l-4 border-transparent px-4 py-3 text-left text-sm font-semibold text-slate-600 transition hover:bg-[#F2F2DE]/60 dark:text-slate-300 dark:hover:bg-slate-800"
+        :class="route.path.startsWith('/' + link.page) ? 'border-[#333D2A] bg-[#F2F2DE] text-[#333D2A] dark:border-[#BC7B3B] dark:bg-slate-800 dark:text-white' : ''"
       >
         <i class="fa-solid" :class="link.icon + ' w-5 text-center'"></i>
         <span>{{ link.label }}</span>

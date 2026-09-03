@@ -146,22 +146,22 @@ async function soumettre() {
     <AppInput v-model="email" type="email" label="Email *" placeholder="email@gmail.com" :error="erreurEmail" />
 
     <div>
-      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500">Image (facultatif)</label>
+      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Image (facultatif)</label>
       <div v-if="photoActuelle" class="mb-2 flex items-center gap-3">
         <img :src="photoActuelle" alt="" class="h-14 w-14 rounded-full object-cover" />
-        <span class="text-xs text-slate-500">Photo actuelle — choisissez un fichier pour la remplacer.</span>
+        <span class="text-xs text-slate-500 dark:text-slate-400">Photo actuelle — choisissez un fichier pour la remplacer.</span>
       </div>
       <input
         type="file"
         accept="image/*"
         @change="surChangementPhoto"
-        class="w-full rounded-2xl border bg-white px-4 py-2.5 text-sm focus:outline-none"
-        :class="erreurPhoto ? 'border-rose-500' : 'border-slate-200'"
+        class="w-full rounded-2xl border bg-white px-4 py-2.5 text-sm focus:outline-none dark:bg-slate-800 dark:text-slate-100"
+        :class="erreurPhoto ? 'border-rose-500' : 'border-slate-200 dark:border-slate-600'"
       />
       <p v-if="erreurPhoto" class="mt-1 text-xs text-rose-600">{{ erreurPhoto }}</p>
     </div>
 
-    <label class="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700">
+    <label class="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200">
       <span>Actuellement en Service actif (Sur place)</span>
       <input type="checkbox" v-model="disponibilite" class="h-5 w-5 accent-[#333D2A]" />
     </label>

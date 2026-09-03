@@ -77,17 +77,17 @@ async function soumettre() {
         <template v-else>{{ user.nomComplet?.charAt(0).toUpperCase() || '?' }}</template>
       </div>
       <div class="flex-1">
-        <p class="font-bold text-slate-900">{{ user.nomComplet || '-' }}</p>
-        <p class="text-xs text-slate-500">Choisissez une image pour remplacer votre photo actuelle.</p>
+        <p class="font-bold text-slate-900 dark:text-slate-100">{{ user.nomComplet || '-' }}</p>
+        <p class="text-xs text-slate-500 dark:text-slate-400">Choisissez une image pour remplacer votre photo actuelle.</p>
       </div>
     </div>
 
     <div>
-      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500">Photo (facultatif)</label>
+      <label class="mb-2 block text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Photo (facultatif)</label>
       <input
         type="file"
         accept="image/*"
-        class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm"
+        class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
         @change="surFichier"
       />
     </div>

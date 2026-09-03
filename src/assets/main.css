@@ -1,8 +1,31 @@
 @import "tailwindcss";
+
+/* Mode sombre basé sur la classe `.dark` (au lieu de la préférence système)
+   posée sur <html> par useTheme.js / le script anti-flash */
+@custom-variant dark (&:where(.dark, .dark *));
+
 html,
 body,
 #app {
   height: 100%;
   margin: 0;
-  overflow: hidden;
 }
+
+body {
+  background-color: #f2f2de;
+  color: #1e293b;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+html.dark body {
+  /* Gris bleuté profond (évite le noir pur) pour reposer les yeux */
+  background-color: #0f172a; /* slate-900 */
+  color: #e2e8f0; /* slate-200 */
+}
+
+/* En mode sombre, donne une légère ombre portée aux cartes pour créer de la profondeur */
+html.dark .shadow-sm {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 4px 16px rgba(2, 6, 23, 0.55);
+}
+
+

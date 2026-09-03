@@ -75,60 +75,60 @@ async function charger() {
 onMounted(charger)
 </script>
 <template>
-  <section v-if="!chargement && !pelerin" class="rounded-[2rem] border border-amber-200 bg-amber-50 p-8 text-center">
-    <p class="text-sm font-semibold text-amber-700">Aucun profil pèlerin associé à ce compte.</p>
+  <section v-if="!chargement && !pelerin" class="rounded-[2rem] border border-amber-200 bg-amber-50 p-8 text-center dark:border-amber-500/40 dark:bg-amber-500/10">
+    <p class="text-sm font-semibold text-amber-700 dark:text-amber-400">Aucun profil pèlerin associé à ce compte.</p>
   </section>
 
   <section v-else-if="!chargement && !groupe">
     <PageHeader kicker="Mon voyage" title="Mon groupe" subtitle="" />
-    <div class="rounded-[2rem] border border-slate-200 bg-white p-10 text-center text-sm text-slate-500 shadow-sm">Aucun groupe ne t'est encore assigné.</div>
+    <div class="rounded-[2rem] border border-slate-200 bg-white p-10 text-center text-sm text-slate-500 shadow-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400">Aucun groupe ne t'est encore assigné.</div>
   </section>
 
   <section v-else>
     <PageHeader kicker="Mon voyage" :title="titre" subtitle="Vos informations enregistrées et état de préparation." />
 
     <div class="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-      <article class="rounded-[2rem] border border-t-4 border-slate-200 border-t-[#0B6E4F] bg-white p-6 shadow-sm">
-        <h2 class="mb-4 flex items-center gap-2 text-base font-black text-slate-950"><i class="fa-solid fa-briefcase text-[#333D2A]"></i> Ma fiche Logistique</h2>
+      <article class="rounded-[2rem] border border-t-4 border-slate-200 border-t-[#0B6E4F] bg-white p-6 shadow-sm dark:border-slate-700 dark:border-t-[#0B6E4F] dark:bg-slate-800">
+        <h2 class="mb-4 flex items-center gap-2 text-base font-black text-slate-950 dark:text-slate-100"><i class="fa-solid fa-briefcase text-[#333D2A] dark:text-[#BC7B3B]"></i> Ma fiche Logistique</h2>
 
-        <p class="mb-3 text-xs font-extrabold uppercase tracking-widest text-slate-400">Identité & contact d'urgence</p>
+        <p class="mb-3 text-xs font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Identité & contact d'urgence</p>
         <div class="grid gap-4 sm:grid-cols-2">
-          <div class="rounded-2xl bg-[#F2F2DE]/60 p-4 text-sm">
-            <p class="text-slate-500">Nom complet :</p>
-            <p class="mb-2 font-bold text-slate-800">{{ auth.user?.nomComplet || '-' }}</p>
-            <p class="text-slate-500">Identifiant pèlerin :</p>
-            <p class="mb-2 font-bold text-slate-800">{{ (pelerin?.id || '').slice(0, 6).toUpperCase() }}</p>
-            <p class="text-slate-500">Numéro de passeport :</p>
-            <p class="mb-2 font-bold text-slate-800">{{ pelerin?.numeroPasseport || '-' }}</p>
+          <div class="rounded-2xl bg-[#F2F2DE]/60 p-4 text-sm dark:bg-slate-700/50">
+            <p class="text-slate-500 dark:text-slate-400">Nom complet :</p>
+            <p class="mb-2 font-bold text-slate-800 dark:text-slate-100">{{ auth.user?.nomComplet || '-' }}</p>
+            <p class="text-slate-500 dark:text-slate-400">Identifiant pèlerin :</p>
+            <p class="mb-2 font-bold text-slate-800 dark:text-slate-100">{{ (pelerin?.id || '').slice(0, 6).toUpperCase() }}</p>
+            <p class="text-slate-500 dark:text-slate-400">Numéro de passeport :</p>
+            <p class="mb-2 font-bold text-slate-800 dark:text-slate-100">{{ pelerin?.numeroPasseport || '-' }}</p>
             <template v-if="procheUser">
-              <p class="text-slate-500">Contact d'urgence (proche) :</p>
-              <p class="font-bold text-slate-800">{{ procheUser.nomComplet || '-' }}{{ procheAssocie?.lienParente ? ` (${procheAssocie.lienParente})` : '' }}</p>
-              <p class="text-slate-600">{{ procheUser.telephone || '' }}</p>
+              <p class="text-slate-500 dark:text-slate-400">Contact d'urgence (proche) :</p>
+              <p class="font-bold text-slate-800 dark:text-slate-100">{{ procheUser.nomComplet || '-' }}{{ procheAssocie?.lienParente ? ` (${procheAssocie.lienParente})` : '' }}</p>
+              <p class="text-slate-600 dark:text-slate-300">{{ procheUser.telephone || '' }}</p>
             </template>
           </div>
           <div class="grid gap-3">
-            <div v-for="b in badgesEtat" :key="b.label" class="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm">
-              <span class="text-slate-600">{{ b.label }}</span>
-              <span v-if="b.ok" class="inline-flex items-center gap-1 font-bold text-emerald-600"><i class="fa-solid fa-circle-check"></i> {{ b.texteOk }}</span>
-              <span v-else class="inline-flex items-center gap-1 font-bold text-amber-600"><i class="fa-solid fa-clock"></i> En attente</span>
+            <div v-for="b in badgesEtat" :key="b.label" class="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-800">
+              <span class="text-slate-600 dark:text-slate-300">{{ b.label }}</span>
+              <span v-if="b.ok" class="inline-flex items-center gap-1 font-bold text-emerald-600 dark:text-emerald-400"><i class="fa-solid fa-circle-check"></i> {{ b.texteOk }}</span>
+              <span v-else class="inline-flex items-center gap-1 font-bold text-amber-600 dark:text-amber-400"><i class="fa-solid fa-clock"></i> En attente</span>
             </div>
           </div>
         </div>
       </article>
 
-      <article class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 class="mb-4 flex items-center gap-2 text-base font-black text-slate-950"><i class="fa-solid fa-clock text-[#333D2A]"></i> Planning de voyages</h2>
+      <article class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+        <h2 class="mb-4 flex items-center gap-2 text-base font-black text-slate-950 dark:text-slate-100"><i class="fa-solid fa-clock text-[#333D2A] dark:text-[#BC7B3B]"></i> Planning de voyages</h2>
         <div class="grid gap-3">
-          <p v-if="planning.length === 0" class="text-sm text-slate-400">Aucun événement planifié pour l'instant.</p>
+          <p v-if="planning.length === 0" class="text-sm text-slate-400 dark:text-slate-500">Aucun événement planifié pour l'instant.</p>
           <template v-else>
-            <div v-for="e in planningPagines" :key="e.id" class="rounded-2xl border border-slate-200 bg-white p-4">
+            <div v-for="e in planningPagines" :key="e.id" class="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-800">
               <div class="mb-1 flex items-center justify-between gap-2">
                 <span class="rounded-full bg-[#333D2A] px-2.5 py-0.5 text-[10px] font-black uppercase text-white">Jour {{ numeroJour(e) }}</span>
-                <span v-if="categorieMap[e.categorieId]" class="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-700">{{ categorieMap[e.categorieId] }}</span>
+                <span v-if="categorieMap[e.categorieId]" class="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-700 dark:bg-amber-500/20 dark:text-amber-400">{{ categorieMap[e.categorieId] }}</span>
               </div>
-              <h3 class="font-black text-slate-900">{{ e.titre }}</h3>
-              <p class="mt-1 text-sm text-slate-500">{{ e.description || '' }}</p>
-              <p class="mt-2 flex items-center gap-1 text-xs text-slate-500"><i class="fa-solid fa-location-dot"></i> {{ e.lieu || '-' }} · {{ e.heure || '' }}</p>
+              <h3 class="font-black text-slate-900 dark:text-slate-100">{{ e.titre }}</h3>
+              <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ e.description || '' }}</p>
+              <p class="mt-2 flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400"><i class="fa-solid fa-location-dot"></i> {{ e.lieu || '-' }} · {{ e.heure || '' }}</p>
             </div>
           </template>
         </div>

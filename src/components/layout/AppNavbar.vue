@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth.js'
 import { useToast } from '@/composables/useToast.js'
 import { useDrawer } from '@/composables/useDrawer.js'
+import { useTheme } from '@/composables/useTheme.js'
 import { getNotifications, countUnseen, markSeen } from '@/services/notificationService.js'
 import { getPelerinByUtilisateurId } from '@/services/pelerinService.js'
 import ProfilEditForm from '@/components/forms/ProfilEditForm.vue'
@@ -27,6 +28,7 @@ const router = useRouter()
 const auth = useAuthStore()
 const { success } = useToast()
 const { open: ouvrirDrawer } = useDrawer()
+const { isDark, toggleTheme } = useTheme()
 
 const notifications = ref([])
 const nonVues = ref(0)
@@ -143,6 +145,15 @@ onUnmounted(() => document.removeEventListener('click', clicDehors))
     </div>
 
     <div class="flex items-center gap-2 sm:gap-4">
+      <!-- Bascule Sombre / Clair -->
+      <button
+        @click="toggleTheme"
+        class="flex h-10 w-10 items-center justify-center rounded-xl text-white transition hover:bg-white/10"
+        :aria-label="isDark ? 'Passer en mode clair' : 'Passer en mode sombre'"
+      >
+        <i class="fa-solid" :class="isDark ? 'fa-sun' : 'fa-moon'"></i>
+      </button>
+
       <!-- Cloche de notifications -->
       <button
         ref="notifBtnRef"
@@ -180,7 +191,7 @@ onUnmounted(() => document.removeEventListener('click', clicDehors))
     <div
       v-if="notifOuvert"
       ref="notifPanelRef"
-      class="fixed right-3 top-16 z-[90] w-80 max-w-[92vw] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
+      class="fixed right-3 top-16 z-[90] w-80 max-w-[92vw] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-700 dark:bg-slate-800"
     >
       <div class="flex items-center justify-between bg-[#333D2A] px-4 py-3 text-white">
         <span class="font-black">Notifications</span>
@@ -192,25 +203,24 @@ onUnmounted(() => document.removeEventListener('click', clicDehors))
             v-for="item in notifications"
             :key="item.id"
             @click="aller(item.page)"
-            class="flex w-full items-start gap-3 border-b border-slate-50 px-4 py-3 text-left transition last:border-0 hover:bg-slate-50"
+            class="flex w-full items-start gap-3 border-b border-slate-50 px-4 py-3 text-left transition last:border-0 hover:bg-slate-50 dark:border-slate-700/60 dark:hover:bg-slate-700/50"
           >
             <span
               class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
-              :class="item.type === 'sos' ? 'bg-rose-100 text-rose-600' : 'bg-[#F2F2DE] text-[#333D2A]'"
+              :class="item.type === 'sos' ? 'bg-rose-100 text-rose-600' : 'bg-[#F2F2DE] text-[#333D2A] dark:bg-slate-700 dark:text-white'"
             >
               <i class="fa-solid" :class="item.icon"></i>
             </span>
             <span class="min-w-0 flex-1">
               <span class="flex items-center gap-2">
-                <span class="truncate font-bold text-slate-800">{{ item.titre }}</span>
+                <span class="truncate font-bold text-slate-800 dark:text-slate-100">{{ item.titre }}</span>
                 <span v-if="item.urgent" class="shrink-0 rounded-full bg-rose-100 px-1.5 text-[9px] font-black text-rose-700">URGENT</span>
               </span>
-              <span class="mt-0.5 block truncate text-xs text-slate-500">{{ item.sous }}</span>
-              <span class="mt-0.5 block text-[10px] text-slate-400">{{ formatDateNotif(item.date) }}</span>
-            </span>
+              <span class="mt-0.5 block truncate text-xs text-slate-500 dark:text-slate-400">{{ item.sous }}</span>
+              <span class="mt-0.5 block text-[10px] text-slate-400">{{ formatDateNotif(item.date) }}</span>            </span>
           </button>
         </template>
-        <p v-else class="p-6 text-center text-sm text-slate-400">Aucune notification pour le moment.</p>
+        <p v-else class="p-6 text-center text-sm text-slate-400 dark:text-slate-500">Aucune notification pour le moment.</p>
       </div>
     </div>
 
@@ -218,7 +228,7 @@ onUnmounted(() => document.removeEventListener('click', clicDehors))
     <div
       v-if="profilOuvert"
       ref="profilPanelRef"
-      class="fixed right-3 top-16 z-[90] w-72 max-w-[92vw] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
+      class="fixed right-3 top-16 z-[90] w-72 max-w-[92vw] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-700 dark:bg-slate-800"
     >
       <div class="flex flex-col items-center gap-2 bg-[#333D2A] px-4 py-5 text-center text-white">
         <div class="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-[#BC7B3B] text-xl font-black">
@@ -232,33 +242,33 @@ onUnmounted(() => document.removeEventListener('click', clicDehors))
       </div>
 
       <div class="grid gap-2 p-4">
-        <div class="flex items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-3">
-          <i class="fa-solid fa-envelope w-5 text-center text-[#333D2A]"></i>
+        <div class="flex items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-700/40">
+          <i class="fa-solid fa-envelope w-5 text-center text-[#333D2A] dark:text-[#BC7B3B]"></i>
           <div>
-            <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Email</p>
-            <p class="truncate text-sm font-bold text-slate-800">{{ auth.user?.email || '-' }}</p>
+            <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Email</p>
+            <p class="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{{ auth.user?.email || '-' }}</p>
           </div>
         </div>
-        <div class="flex items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-3">
-          <i class="fa-solid fa-phone w-5 text-center text-[#333D2A]"></i>
+        <div class="flex items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-700/40">
+          <i class="fa-solid fa-phone w-5 text-center text-[#333D2A] dark:text-[#BC7B3B]"></i>
           <div>
-            <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Téléphone</p>
-            <p class="truncate text-sm font-bold text-slate-800">{{ auth.user?.telephone || '-' }}</p>
+            <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Téléphone</p>
+            <p class="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{{ auth.user?.telephone || '-' }}</p>
           </div>
         </div>
         <div v-if="passeport" class="flex items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-3">
-          <i class="fa-solid fa-passport w-5 text-center text-[#333D2A]"></i>
+          <i class="fa-solid fa-passport w-5 text-center text-[#333D2A] dark:text-[#BC7B3B]"></i>
           <div>
-            <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Passeport</p>
-            <p class="truncate text-sm font-bold text-slate-800">{{ passeport }}</p>
+            <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Passeport</p>
+            <p class="truncate text-sm font-bold text-slate-800 dark:text-slate-100">{{ passeport }}</p>
           </div>
         </div>
       </div>
 
-      <div class="grid gap-2 border-t border-slate-100 p-3">
+      <div class="grid gap-2 border-t border-slate-100 p-3 dark:border-slate-700">
         <button
           @click="modifierProfil"
-          class="flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-extrabold text-slate-700 transition hover:bg-slate-50"
+          class="flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-extrabold text-slate-700 transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600"
         >
           <i class="fa-solid fa-pen"></i> Modifier mon profil
         </button>

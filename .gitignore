@@ -8,6 +8,11 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+# Variables d'environnement (jamais versionnées : contiennent l'URL backend / secrets)
+.env
+.env.*
+!.env.example
+
 .DS_Store
 dist
 dist-ssr

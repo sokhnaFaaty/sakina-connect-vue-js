@@ -1,12 +1,14 @@
-// L'URL du backend dépend de l'endroit d'où la page est servie :
-// en local on tape le serveur local, en ligne on tape celui de Render.
-const EN_LOCAL = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+// L'URL du backend est fournie uniquement via la variable d'environnement
+// VITE_API_URL 
+const API_URL = import.meta.env.VITE_API_URL;
 
-export const API_BASE_URL =
-  import.meta.env.VITE_API_URL ??
-  (EN_LOCAL
-    ? "http://localhost:3000"
-    : "https://backendsakinaconnectapi.onrender.com");
+if (!API_URL) {
+  throw new Error(
+    "Variable d'environnement VITE_API_URL manquante. Ajoutez-la dans le fichier .env."
+  );
+}
+
+export const API_BASE_URL = API_URL;
 
 export const ENDPOINTS = {
   utilisateurs: `${API_BASE_URL}/utilisateurs`,

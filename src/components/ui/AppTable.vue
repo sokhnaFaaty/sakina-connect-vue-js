@@ -7,18 +7,18 @@ defineEmits(['modifier', 'supprimer']);
 </script>
 
 <template>
-  <div class="overflow-hidden rounded-3xl border border-slate-200 bg-white">
+  <div class="overflow-hidden rounded-3xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800">
     <div class="overflow-x-auto">
       <table class="w-full text-left text-sm">
-        <thead class="bg-slate-50 text-xs font-black uppercase text-slate-500">
+        <thead class="bg-slate-50 text-xs font-black uppercase text-slate-500 dark:bg-slate-900 dark:text-slate-400">
           <tr>
             <th v-for="col in colonnes" :key="col.key" class="px-5 py-4">{{ col.label }}</th>
             <th class="px-5 py-4 text-center">Actions</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-slate-100">
-          <tr v-for="ligne in lignes" :key="ligne.id" class="transition hover:bg-slate-50">
-            <td v-for="col in colonnes" :key="col.key" class="px-5 py-4 text-slate-700">
+        <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+          <tr v-for="ligne in lignes" :key="ligne.id" class="transition hover:bg-slate-50 dark:hover:bg-slate-700/50">
+            <td v-for="col in colonnes" :key="col.key" class="px-5 py-4 text-slate-700 dark:text-slate-300">
               <!-- Si une fonction 'render' est passée, on l'utilise -->
               <template v-if="col.render">{{ col.render(ligne) }}</template>
               <!-- Sinon on affiche simplement la propriété de l'objet -->
@@ -34,7 +34,7 @@ defineEmits(['modifier', 'supprimer']);
             </td>
           </tr>
           <tr v-if="lignes.length === 0">
-            <td :colspan="colonnes.length + 1" class="px-5 py-8 text-center text-slate-400">Aucune donnée disponible.</td>
+            <td :colspan="colonnes.length + 1" class="px-5 py-8 text-center text-slate-400 dark:text-slate-500">Aucune donnée disponible.</td>
           </tr>
         </tbody>
       </table>

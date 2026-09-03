@@ -207,15 +207,15 @@ const colonnes = [
     <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div class="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
         <div class="relative flex-1 sm:max-w-xs">
-          <i class="fa-solid fa-magnifying-glass pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-400"></i>
+          <i class="fa-solid fa-magnifying-glass pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-400 dark:text-slate-500"></i>
           <input
             v-model="recherche"
             type="search"
             placeholder="Rechercher un pèlerin (nom, passeport)…"
-            class="w-full rounded-2xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm"
+            class="w-full rounded-2xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
           />
         </div>
-        <select v-model="filtreGroupe" class="rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm sm:w-56">
+        <select v-model="filtreGroupe" class="rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm sm:w-56 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100">
           <option value="">Tous les groupes</option>
           <option v-for="g in groupes" :key="g.id" :value="g.id">{{ g.nom }}</option>
         </select>
@@ -225,58 +225,58 @@ const colonnes = [
 
     <div
       v-if="pelerinsFiltres.length === 0"
-      class="rounded-[2rem] border border-slate-200 bg-white p-10 text-center text-sm text-slate-400 shadow-sm"
+      class="rounded-[2rem] border border-slate-200 bg-white p-10 text-center text-sm text-slate-400 shadow-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-500"
     >
       Aucun pèlerin ne correspond à votre recherche.
     </div>
 
     <template v-else>
-      <article v-if="vue === 'table'" class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
-        <div class="overflow-hidden rounded-3xl border border-slate-200 bg-white">
+      <article v-if="vue === 'table'" class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+        <div class="overflow-hidden rounded-3xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800">
           <div class="overflow-x-auto">
             <table class="min-w-full border-collapse">
-              <thead class="bg-slate-50">
+              <thead class="bg-slate-50 dark:bg-slate-900">
                 <tr>
-                  <th class="whitespace-nowrap px-5 py-4 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500">Image</th>
-                  <th class="whitespace-nowrap px-5 py-4 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500">Nom</th>
-                  <th class="whitespace-nowrap px-5 py-4 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500">N Passeport</th>
-                  <th class="whitespace-nowrap px-5 py-4 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500">Groupe</th>
-                  <th class="whitespace-nowrap px-5 py-4 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500">Statut Visa</th>
-                  <th class="whitespace-nowrap px-5 py-4 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500">Santé</th>
-                  <th class="whitespace-nowrap px-5 py-4 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500">Actions</th>
+                  <th class="whitespace-nowrap px-5 py-4 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Image</th>
+                  <th class="whitespace-nowrap px-5 py-4 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Nom</th>
+                  <th class="whitespace-nowrap px-5 py-4 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">N Passeport</th>
+                  <th class="whitespace-nowrap px-5 py-4 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Groupe</th>
+                  <th class="whitespace-nowrap px-5 py-4 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Statut Visa</th>
+                  <th class="whitespace-nowrap px-5 py-4 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Santé</th>
+                  <th class="whitespace-nowrap px-5 py-4 text-left text-xs font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Actions</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-100">
-                <tr v-for="p in pelerinsFiltres" :key="p.id" class="transition hover:bg-slate-50">
-                  <td class="border-t border-slate-100 px-5 py-4 align-middle text-sm text-slate-700">
+              <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+                <tr v-for="p in pelerinsFiltres" :key="p.id" class="transition hover:bg-slate-50 dark:hover:bg-slate-700/50">
+                  <td class="border-t border-slate-100 px-5 py-4 align-middle text-sm text-slate-700 dark:border-slate-700 dark:text-slate-300">
                     <img
                       v-if="utilisateurMap[p.utilisateurId]?.photo"
                       :src="utilisateurMap[p.utilisateurId].photo"
                       alt=""
                       class="h-10 w-10 rounded-full object-cover"
                     />
-                    <div v-else class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+                    <div v-else class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-400 dark:bg-slate-700 dark:text-slate-500">
                       <i class="fa-solid fa-user"></i>
                     </div>
                   </td>
-                  <td class="border-t border-slate-100 px-5 py-4 align-middle text-sm text-slate-700">
-                    <strong class="font-bold text-slate-950">{{ nomPelerin(p) }}</strong>
+                  <td class="border-t border-slate-100 px-5 py-4 align-middle text-sm text-slate-700 dark:border-slate-700 dark:text-slate-300">
+                    <strong class="font-bold text-slate-950 dark:text-slate-100">{{ nomPelerin(p) }}</strong>
                   </td>
-                  <td class="border-t border-slate-100 px-5 py-4 align-middle text-sm text-slate-700">{{ p.numeroPasseport }}</td>
-                  <td class="border-t border-slate-100 px-5 py-4 align-middle text-sm text-slate-700">{{ nomGroupe(p.groupeId) || '-' }}</td>
-                  <td class="border-t border-slate-100 px-5 py-4 align-middle text-sm text-slate-700">
+                  <td class="border-t border-slate-100 px-5 py-4 align-middle text-sm text-slate-700 dark:border-slate-700 dark:text-slate-300">{{ p.numeroPasseport }}</td>
+                  <td class="border-t border-slate-100 px-5 py-4 align-middle text-sm text-slate-700 dark:border-slate-700 dark:text-slate-300">{{ nomGroupe(p.groupeId) || '-' }}</td>
+                  <td class="border-t border-slate-100 px-5 py-4 align-middle text-sm text-slate-700 dark:border-slate-700 dark:text-slate-300">
                     <span
                       class="inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-bold"
                       :class="visaClasse(p.statutVisa)"
                     >{{ visaLibelle(p.statutVisa) }}</span>
                   </td>
-                  <td class="border-t border-slate-100 px-5 py-4 align-middle text-sm text-slate-700">{{ p.informationsMedicales || '----' }}</td>
-                  <td class="border-t border-slate-100 px-5 py-4 align-middle text-sm text-slate-700">
+                  <td class="border-t border-slate-100 px-5 py-4 align-middle text-sm text-slate-700 dark:border-slate-700 dark:text-slate-300">{{ p.informationsMedicales || '----' }}</td>
+                  <td class="border-t border-slate-100 px-5 py-4 align-middle text-sm text-slate-700 dark:border-slate-700 dark:text-slate-300">
                     <div class="flex flex-wrap gap-2">
-                      <button type="button" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-extrabold" title="Voir" @click="ouvrirDetail(p)">
+                      <button type="button" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-extrabold dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100" title="Voir" @click="ouvrirDetail(p)">
                         <i class="fa-solid fa-eye"></i>
                       </button>
-                      <button type="button" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-extrabold" title="Modifier" @click="ouvrirFormulaire(p)">
+                      <button type="button" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-extrabold dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100" title="Modifier" @click="ouvrirFormulaire(p)">
                         <i class="fa-solid fa-pen"></i>
                       </button>
                       <button type="button" class="rounded-xl bg-rose-600 px-3 py-2 text-xs font-extrabold text-white" title="Supprimer" @click="supprimer(p)">
@@ -295,7 +295,7 @@ const colonnes = [
         <article
           v-for="p in pelerinsFiltres"
           :key="p.id"
-          class="flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
+          class="flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800"
         >
           <div class="flex-1 p-5">
             <div class="mb-3 flex items-center gap-3">
@@ -305,31 +305,31 @@ const colonnes = [
                 alt=""
                 class="h-10 w-10 rounded-full object-cover"
               />
-              <div v-else class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+              <div v-else class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-400 dark:bg-slate-700 dark:text-slate-500">
                 <i class="fa-solid fa-user"></i>
               </div>
               <div>
-                <h3 class="font-black text-slate-950">{{ nomPelerin(p) }}</h3>
-                <p class="text-xs text-slate-500">{{ nomGroupe(p.groupeId) || 'Sans groupe' }}</p>
+                <h3 class="font-black text-slate-950 dark:text-slate-100">{{ nomPelerin(p) }}</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">{{ nomGroupe(p.groupeId) || 'Sans groupe' }}</p>
               </div>
             </div>
-            <div class="grid gap-2 text-sm text-slate-600">
-              <p class="flex items-center gap-2"><i class="fa-solid fa-passport w-4 text-[#333D2A]"></i> {{ p.numeroPasseport }}</p>
+            <div class="grid gap-2 text-sm text-slate-600 dark:text-slate-300">
+              <p class="flex items-center gap-2"><i class="fa-solid fa-passport w-4 text-[#333D2A] dark:text-[#BC7B3B]"></i> {{ p.numeroPasseport }}</p>
               <p class="flex items-center gap-2">
-                <i class="fa-solid fa-file-shield w-4 text-[#333D2A]"></i>
+                <i class="fa-solid fa-file-shield w-4 text-[#333D2A] dark:text-[#BC7B3B]"></i>
                 <span
                   class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold"
                   :class="visaClasse(p.statutVisa)"
                 >{{ visaLibelle(p.statutVisa) }}</span>
               </p>
-              <p class="flex items-center gap-2"><i class="fa-solid fa-heart-pulse w-4 text-[#333D2A]"></i> {{ p.informationsMedicales || '----' }}</p>
+              <p class="flex items-center gap-2"><i class="fa-solid fa-heart-pulse w-4 text-[#333D2A] dark:text-[#BC7B3B]"></i> {{ p.informationsMedicales || '----' }}</p>
             </div>
           </div>
-          <div class="flex items-center justify-end gap-2 bg-[#F2F2DE]/70 px-5 py-3">
-            <button type="button" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-extrabold" title="Voir" @click="ouvrirDetail(p)">
+          <div class="flex items-center justify-end gap-2 bg-[#F2F2DE]/70 px-5 py-3 dark:bg-slate-700/50">
+            <button type="button" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-extrabold dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100" title="Voir" @click="ouvrirDetail(p)">
               <i class="fa-solid fa-eye"></i>
             </button>
-            <button type="button" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-extrabold" title="Modifier" @click="ouvrirFormulaire(p)">
+            <button type="button" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-extrabold dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100" title="Modifier" @click="ouvrirFormulaire(p)">
               <i class="fa-solid fa-pen"></i>
             </button>
             <button type="button" class="rounded-xl bg-rose-600 px-3 py-2 text-xs font-extrabold text-white" title="Supprimer" @click="supprimer(p)">
@@ -346,100 +346,100 @@ const colonnes = [
         class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm"
         @click="fermerDetail"
       >
-        <div class="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl" @click.stop>
+        <div class="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl dark:bg-slate-800" @click.stop>
           <div class="mb-5 flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F2F2DE] text-[#333D2A]">
+              <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F2F2DE] text-[#333D2A] dark:bg-slate-700/50 dark:text-[#BC7B3B]">
                 <i class="fa-solid fa-circle-info"></i>
               </div>
             </div>
-            <button type="button" class="flex h-9 w-9 items-center justify-center rounded-xl text-slate-400 transition hover:bg-slate-100 hover:text-slate-700" aria-label="Fermer" @click="fermerDetail">
+            <button type="button" class="flex h-9 w-9 items-center justify-center rounded-xl text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-slate-100" aria-label="Fermer" @click="fermerDetail">
               <i class="fa-solid fa-xmark"></i>
             </button>
           </div>
 
           <div class="grid gap-4">
-            <div class="-m-6 mb-0 flex items-start gap-4 border-b border-slate-100 p-6 pb-5">
-              <div class="h-16 w-16 shrink-0 overflow-hidden rounded-full bg-slate-100">
+            <div class="-m-6 mb-0 flex items-start gap-4 border-b border-slate-100 p-6 pb-5 dark:border-slate-700">
+              <div class="h-16 w-16 shrink-0 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
                 <img v-if="detail.utilisateur?.photo" :src="detail.utilisateur.photo" alt="" class="h-full w-full object-cover" />
-                <div v-else class="flex h-full w-full items-center justify-center text-slate-300">
+                <div v-else class="flex h-full w-full items-center justify-center text-slate-300 dark:text-slate-500">
                   <i class="fa-solid fa-user text-2xl"></i>
                 </div>
               </div>
               <div>
                 <div class="flex items-center gap-2">
-                  <h2 class="text-lg font-black text-slate-950">{{ detail.utilisateur?.nomComplet || '-' }}</h2>
-                  <span class="rounded-full bg-[#F2F2DE] px-2 py-0.5 text-xs font-bold text-[#333D2A]">{{ detail.pelerin.id.slice(0, 5).toUpperCase() }}</span>
+                  <h2 class="text-lg font-black text-slate-950 dark:text-slate-100">{{ detail.utilisateur?.nomComplet || '-' }}</h2>
+                  <span class="rounded-full bg-[#F2F2DE] px-2 py-0.5 text-xs font-bold text-[#333D2A] dark:bg-slate-700/50 dark:text-[#BC7B3B]">{{ detail.pelerin.id.slice(0, 5).toUpperCase() }}</span>
                 </div>
-                <p class="text-sm text-slate-500">Passeport : {{ detail.pelerin.numeroPasseport }}</p>
-                <p class="mt-1 text-sm text-slate-500">
+                <p class="text-sm text-slate-500 dark:text-slate-400">Passeport : {{ detail.pelerin.numeroPasseport }}</p>
+                <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
                   Statut du Visa :
-                  <span v-if="detail.pelerin.statutVisa === 'APPROUVE'" class="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-700"><i class="fa-solid fa-check"></i> Approuvé</span>
-                  <span v-else class="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-700">{{ detail.pelerin.statutVisa }}</span>
+                  <span v-if="detail.pelerin.statutVisa === 'APPROUVE'" class="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400"><i class="fa-solid fa-check"></i> Approuvé</span>
+                  <span v-else class="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-700 dark:bg-amber-500/20 dark:text-amber-400">{{ detail.pelerin.statutVisa }}</span>
                 </p>
               </div>
             </div>
 
             <div class="grid gap-4 pt-4 sm:grid-cols-2">
               <div>
-                <p class="mb-2 flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-[#0B6E4F]">
+                <p class="mb-2 flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-[#0B6E4F] dark:text-emerald-400">
                   <i class="fa-solid fa-route"></i> Logistique &amp; Accompagnement
                 </p>
-                <div class="rounded-2xl bg-[#F2F2DE] p-4 text-sm">
-                  <p class="text-slate-500">Guide spirituel assigné :</p>
-                  <p class="mb-3 font-bold text-slate-800">{{ detail.guideNom }}</p>
-                  <p class="text-slate-500">Groupe de voyage :</p>
-                  <p class="font-bold text-slate-800">{{ detail.groupe?.nom || '-' }}</p>
+                <div class="rounded-2xl bg-[#F2F2DE] p-4 text-sm dark:bg-slate-700/50">
+                  <p class="text-slate-500 dark:text-slate-400">Guide spirituel assigné :</p>
+                  <p class="mb-3 font-bold text-slate-800 dark:text-slate-100">{{ detail.guideNom }}</p>
+                  <p class="text-slate-500 dark:text-slate-400">Groupe de voyage :</p>
+                  <p class="font-bold text-slate-800 dark:text-slate-100">{{ detail.groupe?.nom || '-' }}</p>
                 </div>
 
-                <p class="mb-2 mt-4 flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-[#0B6E4F]">
+                <p class="mb-2 mt-4 flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-[#0B6E4F] dark:text-emerald-400">
                   <i class="fa-solid fa-hotel"></i> Hébergements d'hôtels
                 </p>
                 <div class="grid grid-cols-2 gap-3">
-                  <div class="rounded-2xl bg-[#F2F2DE] p-3 text-sm">
-                    <p class="text-xs font-bold text-slate-500">LA MECQUE :</p>
-                    <p class="font-bold text-slate-800">{{ detail.hotelMecque }}</p>
+                  <div class="rounded-2xl bg-[#F2F2DE] p-3 text-sm dark:bg-slate-700/50">
+                    <p class="text-xs font-bold text-slate-500 dark:text-slate-400">LA MECQUE :</p>
+                    <p class="font-bold text-slate-800 dark:text-slate-100">{{ detail.hotelMecque }}</p>
                   </div>
-                  <div class="rounded-2xl bg-[#F2F2DE] p-3 text-sm">
-                    <p class="text-xs font-bold text-slate-500">MÉDINE :</p>
-                    <p class="font-bold text-slate-800">{{ detail.hotelMedine }}</p>
+                  <div class="rounded-2xl bg-[#F2F2DE] p-3 text-sm dark:bg-slate-700/50">
+                    <p class="text-xs font-bold text-slate-500 dark:text-slate-400">MÉDINE :</p>
+                    <p class="font-bold text-slate-800 dark:text-slate-100">{{ detail.hotelMedine }}</p>
                   </div>
                 </div>
               </div>
 
               <div>
-                <p class="mb-2 flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-rose-600">
+                <p class="mb-2 flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-rose-600 dark:text-rose-400">
                   <i class="fa-solid fa-heart-pulse"></i> Fiche médicale &amp; pathologies
                 </p>
-                <div class="rounded-2xl bg-rose-50 p-4 text-sm">
-                  <p class="text-xs font-bold text-rose-700">PATHOLOGIES SIGNALÉES :</p>
-                  <p class="mt-1 text-slate-700">{{ detail.pelerin.informationsMedicales || 'Aucune pathologie signalée.' }}</p>
+                <div class="rounded-2xl bg-rose-50 p-4 text-sm dark:bg-rose-500/10">
+                  <p class="text-xs font-bold text-rose-700 dark:text-rose-400">PATHOLOGIES SIGNALÉES :</p>
+                  <p class="mt-1 text-slate-700 dark:text-slate-300">{{ detail.pelerin.informationsMedicales || 'Aucune pathologie signalée.' }}</p>
                 </div>
 
-                <p class="mb-2 mt-4 flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-rose-600">
+                <p class="mb-2 mt-4 flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-rose-600 dark:text-rose-400">
                   <i class="fa-solid fa-hand-holding-heart"></i> Proches &amp; contacts d'urgence
                 </p>
-                <div class="rounded-2xl bg-[#F2F2DE] p-4 text-sm">
-                  <p class="text-slate-500">Contact d'urgence — Proche associé (Portail Famille) :</p>
+                <div class="rounded-2xl bg-[#F2F2DE] p-4 text-sm dark:bg-slate-700/50">
+                  <p class="text-slate-500 dark:text-slate-400">Contact d'urgence — Proche associé (Portail Famille) :</p>
                   <template v-if="detail.procheUtilisateur">
-                    <p class="font-bold text-slate-800">
+                    <p class="font-bold text-slate-800 dark:text-slate-100">
                       {{ detail.procheUtilisateur.nomComplet }}<template v-if="detail.procheAssocie.lienParente"> ({{ detail.procheAssocie.lienParente }})</template>
                     </p>
-                    <p class="text-slate-600">{{ detail.procheUtilisateur.telephone || '' }}</p>
+                    <p class="text-slate-600 dark:text-slate-300">{{ detail.procheUtilisateur.telephone || '' }}</p>
                   </template>
-                  <p v-else class="font-bold text-slate-800">Aucun proche associé.</p>
+                  <p v-else class="font-bold text-slate-800 dark:text-slate-100">Aucun proche associé.</p>
                 </div>
 
-                <p class="mb-2 mt-4 flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-rose-600">
+                <p class="mb-2 mt-4 flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-rose-600 dark:text-rose-400">
                   <i class="fa-solid fa-triangle-exclamation"></i> Historique d'urgence SOS récent
                 </p>
-                <div v-if="detail.sosRecents.length === 0" class="rounded-2xl bg-[#F2F2DE] p-4 text-sm text-slate-400">
+                <div v-if="detail.sosRecents.length === 0" class="rounded-2xl bg-[#F2F2DE] p-4 text-sm text-slate-400 dark:bg-slate-700/50 dark:text-slate-500">
                   Aucune alerte SOS récente déclenchée.
                 </div>
-                <div v-else class="grid gap-2 rounded-2xl bg-[#F2F2DE] p-4 text-sm">
-                  <div v-for="s in detail.sosRecents" :key="s.id" class="rounded-xl bg-white/80 px-3 py-2">
-                    <p class="font-bold text-slate-800">{{ formaterDateSos(s.dateHeure) }}</p>
-                    <p class="text-xs text-slate-500">{{ s.commentaire || 'Alerte SOS déclenchée.' }}</p>
+                <div v-else class="grid gap-2 rounded-2xl bg-[#F2F2DE] p-4 text-sm dark:bg-slate-700/50">
+                  <div v-for="s in detail.sosRecents" :key="s.id" class="rounded-xl bg-white/80 px-3 py-2 dark:bg-slate-800">
+                    <p class="font-bold text-slate-800 dark:text-slate-100">{{ formaterDateSos(s.dateHeure) }}</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">{{ s.commentaire || 'Alerte SOS déclenchée.' }}</p>
                   </div>
                 </div>
               </div>
@@ -462,25 +462,25 @@ const colonnes = [
         class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm"
         @click="fermerProcheCree"
       >
-        <div class="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl" @click.stop>
+        <div class="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl dark:bg-slate-800" @click.stop>
           <div class="mb-5 flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-600">
+              <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400">
                 <i class="fa-solid fa-key"></i>
               </div>
-              <h2 class="text-xl font-black tracking-tight text-slate-950">Compte proche créé</h2>
+              <h2 class="text-xl font-black tracking-tight text-slate-950 dark:text-slate-100">Compte proche créé</h2>
             </div>
-            <button type="button" @click="fermerProcheCree" class="flex h-9 w-9 items-center justify-center rounded-xl text-slate-400 transition hover:bg-slate-100 hover:text-slate-700" aria-label="Fermer">
+            <button type="button" @click="fermerProcheCree" class="flex h-9 w-9 items-center justify-center rounded-xl text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-slate-100" aria-label="Fermer">
               <i class="fa-solid fa-xmark"></i>
             </button>
           </div>
 
-          <p class="text-sm text-slate-600">
+          <p class="text-sm text-slate-600 dark:text-slate-300">
             Le compte de <strong>{{ procheCree.nomComplet }}</strong> a été créé. Communique-lui ce mot de passe temporaire :
           </p>
-          <div class="mt-3 flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-            <span class="text-lg font-black tracking-widest text-slate-950">{{ procheCree.motDePasse }}</span>
-            <button type="button" @click="copierMotDePasse" class="text-slate-500 hover:text-slate-800">
+          <div class="mt-3 flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-600 dark:bg-slate-700/50">
+            <span class="text-lg font-black tracking-widest text-slate-950 dark:text-slate-100">{{ procheCree.motDePasse }}</span>
+            <button type="button" @click="copierMotDePasse" class="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100">
               <i class="fa-solid fa-copy"></i>
             </button>
           </div>
