@@ -408,7 +408,6 @@ function ouvrirRejet(evenement) {
         <div v-if="placeholderCarte" class="flex h-full items-center justify-center text-sm text-slate-400 dark:text-slate-500">Aucune position définie pour ce voyage.</div>
         <div v-else id="carteItineraire" class="h-full w-full"></div>
       </div>
-      <div class="h-[500px] rounded-2xl border overflow-hidden dark:border-slate-700"><div ref="conteneurCarte" id="carteItineraire" class="h-full w-full"></div></div>
     </div>
   </section>
 </template>

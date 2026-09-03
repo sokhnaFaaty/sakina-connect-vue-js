@@ -1,5 +1,6 @@
 <script setup>
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
+import Pagination from '@/components/ui/Pagination.vue';
 
 const props = defineProps({
   groupe: { type: Object, required: true },
@@ -11,6 +12,10 @@ const props = defineProps({
   utilisateurs: { type: Array, default: () => [] },
 });
 
+const MEMBRES_PAR_PAGE = 5;
+const searchTerm = ref('');
+const page = ref(1);
+
 const utilisateurMap = computed(() => Object.fromEntries(props.utilisateurs.map((u) => [u.id, u])));
 const guideNom = computed(() => {
   const guide = props.guides.find((g) => g.id === props.groupe.guideId);
@@ -19,6 +24,22 @@ const guideNom = computed(() => {
 const hotelMecque = computed(() => props.hotels.find((h) => h.id === props.groupe.hotelMecqueId)?.nom || '-');
 const hotelMedine = computed(() => props.hotels.find((h) => h.id === props.groupe.hotelMedineId)?.nom || '-');
 const membres = computed(() => props.pelerins.filter((p) => p.groupeId === props.groupe.id));
+
+const membresFiltres = computed(() => {
+  const terme = searchTerm.value.trim().toLowerCase();
+  return membres.value.filter((p) => {
+    const nom = String(utilisateurMap.value[p.utilisateurId]?.nomComplet || '').toLowerCase();
+    const passeport = String(p.numeroPasseport || '').toLowerCase();
+    return !terme || nom.includes(terme) || passeport.includes(terme);
+  });
+});
+const totalPages = computed(() => Math.max(1, Math.ceil(membresFiltres.value.length / MEMBRES_PAR_PAGE)));
+const pageSafe = computed(() => Math.min(page.value, totalPages.value));
+const membresPage = computed(() => {
+  const debut = (pageSafe.value - 1) * MEMBRES_PAR_PAGE;
+  return membresFiltres.value.slice(debut, debut + MEMBRES_PAR_PAGE);
+});
+function resetPage() { page.value = 1; }
 </script>
 
 <template>
@@ -52,10 +73,20 @@ const membres = computed(() => props.pelerins.filter((p) => p.groupeId === props
       <p class="mb-3 flex items-center gap-2 text-sm font-extrabold text-slate-800 dark:text-slate-100">
         <i class="fa-solid fa-users text-[#07744E]"></i> Membres du groupe ({{ membres.length }})
       </p>
-      <div class="rounded-2xl border border-slate-200 p-4 dark:border-slate-600">
-        <template v-if="membres.length">
+      <div class="mb-3 relative">
+        <i class="fa-solid fa-magnifying-glass pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-400"></i>
+        <input
+          v-model="searchTerm"
+          type="search"
+          placeholder="Rechercher un pèlerin (nom, passeport)…"
+          class="w-full rounded-2xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm"
+          @input="resetPage"
+        />
+      </div>
+      <div class="rounded-2xl border border-slate-200 p-4">
+        <template v-if="membresPage.length">
           <div
-            v-for="p in membres"
+            v-for="p in membresPage"
             :key="p.id"
             class="flex items-center justify-between border-b border-slate-100 py-2 text-sm last:border-0 dark:border-slate-700"
           >
@@ -63,8 +94,9 @@ const membres = computed(() => props.pelerins.filter((p) => p.groupeId === props
             <span class="text-xs text-slate-500 dark:text-slate-400">Passeport : {{ p.numeroPasseport }} &nbsp; ID : {{ p.id.slice(0, 6).toUpperCase() }}</span>
           </div>
         </template>
-        <p v-else class="text-sm text-slate-400 dark:text-slate-500">Aucun pèlerin dans ce groupe pour l'instant.</p>
+        <p v-else class="text-sm text-slate-400">Aucun pèlerin ne correspond à votre recherche.</p>
       </div>
+      <Pagination v-model:page="page" :total-pages="totalPages" />
     </div>
 
     <div class="flex justify-end">
