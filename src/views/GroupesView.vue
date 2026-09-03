@@ -9,6 +9,7 @@ import { getPelerins } from '@/services/pelerinService.js'
 import { getUtilisateurs } from '@/services/utilisateurService.js'
 import PageHeader from '@/components/ui/PageHeader.vue'
 import ViewToggle from '@/components/ui/ViewToggle.vue'
+import AppPagination from '@/components/ui/AppPagination.vue'
 import GroupeForm from '@/components/forms/GroupeForm.vue'
 
 // Port fidèle de js/pages/groupesPage.js
@@ -86,6 +87,8 @@ const groupeDetaille = ref(null)
 function ouvrirDetail(groupe) {
   groupeDetaille.value = groupe
   detailOuvert.value = true
+  searchTermDetail.value = ''
+  pageDetail.value = 1
 }
 
 const hotelMecqueNom = computed(() => hotels.value.find((h) => h.id === groupeDetaille.value?.hotelMecqueId)?.nom || '-')
@@ -94,9 +97,30 @@ const guideDetailNom = computed(() => {
   const guide = guides.value.find((g) => g.id === groupeDetaille.value?.guideId)
   return guide ? utilisateurMap.value[guide.utilisateurId]?.nomComplet || '-' : '-'
 })
+const MEMBRES_PAR_PAGE = 5
+const searchTermDetail = ref('')
+const pageDetail = ref(1)
+
 const pelerinsDuGroupe = computed(() =>
   groupeDetaille.value ? pelerins.value.filter((p) => p.groupeId === groupeDetaille.value.id) : []
 )
+
+const membresFiltres = computed(() => {
+  const terme = searchTermDetail.value.trim().toLowerCase()
+  return pelerinsDuGroupe.value.filter((p) => {
+    const nom = String(utilisateurMap.value[p.utilisateurId]?.nomComplet || '').toLowerCase()
+    const passeport = String(p.numeroPasseport || '').toLowerCase()
+    return !terme || nom.includes(terme) || passeport.includes(terme)
+  })
+})
+const totalPagesMembres = computed(() => Math.max(1, Math.ceil(membresFiltres.value.length / MEMBRES_PAR_PAGE)))
+const pageSafeMembres = computed(() => Math.min(pageDetail.value, totalPagesMembres.value))
+const membresPage = computed(() => {
+  const debut = (pageSafeMembres.value - 1) * MEMBRES_PAR_PAGE
+  return membresFiltres.value.slice(debut, debut + MEMBRES_PAR_PAGE)
+})
+
+function resetPageDetail() { pageDetail.value = 1 }
 </script>
 
 <template>
@@ -227,15 +251,26 @@ const pelerinsDuGroupe = computed(() =>
               <p class="mb-3 flex items-center gap-2 text-sm font-extrabold text-slate-800">
                 <i class="fa-solid fa-users text-[#07744E]"></i> Membres du groupe ({{ pelerinsDuGroupe.length }})
               </p>
+              <div class="mb-3 relative">
+                <i class="fa-solid fa-magnifying-glass pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-400"></i>
+                <input
+                  v-model="searchTermDetail"
+                  type="search"
+                  placeholder="Rechercher un pèlerin (nom, passeport)…"
+                  class="w-full rounded-2xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm"
+                  @input="resetPageDetail"
+                />
+              </div>
               <div class="rounded-2xl border border-slate-200 p-4">
-                <template v-if="pelerinsDuGroupe.length">
-                  <div v-for="p in pelerinsDuGroupe" :key="p.id" class="flex items-center justify-between border-b border-slate-100 py-2 text-sm last:border-0">
+                <template v-if="membresPage.length">
+                  <div v-for="p in membresPage" :key="p.id" class="flex items-center justify-between border-b border-slate-100 py-2 text-sm last:border-0">
                     <span class="font-bold text-slate-800">{{ utilisateurMap[p.utilisateurId]?.nomComplet || '-' }}</span>
                     <span class="text-xs text-slate-500">Passeport : {{ p.numeroPasseport }} &nbsp; ID : {{ String(p.id).slice(0, 6).toUpperCase() }}</span>
                   </div>
                 </template>
-                <p v-else class="text-sm text-slate-400">Aucun pèlerin dans ce groupe pour l'instant.</p>
+                <p v-else class="text-sm text-slate-400">Aucun pèlerin ne correspond à votre recherche.</p>
               </div>
+              <AppPagination :current-page="pageSafeMembres" :total-pages="totalPagesMembres" @navigate="pageDetail = $event" />
             </div>
 
             <div class="mt-6 flex justify-end">
