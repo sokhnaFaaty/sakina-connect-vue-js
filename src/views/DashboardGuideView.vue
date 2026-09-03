@@ -47,7 +47,7 @@ function surRecherche() {
 
 const statCards = computed(() => [
   { label: 'Nom du groupe', valeur: groupe.value?.nom ?? '', icon: 'fa-people-group', accent: 'text-[#333D2A]' },
-  { label: 'Mes pèlerins', valeur: `${pelerins.value.length} âmes actives`, icon: 'fa-user', accent: 'text-[#333D2A]' },
+  { label: 'Mes pèlerins', valeur: `${pelerins.value.length} pelerins`, icon: 'fa-user', accent: 'text-[#333D2A]' },
   {
     label: 'Alerte SOS',
     valeur: nbSosActifs.value > 0 ? `${nbSosActifs.value} urgence(s)` : 'Aucune',
