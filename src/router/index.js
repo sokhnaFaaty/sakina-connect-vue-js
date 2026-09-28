@@ -33,7 +33,7 @@ const routes = [
   // qu'annoncer la plateforme, et le formulaire ne crée qu'une demande en
   // attente dont l'examen reste réservé à l'administrateur.
   { path: '/', name: 'accueil', component: AccueilView },
-  { path: '/rejoindre', name: 'rejoindre', component: DemandeInscriptionView },
+  { path: '/nous-rejoindre', name: 'nous-rejoindre', component: DemandeInscriptionView },
   { path: '/login', name: 'login', component: LoginView },
 // Routes protégées
   { path: '/groupes', name: 'groupes', component: GroupesView, meta: { requiresAuth: true, roles: ['ADMIN'] } },
@@ -92,7 +92,7 @@ router.beforeEach((to) => {
   // cela un administrateur_CONNECTé pourrait remplir le formulaire et demander
   // un compte pèlerin, ce qui n'a aucun sens et encombre l'administration d'une
   // demande à traiter.
-  if (to.name === 'accueil' || to.name === 'rejoindre') {
+  if (to.name === 'accueil' || to.name === 'nous-rejoindre') {
     return redirigerAccueil();
   }
 

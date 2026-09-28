@@ -1,82 +1,123 @@
 <script setup>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
 import DemandeInscriptionForm from '@/components/forms/DemandeInscriptionForm.vue';
 import { useTheme } from '@/composables/useTheme.js';
 
+import coverImage from '@/assets/CouvertureLogin.jpg';
+
 const { isDark, toggleTheme } = useTheme();
-const router = useRouter();
 
 const envoye = ref(false);
+
+const stylePanneau = {
+  backgroundImage: `linear-gradient(rgba(35,42,27,.88), rgba(35,42,27,.96)), url(${coverImage})`,
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
+};
+
+const ETAPES = [
+  {
+    numero: '1',
+    titre: 'Vous déposez votre demande',
+    texte: 'Le formulaire ci-contre ne crée aucun compte : il enregistre une demande.',
+  },
+  {
+    numero: '2',
+    titre: "L'administration l'examine",
+    texte: 'Elle vérifie votre dossier et vous attribue un groupe.',
+  },
+  {
+    numero: '3',
+    titre: 'Vous recevez vos accès',
+    texte: 'Vous vous connectez avec le mot de passe choisi ici.',
+  },
+];
 </script>
 
 <template>
-  <div class="min-h-screen bg-[#F2F2DE] dark:bg-black">
-    <header class="sticky top-0 z-40 border-b border-black/5 bg-[#F2F2DE]/90 backdrop-blur dark:border-white/10 dark:bg-black/90">
-      <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
-        <RouterLink to="/" class="flex items-center gap-3">
-          <i class="fa-solid fa-moon text-xl text-[#BC7B3B]"></i>
-          <span class="text-lg font-black text-[#333D2A] dark:text-white">
-            Sakina <span class="text-[#BC7B3B]">Connect</span>
-          </span>
-        </RouterLink>
+  <div class="flex min-h-screen flex-col lg:grid lg:grid-cols-2">
+    <!-- Bascule sombre / clair -->
+    <button
+      @click="toggleTheme"
+      class="fixed right-4 top-4 z-50 flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white shadow-lg backdrop-blur transition hover:bg-white/20"
+      :aria-label="isDark ? 'Passer en mode clair' : 'Passer en mode sombre'"
+    >
+      <i class="fa-solid" :class="isDark ? 'fa-sun' : 'fa-moon'"></i>
+    </button>
 
-        <div class="flex items-center gap-2">
-          <button
-            @click="toggleTheme"
-            class="flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 text-slate-600 transition hover:bg-white dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-900"
-            :aria-label="isDark ? 'Passer en mode clair' : 'Passer en mode sombre'"
-          >
-            <i class="fa-solid" :class="isDark ? 'fa-sun' : 'fa-moon'"></i>
-          </button>
-          <RouterLink
-            to="/login"
-            class="rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-white dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-900"
-          >
-            Connexion
-          </RouterLink>
-        </div>
-      </div>
-    </header>
+    <!-- Panneau de présentation -->
+    <aside class="relative flex flex-col justify-center overflow-hidden p-8 text-white lg:p-14" :style="stylePanneau">
+      <RouterLink to="/" class="flex items-center gap-3">
+        <i class="fa-solid fa-moon text-2xl text-[#BC7B3B]"></i>
+        <span class="text-2xl font-black">Sakina <span class="text-[#BC7B3B]">Connect</span></span>
+      </RouterLink>
 
-    <main class="mx-auto max-w-3xl px-5 py-12">
-      <h1 class="text-2xl font-black text-[#333D2A] lg:text-3xl dark:text-white">
-        Demande d'inscription
+      <h1 class="mt-10 text-3xl font-black leading-tight lg:text-4xl">
+        Demandez votre place
       </h1>
-      <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
-        Remplissez ce formulaire pour demander une place. L'administration examine
-        chaque demande et vous communiquera la suite.
+      <p class="mt-4 max-w-md leading-relaxed text-slate-200">
+        Remplissez le formulaire, l'administration examine votre dossier et vous
+        communique la suite. Vous'avez déjà un compte ?
+        <RouterLink to="/#connexion" class="font-bold text-[#BC7B3B] underline underline-offset-4">
+          Se connecter
+        </RouterLink>
       </p>
 
-      <!-- Confirmation : on ne remplace pas le formulaire, on affiche l'état
-           réel. Repasser par le formulaire donnerait l'illusion qu'un second
-           envoi serait pris en compte, alors qu'il serait refusé en 409. -->
-      <div
-        v-if="envoye"
-        class="mt-8 rounded-2xl border border-emerald-300 bg-emerald-50 p-6 dark:border-emerald-900 dark:bg-emerald-950"
-        role="status"
-      >
-        <div class="flex items-start gap-3">
-          <i class="fa-solid fa-circle-check mt-1 text-xl text-emerald-600 dark:text-emerald-400"></i>
-          <div>
-            <h2 class="font-black text-emerald-900 dark:text-emerald-200">Demande envoyée</h2>
-            <p class="mt-1 text-sm text-emerald-800 dark:text-emerald-300">
-              Elle est maintenant en attente d'examen. Vous recevrez un email dès
-              qu'elle sera acceptée. Vous pourrez alors vous connecter avec le mot
-              de passe que vous venez de choisir.
-            </p>
-            <button
-              @click="envoye = false"
-              class="mt-4 text-sm font-bold text-emerald-800 underline underline-offset-4 dark:text-emerald-300"
-            >
-              Envoyer une autre demande
-            </button>
-          </div>
-        </div>
-      </div>
+      <ol class="mt-10 grid max-w-md gap-4">
+        <li v-for="etape in ETAPES" :key="etape.numero" class="flex items-start gap-3">
+          <span
+            class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#BC7B3B] text-sm font-black text-white"
+          >
+            {{ etape.numero }}
+          </span>
+          <span>
+            <span class="block text-sm font-bold">{{ etape.titre }}</span>
+            <span class="block text-sm text-slate-300">{{ etape.texte }}</span>
+          </span>
+        </li>
+      </ol>
+    </aside>
 
-      <div v-else class="mt-8 rounded-2xl bg-white p-6 shadow-sm dark:bg-slate-900">
-        <DemandeInscriptionForm @envoye="envoye = true" />
+    <!-- Formulaire -->
+    <main class="flex items-center justify-center bg-[#F2F2DE] p-6 sm:p-10 lg:p-14 dark:bg-black">
+      <div class="w-full max-w-lg">
+        <!-- Confirmation : on affiche l'état réel plutôt que de rendre le
+             formulaire. Le laisser visible laisserait croire qu'un second envoi
+             serait pris en compte, alors qu'il serait refusé en 409. -->
+        <div
+          v-if="envoye"
+          class="rounded-3xl border border-emerald-200 bg-white p-8 text-center shadow-xl shadow-[#333D2A]/5 dark:border-emerald-900 dark:bg-slate-900"
+          role="status"
+        >
+          <span
+            class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-2xl text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400"
+          >
+            <i class="fa-solid fa-check"></i>
+          </span>
+          <h2 class="mt-6 text-xl font-black text-[#333D2A] dark:text-white">Demande envoyée</h2>
+          <p class="mt-3 text-sm leading-relaxed text-[#333D2A]/70 dark:text-slate-300">
+            Elle est en attente d'examen. Vous recevrez un email dès qu'elle sera
+            acceptée. Vous pourrez alors vous connecter avec le mot de passe que
+            vous venez de choisir.
+          </p>
+          <button
+            @click="envoye = false"
+            class="mt-6 text-sm font-bold text-[#BC7B3B] underline underline-offset-4"
+          >
+            Envoyer une autre demande
+          </button>
+        </div>
+
+        <template v-else>
+          <h2 class="text-2xl font-black text-[#333D2A] dark:text-white">Votre dossier</h2>
+          <p class="mt-1 text-sm text-[#333D2A]/60 dark:text-slate-400">
+            Tous les champs sont obligatoires.
+          </p>
+
+          <div class="mt-6">
+            <DemandeInscriptionForm @envoye="envoye = true" />
+          </div>
+        </template>
       </div>
     </main>
   </div>

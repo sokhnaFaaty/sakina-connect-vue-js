@@ -1,13 +1,8 @@
 <script setup>
 import { ref, reactive, computed } from 'vue';
-import AppInput from '@/components/ui/AppInput.vue';
-import AppButton from '@/components/ui/AppButton.vue';
 import { creerDemandeInscription } from '@/services/demandeInscriptionService.js';
 import { validateEmailFormat, validateTelephone } from '@/utils/validators.js';
 
-const props = defineProps({
-  envoye: { type: Boolean, default: false },
-});
 const emit = defineEmits(['envoye']);
 
 const formulaire = reactive({
@@ -25,14 +20,14 @@ const erreurGlobale = ref('');
 const chargement = ref(false);
 const motDePasseVisible = ref(false);
 
-// Le backend impose ces bornes (DemandeInscriptionCreationSchema). Les
-// recontrôler ici évite un aller-retour réseau pour une simple coquille.
+// Bornes identiques à DemandeInscriptionCreationSchema côté backend. Les
+// recontrôler ici évite un aller-retour réseau pour une simple coquille ; le
+// backend revalide de toute façon, cette validation n'est qu'un confort.
 const BORNES = {
-  nom: { min: 2, max: 100 },
-  prenom: { min: 2, max: 100 },
-  telephone: { min: 6, max: 20 },
-  referencePaiement: { max: 100 },
-  motDePasse: { min: 8, max: 128 },
+  nom: { min: 2 },
+  prenom: { min: 2 },
+  telephone: { min: 6 },
+  motDePasse: { min: 8 },
 };
 
 function vider() {
@@ -41,14 +36,10 @@ function vider() {
   erreurGlobale.value = '';
 }
 
-/**
- * Validation locale. Ne se substitue pas au backend : celui-ci revalide
- * toujours, c'est cette validation qui évite surtout un aller-retour.
- */
 function valider() {
   Object.keys(erreurs).forEach((cle) => delete erreurs[cle]);
 
-  for (const champ of ['nom', 'prenom', 'referencePaiement']) {
+  for (const champ of ['nom', 'prenom']) {
     const valeur = formulaire[champ].trim();
     if (!valeur) erreurs[champ] = 'Ce champ est obligatoire.';
     else if (valeur.length < BORNES[champ].min) erreurs[champ] = `Minimum ${BORNES[champ].min} caractères.`;
@@ -72,15 +63,14 @@ function valider() {
     erreurs.referencePaiement = 'Ce champ est obligatoire.';
   }
 
-  const motDePasse = formulaire.motDePasse;
-  if (!motDePasse) erreurs.motDePasse = 'Ce champ est obligatoire.';
-  else if (motDePasse.length < BORNES.motDePasse.min) {
+  if (!formulaire.motDePasse) erreurs.motDePasse = 'Ce champ est obligatoire.';
+  else if (formulaire.motDePasse.length < BORNES.motDePasse.min) {
     erreurs.motDePasse = `Minimum ${BORNES.motDePasse.min} caractères.`;
   }
 
   if (!formulaire.confirmationMotDePasse) {
     erreurs.confirmationMotDePasse = 'Confirmez votre mot de passe.';
-  } else if (formulaire.confirmationMotDePasse !== motDePasse) {
+  } else if (formulaire.confirmationMotDePasse !== formulaire.motDePasse) {
     erreurs.confirmationMotDePasse = 'Les deux mots de passe ne correspondent pas.';
   }
 
@@ -109,8 +99,8 @@ async function envoyer() {
     emit('envoye');
   } catch (e) {
     // 409 = email déjà utilisé ou demande en attente, 429 = quota atteint.
-    // Le backend renvoie un message lisible dans les deux cas, on l'affiche tel
-    // quel plutôt que d'en inventer un.
+    // Le backend renvoie un message lisible dans les deux cas : on l'affiche
+    // tel quel plutôt que d'en inventer un qui masquerait la vraie cause.
     erreurGlobale.value = e.message;
   } finally {
     chargement.value = false;
@@ -119,83 +109,156 @@ async function envoyer() {
 </script>
 
 <template>
-  <form class="grid gap-4" novalidate @submit.prevent="envoyer">
+  <form class="grid gap-5" novalidate @submit.prevent="envoyer">
     <div
       v-if="erreurGlobale"
-      class="flex items-start gap-3 rounded-2xl border border-rose-300 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-700 dark:border-rose-900 dark:bg-rose-950 dark:text-rose-300"
+      class="flex items-start gap-2 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-600 dark:border-rose-900 dark:bg-rose-950 dark:text-rose-300"
       role="alert"
     >
       <i class="fa-solid fa-circle-exclamation mt-0.5"></i>
       <span>{{ erreurGlobale }}</span>
     </div>
 
-    <div class="grid gap-4 sm:grid-cols-2">
-      <AppInput v-model="formulaire.prenom" label="Prénom" :error="erreurs.prenom" autocomplete="given-name" />
-      <AppInput v-model="formulaire.nom" label="Nom" :error="erreurs.nom" autocomplete="family-name" />
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div>
+        <label class="mb-1.5 block text-xs font-bold text-[#333D2A] dark:text-slate-300" for="demandePrenom">Prénom</label>
+        <input
+          v-model="formulaire.prenom"
+          id="demandePrenom"
+          autocomplete="given-name"
+          class="w-full rounded-xl border bg-white px-4 py-3 text-sm outline-none transition dark:bg-slate-800 dark:text-slate-100"
+          :class="erreurs.prenom ? 'border-rose-400 focus:ring-2 focus:ring-rose-100' : 'border-slate-300 focus:border-[#BC7B3B] focus:ring-2 focus:ring-[#BC7B3B]/25 dark:border-slate-600'"
+        />
+        <p v-if="erreurs.prenom" class="mt-1.5 text-xs text-rose-600 dark:text-rose-400">{{ erreurs.prenom }}</p>
+      </div>
+
+      <div>
+        <label class="mb-1.5 block text-xs font-bold text-[#333D2A] dark:text-slate-300" for="demandeNom">Nom</label>
+        <input
+          v-model="formulaire.nom"
+          id="demandeNom"
+          autocomplete="family-name"
+          class="w-full rounded-xl border bg-white px-4 py-3 text-sm outline-none transition dark:bg-slate-800 dark:text-slate-100"
+          :class="erreurs.nom ? 'border-rose-400 focus:ring-2 focus:ring-rose-100' : 'border-slate-300 focus:border-[#BC7B3B] focus:ring-2 focus:ring-[#BC7B3B]/25 dark:border-slate-600'"
+        />
+        <p v-if="erreurs.nom" class="mt-1.5 text-xs text-rose-600 dark:text-rose-400">{{ erreurs.nom }}</p>
+      </div>
     </div>
 
-    <AppInput
-      v-model="formulaire.email"
-      label="Adresse email"
-      type="email"
-      :error="erreurs.email"
-      autocomplete="email"
-      placeholder="nom@exemple.com"
-    />
-
-    <AppInput
-      v-model="formulaire.telephone"
-      label="Téléphone"
-      type="tel"
-      :error="erreurs.telephone"
-      autocomplete="tel"
-      placeholder="+221 77 000 00 00"
-    />
-
-    <AppInput
-      v-model="formulaire.referencePaiement"
-      label="Référence de paiement"
-      :error="erreurs.referencePaiement"
-      placeholder="Reçue de paiement, référence de virement…"
-    />
+    <div>
+      <label class="mb-1.5 block text-xs font-bold text-[#333D2A] dark:text-slate-300" for="demandeEmail">
+        Adresse email
+      </label>
+      <input
+        v-model="formulaire.email"
+        id="demandeEmail"
+        type="email"
+        autocomplete="email"
+        placeholder="nom@exemple.com"
+        class="w-full rounded-xl border bg-white px-4 py-3 text-sm outline-none transition dark:bg-slate-800 dark:text-slate-100"
+        :class="erreurs.email ? 'border-rose-400 focus:ring-2 focus:ring-rose-100' : 'border-slate-300 focus:border-[#BC7B3B] focus:ring-2 focus:ring-[#BC7B3B]/25 dark:border-slate-600'"
+      />
+      <p v-if="erreurs.email" class="mt-1.5 text-xs text-rose-600 dark:text-rose-400">{{ erreurs.email }}</p>
+    </div>
 
     <div>
-      <p class="mb-2 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
-        Choisissez le mot de passe que vous utiliserez pour vous connecter.
-        Il sera demandé de le changer à votre première connexion.
+      <label class="mb-1.5 block text-xs font-bold text-[#333D2A] dark:text-slate-300" for="demandeTelephone">
+        Téléphone
+      </label>
+      <input
+        v-model="formulaire.telephone"
+        id="demandeTelephone"
+        type="tel"
+        autocomplete="tel"
+        placeholder="+221 77 000 00 00"
+        class="w-full rounded-xl border bg-white px-4 py-3 text-sm outline-none transition dark:bg-slate-800 dark:text-slate-100"
+        :class="erreurs.telephone ? 'border-rose-400 focus:ring-2 focus:ring-rose-100' : 'border-slate-300 focus:border-[#BC7B3B] focus:ring-2 focus:ring-[#BC7B3B]/25 dark:border-slate-600'"
+      />
+      <p v-if="erreurs.telephone" class="mt-1.5 text-xs text-rose-600 dark:text-rose-400">{{ erreurs.telephone }}</p>
+    </div>
+
+    <div>
+      <label class="mb-1.5 block text-xs font-bold text-[#333D2A] dark:text-slate-300" for="demandeReference">
+        Référence de paiement
+      </label>
+      <input
+        v-model="formulaire.referencePaiement"
+        id="demandeReference"
+        placeholder="Reçue de paiement, référence de virement…"
+        class="w-full rounded-xl border bg-white px-4 py-3 text-sm outline-none transition dark:bg-slate-800 dark:text-slate-100"
+        :class="erreurs.referencePaiement ? 'border-rose-400 focus:ring-2 focus:ring-rose-100' : 'border-slate-300 focus:border-[#BC7B3B] focus:ring-2 focus:ring-[#BC7B3B]/25 dark:border-slate-600'"
+      />
+      <p v-if="erreurs.referencePaiement" class="mt-1.5 text-xs text-rose-600 dark:text-rose-400">
+        {{ erreurs.referencePaiement }}
       </p>
-      <div class="grid gap-4 sm:grid-cols-2">
-        <AppInput
-          v-model="formulaire.motDePasse"
-          label="Mot de passe"
-          :type="motDePasseVisible ? 'text' : 'password'"
-          :error="erreurs.motDePasse"
-          autocomplete="new-password"
-        />
-        <AppInput
-          v-model="formulaire.confirmationMotDePasse"
-          label="Confirmation"
-          :type="motDePasseVisible ? 'text' : 'password'"
-          :error="erreurs.confirmationMotDePasse"
-          autocomplete="new-password"
-        />
+    </div>
+
+    <div class="rounded-2xl border border-[#BC7B3B]/25 bg-[#BC7B3B]/5 p-4 dark:border-[#BC7B3B]/30 dark:bg-[#BC7B3B]/10">
+      <p class="text-xs leading-relaxed text-[#333D2A]/80 dark:text-slate-300">
+        Choisissez le mot de passe que vous utiliserez pour vous connecter. Il vous
+        sera demandé de le changer à votre première connexion.
+      </p>
+
+      <div class="mt-4 grid gap-4 sm:grid-cols-2">
+        <div>
+          <label class="mb-1.5 block text-xs font-bold text-[#333D2A] dark:text-slate-300" for="demandeMdp">
+            Mot de passe
+          </label>
+          <input
+            v-model="formulaire.motDePasse"
+            id="demandeMdp"
+            :type="motDePasseVisible ? 'text' : 'password'"
+            autocomplete="new-password"
+            class="w-full rounded-xl border bg-white px-4 py-3 text-sm outline-none transition dark:bg-slate-800 dark:text-slate-100"
+            :class="erreurs.motDePasse ? 'border-rose-400' : 'border-slate-300 focus:border-[#BC7B3B] dark:border-slate-600'"
+          />
+          <p v-if="erreurs.motDePasse" class="mt-1.5 text-xs text-rose-600 dark:text-rose-400">
+            {{ erreurs.motDePasse }}
+          </p>
+        </div>
+
+        <div>
+          <label class="mb-1.5 block text-xs font-bold text-[#333D2A] dark:text-slate-300" for="demandeMdpConfirm">
+            Confirmation
+          </label>
+          <input
+            v-model="formulaire.confirmationMotDePasse"
+            id="demandeMdpConfirm"
+            :type="motDePasseVisible ? 'text' : 'password'"
+            autocomplete="new-password"
+            class="w-full rounded-xl border bg-white px-4 py-3 text-sm outline-none transition dark:bg-slate-800 dark:text-slate-100"
+            :class="erreurs.confirmationMotDePasse ? 'border-rose-400' : 'border-slate-300 focus:border-[#BC7B3B] dark:border-slate-600'"
+          />
+          <p v-if="erreurs.confirmationMotDePasse" class="mt-1.5 text-xs text-rose-600 dark:text-rose-400">
+            {{ erreurs.confirmationMotDePasse }}
+          </p>
+        </div>
       </div>
+
       <button
         type="button"
         @click="motDePasseVisible = !motDePasseVisible"
-        class="mt-2 text-xs font-bold text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100"
+        class="mt-3 text-xs font-bold text-[#BC7B3B] transition hover:brightness-110"
       >
         <i class="fa-solid mr-1" :class="motDePasseVisible ? 'fa-eye-slash' : 'fa-eye'"></i>
         {{ motDePasseVisible ? 'Masquer' : 'Afficher' }} les mots de passe
       </button>
     </div>
 
-    <AppButton type="submit" :disabled="chargement || aDesErreurs">
-      <span v-if="chargement" class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
-      {{ chargement ? 'Envoi...' : 'Envoyer ma demande' }}
-    </AppButton>
+    <button
+      type="submit"
+      :disabled="chargement"
+      class="flex w-full items-center justify-center gap-2 rounded-xl bg-[#BC7B3B] px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#BC7B3B]/25 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
+    >
+      <span
+        v-if="chargement"
+        class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"
+      ></span>
+      <i v-else class="fa-solid fa-paper-plane"></i>
+      {{ chargement ? 'Envoi en cours...' : 'Envoyer ma demande' }}
+    </button>
 
-    <p class="text-center text-xs text-slate-500 dark:text-slate-400">
+    <p class="text-center text-xs leading-relaxed text-[#333D2A]/60 dark:text-slate-400">
       Votre demande sera examinée par l'administration. Aucun compte n'est créé
       avant son acceptation.
     </p>
