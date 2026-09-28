@@ -35,7 +35,13 @@ const ETAPES = [
 </script>
 
 <template>
-  <div class="flex min-h-screen flex-col lg:grid lg:grid-cols-2">
+  <!-- Sur mobile la page défile normalement : un formulaire long n'a pas à être
+       enfermé dans la fenêtre. À partir de lg, on verrouille la hauteur sur
+       l'écran et chaque colonne défile de son côté, sinon le contenu de gauche
+       (titre + 3 étapes) repousse le formulaire hors de la fenêtre. -->
+  <div
+    class="flex min-h-screen flex-col lg:h-screen lg:grid lg:grid-cols-2 lg:overflow-hidden"
+  >
     <!-- Bascule sombre / clair -->
     <button
       @click="toggleTheme"
@@ -46,7 +52,10 @@ const ETAPES = [
     </button>
 
     <!-- Panneau de présentation -->
-    <aside class="relative flex flex-col justify-center overflow-hidden p-8 text-white lg:p-14" :style="stylePanneau">
+    <aside
+      class="relative flex flex-col justify-center p-8 text-white lg:overflow-y-auto lg:p-14"
+      :style="stylePanneau"
+    >
       <RouterLink to="/" class="flex items-center gap-3">
         <i class="fa-solid fa-moon text-2xl text-[#BC7B3B]"></i>
         <span class="text-2xl font-black">Sakina <span class="text-[#BC7B3B]">Connect</span></span>
@@ -79,7 +88,9 @@ const ETAPES = [
     </aside>
 
     <!-- Formulaire -->
-    <main class="flex items-center justify-center bg-[#F2F2DE] p-6 sm:p-10 lg:p-14 dark:bg-black">
+    <main
+      class="flex items-center justify-center bg-[#F2F2DE] p-6 sm:p-10 lg:overflow-y-auto lg:p-14 dark:bg-black"
+    >
       <div class="w-full max-w-lg">
         <!-- Confirmation : on affiche l'état réel plutôt que de rendre le
              formulaire. Le laisser visible laisserait croire qu'un second envoi
