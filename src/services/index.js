@@ -4,6 +4,7 @@ export * from './annonceService.js';
 export * from './authService.js';
 export * from './categorieService.js';
 export * from './cloudinaryService.js';
+export * from './demandeInscriptionService.js';
 export * from './groupeService.js';
 export * from './guideService.js';
 export * from './hotelService.js';

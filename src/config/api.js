@@ -23,4 +23,6 @@ export const ENDPOINTS = {
   sos: `${API_BASE_URL}/sos`,
   admins: `${API_BASE_URL}/admins`,
   connexion: `${API_BASE_URL}/connecter`,
+  changerMotDePasse: `${API_BASE_URL}/changer-mot-de-passe`,
+  demandesInscription: `${API_BASE_URL}/demandes-inscription`,
 };
