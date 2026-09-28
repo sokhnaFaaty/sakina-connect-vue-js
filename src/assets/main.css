@@ -4,6 +4,27 @@
    posée sur <html> par useTheme.js / le script anti-flash */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/**
+ * Palette `slate` désaturée vers le noir.
+ *
+ * Par défaut Tailwind part sur un bleu ardoise (« bleu de nuit »), ce qui donne
+ * un gris bleuté à l'écran au lieu d'un vrai noir. Ces teintes sont utilisées
+ * ~285 fois dans le projet via `dark:bg-slate-950`, `dark:bg-slate-800`… :
+ * les réécrire une par une serait ingérable et fragile. On surcharge donc la
+ * palette une seule fois ici, et toutes les classes existing suivent.
+ *
+ * Les luminances sont volontairement proches de celles d'origine : seule la
+ * dominante bleue disparaît. Le mode clair, qui emploie
+ * `text-slate-800` sur des cartes blanches, garde ainsi sa lisibilité.
+ */
+@theme {
+  --color-slate-950: #000000; /* noir pur : fond, modales, tiroirs */
+  --color-slate-900: #0a0a0a; /* fond de page en mode sombre */
+  --color-slate-800: #171717; /* cartes, champs de formulaire */
+  --color-slate-700: #262626; /* séparateurs, bordures marquées */
+  --color-slate-600: #3f3f3f; /* bordures de champs */
+}
+
 html,
 body,
 #app {
@@ -18,14 +39,14 @@ body {
 }
 
 html.dark body {
-  /* Gris bleuté profond (évite le noir pur) pour reposer les yeux */
-  background-color: #0f172a; /* slate-900 */
+  /* Noir franc : le fond ne doit plus virer vers le bleu. */
+  background-color: #000000; /* slate-950 surchargé */
   color: #e2e8f0; /* slate-200 */
 }
 
 /* En mode sombre, donne une légère ombre portée aux cartes pour créer de la profondeur */
 html.dark .shadow-sm {
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 4px 16px rgba(2, 6, 23, 0.55);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 4px 16px rgba(0, 0, 0, 0.6);
 }
 
 
