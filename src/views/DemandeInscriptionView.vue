@@ -58,7 +58,7 @@ const ETAPES = [
       <p class="mt-4 max-w-md leading-relaxed text-slate-200">
         Remplissez le formulaire, l'administration examine votre dossier et vous
         communique la suite. Vous'avez déjà un compte ?
-        <RouterLink to="/#connexion" class="font-bold text-[#BC7B3B] underline underline-offset-4">
+        <RouterLink to="/login" class="font-bold text-[#BC7B3B] underline underline-offset-4">
           Se connecter
         </RouterLink>
       </p>
