@@ -1,7 +1,6 @@
 
 import { ENDPOINTS } from "../config/api.js";
 import { apiRequest } from "./apiClient.js";
-import { createId } from "../utils/id.js";
 
 export async function getSos() {
   return apiRequest(ENDPOINTS.sos, {}, "Impossible de charger les alertes SOS.");
@@ -13,8 +12,13 @@ export async function getSosParPelerinIds(pelerinIds) {
   return all.filter((s) => pelerinIds.includes(s.pelerinId));
 }
 
-// Déclenché par le pèlerin — position capturée une seule fois, pas de suivi continu
-export async function declencherSos({ pelerinId, guideId, commentaire }) {
+// Déclenché par le pèlerin — position capturée une seule fois, pas de suivi continu.
+//
+// Ni `pelerinId` ni `guideId` ne sont envoyés : le serveur les déduit du jeton et
+// de l'appartenance au groupe. Les envoyer était refusé en 400 après le durcissement,
+// et surtout cela aurait permis de router sa propre alerte vers un autre pèlerin ou
+// un autre guide. Le client n'a rien à dire sur le destinataire d'une alerte.
+export async function declencherSos({ commentaire } = {}) {
   return new Promise((resolve, reject) => {
     if (!navigator.geolocation) {
       reject(new Error("La géolocalisation n'est pas disponible sur cet appareil."));
@@ -25,14 +29,10 @@ export async function declencherSos({ pelerinId, guideId, commentaire }) {
       async (position) => {
         try {
           const sos = {
-            id: createId("sos"),
-            pelerinId,
-            guideId,
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
             dateHeure: new Date().toISOString(),
             commentaire: commentaire || "",
-            statut: "EN_ATTENTE",
           };
           const created = await apiRequest(
             ENDPOINTS.sos,
@@ -50,21 +50,18 @@ export async function declencherSos({ pelerinId, guideId, commentaire }) {
   });
 }
 
-// Création directe d'une alerte SOS — position (latitude/longitude) déjà captée côté vue
-export async function createSos({ pelerinId, guideId, latitude, longitude, dateHeure, commentaire, statut }) {
+// Position déjà captée côté vue. Même contrat que declencherSos : le destinataire
+// est déduit par le serveur.
+export async function createSos({ latitude, longitude, dateHeure, commentaire } = {}) {
   return apiRequest(
     ENDPOINTS.sos,
     {
       method: "POST",
       body: JSON.stringify({
-        id: createId("sos"),
-        pelerinId,
-        guideId,
         latitude,
         longitude,
         dateHeure,
         commentaire: commentaire || "",
-        statut: statut || "EN_ATTENTE",
       }),
     },
     "Impossible d'envoyer l'alerte SOS."

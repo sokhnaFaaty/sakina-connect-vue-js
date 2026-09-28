@@ -65,11 +65,7 @@ async function lancerSos() {
   if (!ok) return
 
   try {
-    await declencherSos({
-      pelerinId: pelerin.value.id,
-      guideId: groupe.value?.guideId || null,
-      commentaire: '',
-    })
+    await declencherSos({ commentaire: '' })
     success('Alerte SOS envoyée. De l\'aide arrive.')
     sosActif.value = await getSosActifDuPelerin(pelerin.value.id)
   } catch (e) {
