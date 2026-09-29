@@ -15,24 +15,44 @@ function normalizePasseport(value) {
   return String(value ?? "").trim().toUpperCase();
 }
 
-async function getUtilisateurs() {
-  return apiRequest(ENDPOINTS.utilisateurs, {}, "Impossible de vérifier l'unicité.");
+/**
+ * Unicité d'un email / d'un téléphone, décidée par le serveur.
+ *
+ * Ce contrôle se faisait en téléchargeant TOUTE la liste des utilisateurs puis
+ * en la parcourant côté client. Deux conséquences, dont une de sécurité : chaque
+ * formulaire de profil récupérait l'annuaire complet — emails et téléphones de
+ * tout le monde — pour vérifier un seul champ ; et depuis que la liste complète
+ * est réservée à l'ADMIN, un pèlerin ou un proche obtenait un 403 en éditant son
+ * profil.
+ *
+ * Le serveur normalise aussi le téléphone sur ses derniers chiffres, comme le
+ * faisait ce fichier. La normalisation est donc conservée ici, pour le message
+ * d'erreur, mais elle ne décide plus de l'unicité.
+ */
+async function verifierExistence(critere, valeur, excludeUserId = null) {
+  const params = new URLSearchParams({ [critere]: valeur });
+  if (excludeUserId) params.set('exclureId', excludeUserId);
+  return apiRequest(
+    `${ENDPOINTS.utilisateurs}/existe?${params.toString()}`,
+    {},
+    "Impossible de vérifier l'unicité."
+  );
 }
 
 // L'email est-il déjà utilisé par un autre compte ? excludeUserId = compte à ignorer (édition)
 export async function emailExiste(email, excludeUserId = null) {
   const cible = normalizeEmail(email);
   if (!cible) return false;
-  const utilisateurs = await getUtilisateurs();
-  return utilisateurs.some((u) => u.id !== excludeUserId && normalizeEmail(u.email) === cible);
+  const r = await verifierExistence('email', cible, excludeUserId);
+  return r.email === true;
 }
 
 // Le téléphone est-il déjà utilisé par un autre compte ?
 export async function telephoneExiste(telephone, excludeUserId = null) {
   const cible = normalizeTelephone(telephone);
   if (!cible) return false;
-  const utilisateurs = await getUtilisateurs();
-  return utilisateurs.some((u) => u.id !== excludeUserId && normalizeTelephone(u.telephone) === cible);
+  const r = await verifierExistence('telephone', cible, excludeUserId);
+  return r.telephone === true;
 }
 
 // Le numéro de passeport est-il déjà utilisé par un autre pèlerin ?

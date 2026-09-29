@@ -19,6 +19,25 @@ const router = useRouter();
 const auth = useAuthStore();
 const { isDark, toggleTheme } = useTheme();
 
+const AVANTAGES = [
+  {
+    icone: 'fa-users',
+    texte: 'Suivi des pèlerins, guides et groupes',
+  },
+  {
+    icone: 'fa-route',
+    texte: 'Itinéraires et rituels planifiés',
+  },
+  {
+    icone: 'fa-triangle-exclamation',
+    texte: 'Assistance SOS géolocalisée',
+  },
+  {
+    icone: 'fa-hand-holding-heart',
+    texte: 'Portail famille pour les proches',
+  },
+];
+
 watch(email, (valeur) => {
   if (String(valeur).trim()) erreurEmail.value = '';
 });
@@ -34,25 +53,25 @@ function basculerMotDePasse() {
 async function seConnecter() {
   erreurMessage.value = '';
 
-  let hasError = false;
+  let aUneErreur = false;
 
-  const erreurEmailValidation = validateLoginEmail(email.value.trim());
-  if (erreurEmailValidation) {
-    erreurEmail.value = erreurEmailValidation;
-    hasError = true;
+  const messageEmail = validateLoginEmail(email.value.trim());
+  if (messageEmail) {
+    erreurEmail.value = messageEmail;
+    aUneErreur = true;
   } else {
     erreurEmail.value = '';
   }
 
-  const erreurMotDePasseValidation = validateLoginPassword(motDePasse.value);
-  if (erreurMotDePasseValidation) {
-    erreurMotDePasse.value = erreurMotDePasseValidation;
-    hasError = true;
+  const messageMotDePasse = validateLoginPassword(motDePasse.value);
+  if (messageMotDePasse) {
+    erreurMotDePasse.value = messageMotDePasse;
+    aUneErreur = true;
   } else {
     erreurMotDePasse.value = '';
   }
 
-  if (hasError) return;
+  if (aUneErreur) return;
 
   chargement.value = true;
   try {
@@ -65,15 +84,16 @@ async function seConnecter() {
   }
 }
 
-const bgStyle = {
+// Voile vert foncé sur l'image, pour garder le texte blanc lisible.
+const styleImage = {
   backgroundImage: `linear-gradient(rgba(35,42,27,.82), rgba(35,42,27,.94)), url(${coverImage})`,
   backgroundSize: 'cover',
-  backgroundPosition: 'center'
+  backgroundPosition: 'center',
 };
 </script>
+
 <template>
   <div class="flex min-h-screen flex-col lg:grid lg:grid-cols-2">
-
     <!-- Bascule Sombre / Clair -->
     <button
       @click="toggleTheme"
@@ -83,7 +103,11 @@ const bgStyle = {
       <i class="fa-solid" :class="isDark ? 'fa-sun' : 'fa-moon'"></i>
     </button>
 
-    <div class="relative flex flex-col justify-center overflow-hidden p-8 text-white lg:p-14" :style="bgStyle">
+    <!-- ============ GAUCHE : l'image ============ -->
+    <div
+      class="relative flex flex-col justify-center overflow-hidden p-8 text-white lg:p-14"
+      :style="styleImage"
+    >
       <div class="flex items-center gap-3">
         <i class="fa-solid fa-moon text-2xl text-[#BC7B3B]"></i>
         <span class="text-2xl font-black">Sakina <span class="text-[#BC7B3B]">Connect</span></span>
@@ -98,33 +122,13 @@ const bgStyle = {
       </p>
 
       <ul class="mt-10 grid max-w-md gap-3">
-        <li class="flex items-center gap-3">
+        <li v-for="avantage in AVANTAGES" :key="avantage.texte" class="flex items-center gap-3">
           <span
             class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#BC7B3B]/20 text-[#BC7B3B]"
-            ><i class="fa-solid fa-users"></i
-          ></span>
-          <span class="text-sm text-slate-200">Suivi des pèlerins, guides et groupes</span>
-        </li>
-        <li class="flex items-center gap-3">
-          <span
-            class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#BC7B3B]/20 text-[#BC7B3B]"
-            ><i class="fa-solid fa-route"></i
-          ></span>
-          <span class="text-sm text-slate-200">Itinéraires et rituels planifiés</span>
-        </li>
-        <li class="flex items-center gap-3">
-          <span
-            class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#BC7B3B]/20 text-[#BC7B3B]"
-            ><i class="fa-solid fa-triangle-exclamation"></i
-          ></span>
-          <span class="text-sm text-slate-200">Assistance SOS géolocalisée</span>
-        </li>
-        <li class="flex items-center gap-3">
-          <span
-            class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#BC7B3B]/20 text-[#BC7B3B]"
-            ><i class="fa-solid fa-hand-holding-heart"></i
-          ></span>
-          <span class="text-sm text-slate-200">Portail famille pour les proches</span>
+          >
+            <i class="fa-solid" :class="avantage.icone"></i>
+          </span>
+          <span class="text-sm text-slate-200">{{ avantage.texte }}</span>
         </li>
       </ul>
 
@@ -133,41 +137,57 @@ const bgStyle = {
       </p>
     </div>
 
-    <div class="flex items-center justify-center bg-[#F2F2DE] p-6 sm:p-10 lg:p-14 dark:bg-slate-950">
+    <!-- ============ DROITE : le formulaire ============ -->
+    <div class="flex items-center justify-center bg-[#F2F2DE] p-6 sm:p-10 lg:p-14 dark:bg-black">
       <div class="w-full max-w-md">
-        <h2 class="text-2xl font-black text-[#333D2A]">Connexion</h2>
-        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Accédez à votre espace personnel.</p>
+        <h2 class="text-2xl font-black text-[#333D2A] dark:text-white">Connexion</h2>
+        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          Accédez à votre espace personnel.
+        </p>
 
-        <div v-if="erreurMessage" class="mt-6 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-600">
-          <i class="fa-solid fa-circle-exclamation mr-2"></i>
+        <div
+          v-if="erreurMessage"
+          class="mt-6 flex items-start gap-2 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-600 dark:border-rose-900 dark:bg-rose-950 dark:text-rose-300"
+          role="alert"
+        >
+          <i class="fa-solid fa-circle-exclamation mt-0.5"></i>
           <span>{{ erreurMessage }}</span>
         </div>
 
-        <div class="mt-6 grid gap-4">
+        <form class="mt-6 grid gap-4" novalidate @submit.prevent="seConnecter">
           <div>
-            <label class="mb-1 block text-xs font-bold text-[#333D2A]" for="loginEmail">Adresse email :</label>
+            <label class="mb-1 block text-xs font-bold text-[#333D2A] dark:text-slate-300" for="loginEmail">
+              Adresse email :
+            </label>
             <input
               v-model="email"
               class="w-full rounded-xl border bg-white px-4 py-3 text-sm outline-none focus:ring-2 dark:bg-slate-800 dark:text-slate-100"
-              :class="erreurEmail ? 'border-rose-500 focus:border-rose-500 focus:ring-rose-100' : 'border-slate-300 focus:border-[#BC7B3B] focus:ring-[#BC7B3B]/30 dark:border-slate-600'"
+              :class="
+                erreurEmail
+                  ? 'border-rose-500 focus:border-rose-500 focus:ring-rose-100'
+                  : 'border-slate-300 focus:border-[#BC7B3B] focus:ring-[#BC7B3B]/30 dark:border-slate-600'
+              "
               type="email"
               id="loginEmail"
-              placeholder="nom@gmail.com"
+              placeholder="nom@exemple.com"
               autocomplete="email"
             />
-            <p v-if="erreurEmail" class="mt-1 text-xs text-rose-600">{{ erreurEmail }}</p>
+            <p v-if="erreurEmail" class="mt-1 text-xs text-rose-600 dark:text-rose-400">{{ erreurEmail }}</p>
           </div>
 
           <div>
-            <label class="mb-1 block text-xs font-bold text-[#333D2A]" for="loginPassword"
-              >Mot de passe :</label
-            >
+            <label class="mb-1 block text-xs font-bold text-[#333D2A] dark:text-slate-300" for="loginPassword">
+              Mot de passe :
+            </label>
             <div class="relative">
               <input
                 v-model="motDePasse"
-                @keyup.enter="seConnecter"
                 class="w-full rounded-xl border bg-white px-4 py-3 pr-12 text-sm outline-none focus:ring-2 dark:bg-slate-800 dark:text-slate-100"
-                :class="erreurMotDePasse ? 'border-rose-500 focus:border-rose-500 focus:ring-rose-100' : 'border-slate-300 focus:border-[#BC7B3B] focus:ring-[#BC7B3B]/30 dark:border-slate-600'"
+                :class="
+                  erreurMotDePasse
+                    ? 'border-rose-500 focus:border-rose-500 focus:ring-rose-100'
+                    : 'border-slate-300 focus:border-[#BC7B3B] focus:ring-[#BC7B3B]/30 dark:border-slate-600'
+                "
                 :type="motDePasseVisible ? 'text' : 'password'"
                 id="loginPassword"
                 placeholder="••••••••••••"
@@ -176,25 +196,37 @@ const bgStyle = {
               <button
                 type="button"
                 @click="basculerMotDePasse"
-                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-100"
-                aria-label="Afficher/masquer le mot de passe"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-100"
+                aria-label="Afficher ou masquer le mot de passe"
               >
                 <i class="fa-solid" :class="motDePasseVisible ? 'fa-eye-slash' : 'fa-eye'"></i>
               </button>
             </div>
-            <p v-if="erreurMotDePasse" class="mt-1 text-xs text-rose-600">{{ erreurMotDePasse }}</p>
+            <p v-if="erreurMotDePasse" class="mt-1 text-xs text-rose-600 dark:text-rose-400">
+              {{ erreurMotDePasse }}
+            </p>
           </div>
 
           <button
-            @click="seConnecter"
+            type="submit"
             :disabled="chargement"
             class="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-[#333D2A] px-4 py-3 text-sm font-bold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            <span v-if="chargement" class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
+            <span
+              v-if="chargement"
+              class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"
+            ></span>
             {{ chargement ? 'Connexion...' : 'Connexion' }}
           </button>
-        </div>
+        </form>
+
+        <p class="mt-8 text-center text-sm text-slate-500 dark:text-slate-400">
+          Pas encore de place ?
+          <RouterLink to="/nous-rejoindre" class="font-bold text-[#BC7B3B] hover:underline">
+            Demandez votre inscription
+          </RouterLink>
+        </p>
       </div>
     </div>
   </div>
-</template> 
+</template>

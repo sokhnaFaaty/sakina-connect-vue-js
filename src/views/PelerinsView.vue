@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import { useToast, useConfirm } from '@/composables/index.js';
 import { useDrawer } from '@/composables/useDrawer.js';
 import { getPelerins, deletePelerin } from '@/services/pelerinService.js';
-import { getUtilisateurs } from '@/services/utilisateurService.js';
+import { getUtilisateursComplet } from '@/services/utilisateurService.js';
 import { getGroupes } from '@/services/groupeService.js';
 import { getHotels } from '@/services/hotelService.js';
 import { getGuides } from '@/services/guideService.js';
@@ -81,7 +81,9 @@ async function charger() {
     const [pelerinsData, groupesData, utilisateursData, hotelsData, guidesData] = await Promise.all([
       getPelerins(),
       getGroupes(),
-      getUtilisateurs(),
+      // Vue ADMIN : `PelerinForm` affiche l'email du compte qu'elle édite, et le
+      // répertoire ne le contient pas.
+      getUtilisateursComplet(),
       getHotels(),
       getGuides(),
     ]);
