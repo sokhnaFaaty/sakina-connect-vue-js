@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import { useToast, useConfirm } from '@/composables/index.js';
 import { useDrawer } from '@/composables/useDrawer.js';
 import { getGuides, deleteGuide } from '@/services/guideService.js';
-import { getUtilisateurs } from '@/services/utilisateurService.js';
+import { getUtilisateursComplet } from '@/services/utilisateurService.js';
 import { getGroupes } from '@/services/groupeService.js';
 import PageHeader from '@/components/ui/PageHeader.vue';
 import AppButton from '@/components/ui/AppButton.vue';
@@ -77,7 +77,8 @@ async function charger() {
   try {
     const [guidesData, utilisateursData, groupesData] = await Promise.all([
       getGuides(),
-      getUtilisateurs(),
+      // Vue ADMIN : elle affiche l'email de chaque guide, absent du répertoire.
+      getUtilisateursComplet(),
       getGroupes(),
     ]);
     guides.value = guidesData;

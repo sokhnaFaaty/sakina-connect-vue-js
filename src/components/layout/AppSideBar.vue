@@ -10,6 +10,7 @@ const auth = useAuthStore();
 const NAV_LINKS_BY_ROLE = {
   ADMIN: [
     { page: 'dashboard-admin', label: 'Tableau de Bord', icon: 'fa-gauge' },
+    { page: 'demandes-inscription', label: 'Demandes d\'inscription', icon: 'fa-inbox' },
     { page: 'annuaire-guides', label: 'Annuaire des Guides', icon: 'fa-user-tie' },
     { page: 'groupes', label: 'Liste des Groupes', icon: 'fa-people-group' },
     { page: 'pelerins', label: 'Liste des Pèlerins', icon: 'fa-users' },
