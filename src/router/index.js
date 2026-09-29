@@ -13,6 +13,7 @@ import GuidesView from '@/views/GuidesView.vue';
 import ItineraireView from '@/views/ItineraireView.vue';
 import AnnoncesView from '@/views/AnnoncesView.vue';
 import DashboardAdminView from '@/views/DashboardAdminView.vue';
+import DemandesInscriptionView from '@/views/DemandesInscriptionView.vue';
 import DashboardGuideView from '@/views/DashboardGuideView.vue';
 import DashboardPelerinView from '@/views/DashboardPelerinView.vue';
 import DashboardProcheView from '@/views/DashboardProcheView.vue';
@@ -42,6 +43,7 @@ const routes = [
   { path: '/itineraire', name: 'itineraire', component: ItineraireView, meta: { requiresAuth: true, roles: ['GUIDE', 'ADMIN', 'PELERIN'] } },
   { path: '/annonces', name: 'annonces', component: AnnoncesView, meta: { requiresAuth: true, roles: ['ADMIN', 'GUIDE', 'PELERIN'] } },
   { path: '/dashboard-admin', name: 'dashboard-admin', component: DashboardAdminView, meta: { requiresAuth: true, roles: ['ADMIN'] } },
+  { path: '/demandes-inscription', name: 'demandes-inscription', component: DemandesInscriptionView, meta: { requiresAuth: true, roles: ['ADMIN'] } },
   { path: '/dashboard-guide', name: 'dashboard-guide', component: DashboardGuideView, meta: { requiresAuth: true, roles: ['GUIDE'] } },
   { path: '/dashboard-pelerin', name: 'dashboard-pelerin', component: DashboardPelerinView, meta: { requiresAuth: true, roles: ['PELERIN'] } },
   { path: '/dashboard-proche', name: 'dashboard-proche', component: DashboardProcheView, meta: { requiresAuth: true, roles: ['PROCHE'] } },
